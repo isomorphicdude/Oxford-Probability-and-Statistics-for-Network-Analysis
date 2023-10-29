@@ -1,0 +1,156 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\input{commands}
+
+\title{Appendix}
+
+\begin{document}
+\maketitle
+
+\section{Appendix}
+
+\subsection{Young's Inequality}\label{Young's Inequality}
+\placeholder
+
+\subsection{Minkowski's inequality}\label{Minkowski-holder}
+\placeholder
+
+
+\subsection{Hölder's Inequality}\label{Hölder's inequality}
+\begin{theorem}[Hölder's inequality,]\rm\nextline
+Let $p,q\in[1,\infty]$,	satisfying:
+$$
+\frac{1}{p}+\frac{1}{q}=1
+$$
+Then if $x\in\ell^p$ and $y\in\ell^q$ then 
+$$
+\norm{x}_p\norm{y}_q\geq\norm{xy}_1
+\iff
+\left(\sum_{n=1}^\infty{|x_n|}^p\right)^{1/p}
+\left(\sum_{n=1}^\infty{|y_n|}^q\right)^{1/q}\geq\sum_{n=1}^\infty|x_ny_n|
+$$
+Then if $g\in L^p(S)$ and $g\in L^q(S)$ then 
+$$
+\norm{f}_p\norm{g}_q\geq\norm{fg}_1
+\iff
+\left(\int_S{|f|}^pdx\right)^{1/p}
+\left(\int_S{|g|}^qdx\right)^{1/q}
+\geq\int_S|fg|dx
+$$
+\end{theorem}
+\begin{remark}[Short version]\rm\nextline
+Here's the key information of the above theorem:
+$$
+\frac{1}{p}+\frac{1}{q}=1\implies \norm{x}_p\norm{y}_q\geq\norm{xy}_1
+$$
+\end{remark}
+\begin{remark}
+When supremum occurs, which is  one of $p$ and $q$ becomes infinity and another becomes 1, the inequality still holds. One should pay attention that for $L^p$ spaces the supremum norm is actually essential supremum.
+\end{remark}
+
+\begin{remark}[Proof of Hölder's inequality]\rm\nextline
+The proof uses young's inequality.\\
+\placeholder
+\end{remark}
+
+\subsection{Jensen's Inequality (convex function)}\label{Jensen's inquality}
+Let $\mathbb{I}\subset \real$. A function \func{f}{\mathrm{I}}{\real} is {\bf convex} if the following holds for all $t\in[0,1]$:
+$$
+	t\cdot f(x)+(1-t)\cdot f(y)\geq f(tx+(1-t)y),\,\,\forall x,\,y\in \real\quad\quad\text{(Jensen)}
+$$
+Similarly,  a function \func{f}{\mathrm{I}}{\real} is {\bf concave} if the following holds for all $t\in[0,1]$:
+$$
+	t\cdot f(x)+(1-t)\cdot f(y)\leq f(tx+(1-t)y),\,\,\forall x,\,y\in \real
+$$
+For convex function, the inequality may be rewritten as
+$$
+	\frac{1}{t}(f(y+t
+	=(x-y))-f(y))\leq f(x)-f(y)
+$$
+For concave function with $f(0)\geq 0$ we have {\bf sub-additivity},which is for $t\in[0,1]$,
+$$
+	f(tx)=f(tx+(1-t)0)\geq tf(x)+(1-t)f(0)\geq tf(x)
+$$
+and thus,for $a,b\in\real^+$
+$$
+	f(a)+f(b)=f(\frac{a}{a+b}(a+b))+f(\frac{b}{a+b}(a+b))\geq \frac{a}{a+b}f(a+b)+\frac{b}{a+b}f(a+b)=f(a+b)
+$$
+
+\begin{remark}[Generalised Jensen's Inequality]\rm\nextline
+	Jensen's inequality can be generalized to a sequence variables with weight. Consider a convex function evaluated at $x_1,x_2...$, $f(x_1),f(x_2)...f(x_n)$, with weight $w_1,w_2...$ with $\sum_{j\in\natu}w_j=1$, where
+	$$
+		\sum_{j\in\natu}w_j f(x_j)<\infty \quad\text{and}\quad
+		\sum_{j\in\natu} f(w_jx_j)<\infty
+	$$
+	Then,
+	$$
+		\sum_{j\in\natu} f(w_jx_j)\leq\sum_{j\in\natu}w_j f(x_j)
+	$$
+\end{remark}
+
+\begin{remark}[$f''>0$]\rm\nextline
+	For single variable twice differentiable function, second derivative being non=negative implies convexity.
+\end{remark}
+
+
+\subsection{Completion of metric space}\label{completion of metric space}
+
+
+\begin{theorem}[Completion of metric space]\rm\nextline
+	Every metric space has a completion.
+
+\end{theorem}
+Idea of proof: First construct a space of Cauchy sequence and define a metric on this space, then show that the original space can be embedded to the space of Cauchy sequence as a dense subset by an isometry. Proof given step by step.\\
+\begin{lemma}[Step I:Space of Cauchy sequence]\rm\nextline
+	Let $(X,d)$ be a metric space. Let $C[X]$ denote set of all Cauchy sequence in $X$. Define equivalence relation $\sim$ on $C[X]$:
+	$x\sim y\iff \lim_{n\to\infty}d(x_n,y_n)=0$. Define set $X^*=\{[(x_n)],(x_n)\in C[X]\}$ and metric on this set $d^*((x_n),(y_n))=\lim_{n\to\infty}d(x_n,y_n)$. One can check that $d^*$ is indeed a well-defined metric on $X^*$
+\end{lemma}
+
+
+\subsection{\texorpdfstring{$L^p$}. space and \texorpdfstring{${l}^p$}. space}
+$L^p$ space and $\ell^p$ space are very important for both Lebesgue measure and also functional analysis. We shall fist introduce $\ell^p$ space by introducing its $p-norm$. Here the definition is valid on both $\real$ and $\comp$.
+
+\begin{definition}[p-norm,discrete]\rm\nextline
+	Let $p\in\real$ with $1\leq p\leq\infty$. \\
+	For $p<\infty$,we define p-norm of sequence $\sequ{x_n}$ to be:
+	$$
+		\norm{\sequ{x_n}}_\infty\equiv\left(\sum_{s=1}^\infty|x_n|^p\right)^{1/p}
+	$$
+	And for when "$p=\infty$" the p-norm becomes $\infty$-norm, defined as
+	$$
+		\norm{\sequ{x_n}}_p\equiv\sup_{n\in\natu}|x_n|
+	$$
+	And $\ell^p$ space is defined to be the set of all sequences with finite p-norm:
+	$$
+		\ell^p\equiv\left\{\sequ{x_n}:\norm{\sequ{x_n}}_p<\infty\right\}
+	$$
+\end{definition}
+
+\begin{definition}[p-norm,continuous]\rm\nextline
+	Let $p\in\real$ with $1\leq p\leq\infty$. Again,$\infty$ gives supremum.(why?)\\
+	Consider measurable functions \func{f}{[a,b]}{\real}.\\
+	For $p<\infty$,we define p-norm of function $f$ to be:
+	$$
+		\norm{f}_p\equiv\left(\int_a^b{|f(x)|}^p dx \right)^{1/p}
+	$$
+	And for when "$p=\infty$" the p-norm again becomes $\infty$-norm, defined as
+	$$
+		\norm{f}_\infty\equiv\sup_{n\in[a,b}|f(x)|
+	$$
+	And $L^p$ space is defined to be the set of measurable all functions with finite p-norm from $[a,b]$ to $\real$ or $\comp$:
+	$$
+		L^p\equiv\left\{f:\norm{f}_p<\infty\right\}
+	$$
+\end{definition}
+
+\begin{remark}\rm\nextline
+	There are very typical $\ell^p$ spaces, like
+	\begin{itemize}
+		\item $\ell^1$, space of absolutely convergent sequences
+		\item $\ell^2$, gives a set of square-summable sequences, forms a Hilbert space
+		\item $\ell^\infty$, set of all bounded sequences.
+	\end{itemize}
+
+\end{remark}
+
+\end{document}

@@ -1,0 +1,163 @@
+\documentclass{article}
+
+\input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/commands.tex}
+\input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/theoremstyle.tex}
+\usepackage{tikz}
+
+\title{Preliminaries}
+
+\date{\today}
+
+\begin{document}
+% \author{\aut}
+\maketitle
+
+\section{Preliminaries}
+In this course, we use network and graphs interchangeably. A graph/network is a pair $G=(V, E)$, where $E \subseteq V \times V$. An edge is thus a pair $(u,v) \in E$. 
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.2, every node/.style={circle, draw, minimum size=0.5cm}]
+  \node (A) at (0,0) {1};
+  \node (B) at (2,0) {3};
+  \node (C) at (1,1) {2};
+  \node (D) at (1,-1) {4};
+  \node (E) at (1,-2) {5};
+  
+  % \draw (A) -- (B) node[midway, below] {Edge 1};
+  % \draw (B) -- (C) node[midway, right] {Edge 2};
+  % \draw (A) -- (C) node[midway, above, sloped] {Edge 3};
+  \draw (A) -- (B) ;
+  \draw (B) -- (C) ;
+  \draw (A) -- (C) ;
+  \draw (B) -- (D) ;
+  \draw (A) -- (D) ;
+  \draw (E) -- (D) ;
+\end{tikzpicture}
+    \caption{A graph with $|V|=5$}
+    \label{fig: example graph}
+\end{figure}
+
+\begin{definition}
+    A \textbf{path} in a graph is an alternating sequence of vertices and edges given by 
+    $$
+    \mathcal{P} = (v_0, e_1, v_1, e_2, \ldots, e_n,v_n)
+    $$
+    If there is a path between every pair of vertices, the graph is called \textbf{connected}. 
+\end{definition}
+
+\subsection{Representations} 
+
+In this course, we use the adjacency matrix to represent graphs.  
+
+\begin{definition}
+    The \textbf{adjacency matrix} of a graph $G=(V,E)$ is a $n\times n$ matrix $A$ with each entry $(A)_{uv}$ for each pair of vertices $(u,v)\in E$ defined as:
+    \begin{singlespace}
+        \begin{equation*}
+         (A)_{uv} = \begin{cases}
+            1 & \mathrm{if} \ u\sim v \\
+            0 & \mathrm{otherwise}
+        \end{cases}
+    \end{equation*}
+    \end{singlespace}
+    where we denote $n=|V|$.
+\end{definition}  
+
+In the example above, the adjacency matrix is given by:
+
+\begin{equation*}
+        A=\begin{pmatrix}
+         0&  1&  1&  1& 0\\
+         1&  0&  1&  0& 0\\
+         1&  1&  0&  1& 0\\
+         1&  0&  1&  0& 1\\
+         0&  0&  0&  1& 0\\
+    \end{pmatrix}
+    % \caption{Adjacency matrix for $\mathcal{G}$}
+    \label{tab:adj}
+\end{equation*}
+
+
+Some commonly discussed (deterministic) graphs include
+\begin{itemize}
+    \item \textbf{The complete graph} has $\binom{n}{2}$ edges, with an adjacency matrix with all entries being $1$ except for the diagonal entries. 
+    \item \textbf{The} $k$\textbf{-partite graph} see \citep{DiestelReinhard2017GT}
+    \item \textbf{The star graph} is a $K_{1,k}$ partite graph, with $v_1$ being the central vertex and $v_2, \ldots, v_{k-1}$ being the vertices attached to it. The 2-star is a triangle missing an edge. 
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+% Define the left set of vertices
+\foreach \x in {1,2,3,4}
+    \node[draw, circle] (\x) at (0, -\x) {\x};
+% Define the right set of vertices
+\foreach \y in {5,6,7}
+    \node[draw, circle] (\y) at (2, -\y+4) {\y};
+% Add edges between the sets
+\foreach \x in {1,2,3,4}
+    \foreach \y in {5,6,7}
+        \draw (\x) -- (\y);
+\end{tikzpicture}
+    \caption{A bipartite graph $K_{4,3}$}
+    \label{fig: example bipartite}
+\end{figure}
+
+
+They admit adjacency matrices with special structures.
+
+\subsection{Summary Statistics}
+When dealing with large graphs, it would be convenient to have simple statistics that reveals information about the underlying structure.  
+
+\begin{itemize}
+    \item  The \textbf{density} of a network is given by $\frac{2e}{n(n-1)}$
+    \item The \textbf{average degree} of a network is given by $\bar{d}=\frac{1}{n}\sum_{v\in V} \sum_{u\in V, u\neq v} a_{uv}$, where $a_{uv}$ is the entry in the adjacency matrix
+    \item The \textbf{degree sequence} of a given network on $V$ is the set of degrees $\{d(v): v\in V\}$
+    \item The \textbf{degree distribution} is a vector with each element $d_k=\frac{1}{n} |D_k|$, where $D_k$ is the set of vertices with degree $k$
+\end{itemize}
+\begin{remark}
+    In Sheet 1, we will see that given a sequence of non-negative integers, there is an algorithm (\textbf{Havel-Hakimi}) to determine if this sequence is a degree sequence. (if so we call it graphical)
+\end{remark}
+
+\begin{definition}
+    The \textbf{global clustering coefficient} (often abbreviated as just the clustering coefficient) is defined as
+    \begin{equation*}
+        C = \frac{\sum_{u,v,w \in V} a_{uv}a_{vw}a_{wu}}{\sum_{v \in V} d(v)(d(v)-1)}
+    \end{equation*}
+    where the numerator is $6\times$the number of triangles and the denominator is the number of paths of length $2$.
+\end{definition}
+
+ Note that if we divide both by $2$, then the denominator is the number of $2-$stars in the graph.
+
+A similar statistic is the local clustering coefficient for a particular vertex $v$.
+
+\begin{definition}
+    The \textbf{local clustering coefficient} of $v$ is given by:
+    \begin{equation*}
+        C(v) =  \frac{\sum_{u,w \in V} a_{uv}a_{vw}a_{wu}}{d(v)(d(v)-1)}
+    \end{equation*}
+    where the numerator is $2\times$the number of triangles and the denominator is the number of paths of length $2$ containing $v$.
+\end{definition}
+Note the denominator has an alternative form $\sum_{u, w \in N(v), u\neq w} a_{uv}a_{wv}$, where $N(v)$ denotes the neighbourhood of $v$; to see this, note we first sum over all pairs $(u,w)$ and then subtract the cases where they are equal, which gives $d(v)^2-d(v)$, as desired.
+
+Thus, the \textbf{average local clustering coefficient} is $\overline{C}=\frac{1}{|V|}\sum_{v \in V} C(v)$.
+
+Aside from statistics that arise from degrees of vertices, the global structure is also captured by paths in graphs. 
+
+\begin{definition}
+    Let $\ell(u,v)$ be the length of shortest path between two vertices. The \textbf{average shortest path} is given by:
+    $$
+    \ell = \frac{1}{|V|(|V|-1)} \sum_{u\neq v, u,v\in V} \ell (u,v)
+    $$
+\end{definition}
+
+\begin{remark}
+    We can compute $\ell(u,v)$ from the smallest power of adjacency matrix $A$ such that $(u,v)^{th}$ entry of $A^p$ is nonzero. (This can be shown by induction)
+\end{remark}
+
+
+\bibliographystyle{apalike}
+\bibliography{bibliography1}
+
+\end{document}

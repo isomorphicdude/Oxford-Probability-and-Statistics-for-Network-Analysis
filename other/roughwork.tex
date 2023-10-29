@@ -1,0 +1,264 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\graphicspath{ {./images/} }
+\usepackage{bbold}
+
+\begin{document}
+1
+
+MATH 60029/
+
+Functional Analysis
+
+MATH 70029.
+
+$\sim$ Week 1 - In -class note $\sim$
+
+P.F. Rodriguez
+
+There notes are meant to accompany the lecture notes.
+
+Organization, Wed 9-11 lecture. Room:? (now: 642)
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2023_01_13_25a63e982198ba4aaa42g-1}
+\end{center}
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2023_01_13_25a63e982198ba4aaa42g-1(1)}
+\end{center}
+
+90\%: exam.
+
+$\mathrm{OH}$ : Wed $\mathbb{1 - 1 2}$
+
+What is the course about?
+
+Roughly: soling linear. systems of the form
+
+where $A: X \rightarrow Y$ linear* , yer given, find solon $x \in X$ $X, Y(\infty-$ dimensional) linear spaces
+
+Dint. if $X_{1} t<\infty-$ dime $\rightarrow$ Linear Algebra $\infty$-dim: brings into play additional structure $\rightarrow F A$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2023_01_13_25a63e982198ba4aaa42g-1(2)}
+\end{center}
+
+completeness, compactness,
+
+\includegraphics[max width=\textwidth, center]{2023_01_13_25a63e982198ba4aaa42g-2}
+$i$ comport support
+
+$$
+\underbrace{-\Delta u}_{A}=f \quad \text { in } \mathbb{R}^{n}
+$$
+
+What space?
+
+Can take $(\rightarrow$ PrEs $) X=Y=C^{\infty}\left(\mathbb{R}^{n}\right):$ function spaces
+
+Adequate choice of space (to find a salk) necessary! + con vary: eg metic/ normed linear spare, locally comber
+
+In this course: linear space (almost) Plays: Banach spore or ever
+
+Hilbert space
+
+Running example: $L^{P}$-spaces (always keep in mind) of. MATH 50006 moles $\oint 2.6$
+
+$$
+\begin{aligned}
+(X, A, \mu) \text { measure space }
+\end{aligned}
+$$
+
+Choices of measure space:
+
+(0) $X=\{1,2, \ldots, n\}, \quad k=2^{x} \quad \mu(\{k\})=1 \quad \forall k=1, \ldots, n$ (extended to meanie by additivity) 3
+
+Every function $f: x \rightarrow \mathbb{R}$ is simple
+
+$$
+\begin{aligned}
+& f(x)=\sum_{k=1}^{n} f(k) 1_{\{k\}}(x) \quad \Lambda_{A}(x)=\left\{\begin{array}{l}1, \text { f } a e A \\0, \text { f } q \notin A\end{array}\right. \\
+& \rightarrow\|f\|_{p}^{p}=\int|f|^{p} d \mu=\sum_{k=1}^{n}|f(k)^{p} \underbrace{\int 1\{k\} d \mu}_{\mu(\{k\})=1}=\sum_{k-1}^{n}| f(k) \mid
+\end{aligned}
+$$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2023_01_13_25a63e982198ba4aaa42g-3}
+\end{center}
+
+\begin{enumerate}
+  \item Same with $X=\mathbb{N}-\{1,2,3, \ldots\} \rightarrow l^{p}$ "Lithe e-l-p" $\begin{array}{lll}\text { i. } \mu(\{R\})-1 & \forall k \in \mathbb{N} & \\ \text { extended to measure by } 8 \text {-additinty, ire. } & {\left[l_{p} \text { in notes }\right]} \\ l_{\infty}\end{array}$ $\mu(A)=\sum_{k \in A} \mu(k|k|)(=|A|) \quad \forall A \subset \mathbb{N}$.
+\end{enumerate}
+
+Now every $f: x \rightarrow \mathbb{R}$ of form
+
+$$
+f(x)=\sum_{k=1}^{\infty} f(k) 1\{k\}(x)
+$$
+
+Approximal by $f_{n} \leftrightarrow \sum_{t=1}^{n}+$ use monot. conv. to get
+
+$$
+\|f\|_{p}^{p}=\sum_{k=1}^{\infty}|f(k)|^{p}
+$$
+
+An element $f: x \rightarrow R \quad f=(f(1), f(2), \ldots)=(f, f, \ldots)=(f \ell)$ is a sequence! $\mid \mathbb{R}$-rolled) $\quad$ isp $\left|k_{2}\right|<\infty(p=\infty)$ $p^{P}=\left\{\right.$ all sequences $f=\left(f_{k}\right)_{k}$ sit. $\left.\sum_{k=1}^{\infty}\left|f_{k}\right|^{P}<\infty\right\}$
+
+$p=1$ : all abedutcly convergent series! 4
+
+Rink. add weights (Example 10): $\ell^{p}(\eta) \quad \eta_{j} \geqslant 0$ $D_{\text {fac }} \mu(\{j\})=\eta_{j} j_{j} \mathbb{N}$
+$\leadsto\|\|_{f^{p}(\eta)}=\sum_{j=1}^{\infty}\left|f_{j}\right|^{p} \eta_{j}$.
+
+(2) $X=\mathbb{R}^{n}$ for sane $n \in \mathbb{N} \quad A=\frac{P_{\text {orel }}}{L^{P}\left(\mathbb{R}^{n}\right)}$ b-algeba $\mu=$ Lebesgue measure $\quad \leadsto L^{P}\left(\mathbb{R}^{x}\right)$ $\|f\|_{p}=\left(\int||^{p}{ }^{p} \hat{\imath}_{\text {lateague }}\right)^{\frac{1}{p}}$ t more generally $X \subset \mathbb{R}^{n}$ open/closed $\leadsto L^{P}(X)$ eg. $m=1 \quad X=[0,1]$
+
+The
+
+$(X, A, \mu)$ any measure space. Then
+
+i) $\|f\|_{p}$ defines a norm $\forall p \in[1, \infty] \leadsto \Delta$ Dined called
+
+\includegraphics[max width=\textwidth, center]{2023_01_13_25a63e982198ba4aaa42g-4}
+$f g \in L^{1}(\mu)$ and $\|f g\|_{L^{1}(\mu)} \leqslant\|f\|_{L^{p}(\mu)}\|g\|_{L^{q}(\mu)}$
+
+iii) $L^{P}(\mu)$ is complete.
+
+Def A normed linear pace $(x,\|-\|)$ which is complete wart. the induced metric is cooled a Banach pore. 5
+
+Explanations.
+
+. $\|\cdot\|$ is a nom i see $D \cdot 3$ in notes
+
+\begin{itemize}
+  \item the induced metric is
+\end{itemize}
+
+$$
+f(x, y)=\|x-y\|
+$$
+
+It is a metric (Plo pe innokes), ie it satisfies Def 1
+
+\begin{itemize}
+  \item X complete wit. $g$ (Def. 8 : every Cauchy -sega. converge
+
+  \item Cauchy sega: $\left(f_{n}\right)_{n} \subset X$ st. $\forall \varepsilon>0 \quad \exists N \quad \forall m, m \geqslant N \quad \rho\left(f_{n}, f_{m}\right)<\varepsilon$.
+
+\end{itemize}
+
+Rok. Thu asserts $L^{P}(\mu)$ is a Banach space. Apply in case of (1) to get immediately all of Tho 2, Exerase 10-12; Prop 7, Example $12-14$, and much moe!
+
+Pf: ii) see eg. MATH 50006 moles Cor $2.42$
+
+i) easy : see MATH50006 Tam 2.39. For Minkowati, apply - Holder as follows
+
+$$
+\|f+g\|_{p}^{p} \leq \Delta_{\text {inc. }} \leq|f||f+g|^{p-1} d \mu+\int|g||f+g|^{p-1} d \mu
+$$
+
+$\sum_{\operatorname{exps}}^{p, q=\frac{p}{p-1}} \stackrel{H(\| d e r}{\leqslant}\left(\|f\|_{p}+\left\|_{g}\right\|_{p}\right) \underbrace{\left\||f+g|^{p-1}\right\|_{q}}_{\|f+g\|_{p}^{p-1}}$
+
+iii) MATH 50006 Lemma 243
+
+Further examples
+
+(3) $C([a, b])=\{f:[a, b] \rightarrow \mathbb{R}$ cont. $\}$ with $\|f\|_{\infty}=\underset{x \in[a, b]}{ } \sup _{x} \mid$
+
+(4) $C^{r}([a, b])=r$ - lies cont. diffabble $\left(C=C^{0}\right)$
+
+$$
+\|f\|_{r, \infty}=\operatorname{skp}_{x \in[a, b]}\left|f^{(\xi)}(x)\right|
+$$
+
+\begin{center}
+\includegraphics[max width=\textwidth]{2023_01_13_25a63e982198ba4aaa42g-5}
+\end{center}
+
+6
+
+Proposition $\left(C,\|\cdot\|_{\infty}\right) C=C[0,1]$ is complete. ( $\left.\begin{array}{c}\text { Pop } 8_{\text {in }} \\ \text { macs }\end{array}\right)$
+
+General staked to show completeness of $(X, 11 \cdot \|)$ (sec eg Ex d2-14 or $15-17$ in notes)
+
+For a given CS $\left(f_{n}\right)$ in $X$
+
+\begin{enumerate}
+  \item find candidate limit $f$
+
+  \item show $\|f w-f\| \rightarrow 0, n \rightarrow \infty$
+
+  \item show $f \in X$.
+
+\end{enumerate}
+
+Proof 1) let $\left(f_{u}\right) \subset C$ be CS, ie. $\forall \varepsilon>0 \exists N$
+
+$$
+\begin{aligned}
+& \forall m, n \geqslant N:\left\|f_{n}-f_{n}\right\|_{\infty}<\varepsilon \\
+& \text { But }\left\|f_{n}-f_{m}\right\|_{\infty} \geqslant\left|f_{n}(x)-f_{m}(x)\right| \quad \forall x \in[0,1] \text { so }\left(f_{n}(x)\right) \text {. } \\
+& \text { is CS in } \mathbb{R} \forall_{x} \text {. Since } \mathbb{R} \text { is complete it has alimit. } \\
+& \text { Call it } f(a)=\lim _{n \rightarrow \infty} f_{n}(a)
+\end{aligned}
+$$
+
+e) $\left|f_{n}(a)-f_{m}(a)\right|<\varepsilon \quad \forall n, m \geqslant N, \forall \in[0,1]$ (since $\left(f_{n}\right) C S$ )
+
+$$
+\begin{aligned}
+& \rightarrow \lim _{n \rightarrow \infty} \downarrow \leqslant \varepsilon \\
+& \left|f(a)-f_{m}(a)\right|
+\end{aligned}
+$$
+
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item To show feC med to argue $\forall x, \varepsilon>0$
+\end{enumerate}
+
+(1) $\quad \exists \delta:|x-y|<\delta \rightarrow|f(x)-f(y)|<\varepsilon$
+
+$\varepsilon / 3$ argument, wale for any $m \in \mathbb{N}$ and $2, y \in[0$,$] ,$
+
+(2) $|f(x)-f(y)| \leqslant\left|f(a)-f_{n}(x)\right|+\left|f_{n}(x)-f_{n}(y)\right|+\mid \ln _{n}(y)-$ $f(y) \mid$ 7
+
+First, wing 2), pick n sit. $\left\|f_{n}-f\right\|_{\infty}<\frac{\varepsilon}{3}$, whence
+
+(3) $\left|f(x)-f_{n}(x)\right|,\left|f(y)-f_{n}(y)\right|<\frac{\varepsilon}{3} \quad \forall x, y \in[0,1]$
+
+Then, with $n$ now fixed, wing cont. of $f_{n}$, pick $\delta$ st.
+
+(4) $\quad\left|f_{n}(x)-f_{n}(y)\right|<\frac{\varepsilon}{3}$ whenever $|x-y|<\delta$
+
+Substitute (4), (3) into (2) to get (1). $\square$
+
+Rok: - 3) is well-known (Analysis I-II) $\lim _{n}\left\|f_{h}-f\right\|_{\infty}=0$ is precisely the uniform convergence of $(f u)$ towards f. So 3) asserts that the uniform " limit of a sequence of continuous functions is again continuo
+
+\begin{itemize}
+  \item $f_{n}(x)=x^{n}$ is not a CS in $\left(C,\|\cdot\|_{\infty}\right)$ $\stackrel{1}{1}_{1}$ Get $f_{n}(x) \rightarrow f(x)=1_{\{1\}}(x), m \rightarrow \infty$ (paintwise limits are not always continuous)
+
+  \item if instead consider $f_{n}(x)=x^{n}$ as elements of $L^{1}\left([0,1]^{\prime}\right.$, [that's ok broause
+
+\end{itemize}
+
+$$
+\left.\int_{0}^{1} f_{n} d x=\left.\frac{x^{n+1}}{m+1}\right|_{0} ^{1}=\frac{1}{m+1}<\infty\right]
+$$
+
+Then $\left(f_{n}\right) \subset L^{1}([0,1])$ is a CS (exercise) and converges by The $p .4, \mathrm{iin})$. The limit $\left(\operatorname{in} L^{1}\right)$ is $f=0$ :
+
+$$
+\left\|f_{n}\right\|_{\left.L^{4}[0,1]\right)}=\left\|f_{n}-O\right\|_{L^{1}([0,1])}=(n+1)^{-1} \underset{n \rightarrow \infty}{\rightarrow} \text {. }
+$$
+
+
+\end{document}

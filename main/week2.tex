@@ -1,0 +1,134 @@
+\documentclass{article}
+
+\input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/commands.tex}
+\input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/theoremstyle.tex}
+\usepackage{tikz}
+
+\title{Week 2 Random Graphs}
+
+\date{\today}
+
+\begin{document}
+% \author{\aut}
+\maketitle
+
+\section{Random Graphs}
+In order to judge whether a network summary is ”unusual” or whether a motif (pattern) is ”frequent”, there is an underlying assumption of randomness in the network. The randomness can be intrinsic to the network, and/or may stem from errors in the data.  
+
+With the random models, we would like to compute important statistics such as \textbf{the degree distribution}, \textbf{the clustering coefficient}, and \textbf{the number of triangles}.
+
+\subsection{Erd\H{o}s-R\'{e}nyi}
+The first configuration of Erd\H{o}s-R\'{e}nyi random graphs specifies edges with a probability $p$. Namely, for $V=\{1,2,\ldots,n\}$, the probability of an edge between $i$ and $j$ is $p$ for all $i,j\in V$.
+\begin{definition}
+    A random graph $G(n,p)$ is a graph on $n$ vertices where the adjacency matrix satisfies
+    \begin{equation*}
+        \Pr(A_{ij}=1)=p
+    \end{equation*}
+    The edges are independent of each other.
+\end{definition}
+
+In this case, the expected number of edges is $m=\binom{n}{2}p$ and the degree of a vertex $v$ follows a binomial distribution with parameters $n-1$ and $p$:
+$$
+\Pr(d(v)=k)=\binom{n-1}{k}p^k(1-p)^{n-1-k}
+$$
+
+Also, by independence, we can compute the number of triangles by:
+\begin{align*}
+    \mathbb{E}[T]&=\sum_{i<j<k} \mathbb{E}[A_{ij}A_{jk}A_{ki}]\\
+    &=\binom{n}{3}p^3\\
+\end{align*}
+
+Thus, the expected (global) clustering coefficient is
+\begin{align*}
+    \mathbb{E}[C]&=\frac{\mathbb{E}[\sum_{u,v,w \in V} a_{uv}a_{vw}a_{wu}]}{\mathbb{E}[\sum_{v\in V} d(v)(d(v)-1)]} \\
+    &= \frac{6p^3 \binom{n}{3}}{n ((n-1)p(1-p) + (n-1)^2p^2 -(n-1)p)}\\
+    &=p
+\end{align*}
+
+
+An alternative configuration is to specify the number of edges $m$ and choose uniformly from all graphs with $m$ edges. 
+
+\begin{definition}
+    A random graph $G(n,m)$ is a graph on $n$ vertices where the adjacency matrix satisfies
+    \begin{equation*}
+        \Pr(A_{ij}=1)=\frac{m}{\binom{n}{2}}
+    \end{equation*}
+    The edges are independent of each other.
+\end{definition}
+
+The degree distribution here is hypergeometric:
+$$
+\Pr(d(v)=k)=\frac{\binom{n-1}{k}\binom{\binom{n}{2}-k}{m-k}}{\binom{\binom{n}{2}}{m}}
+$$
+
+where $k=0,1,\ldots,\min(n-1,m)$. To see this, note that we can choose $k$ vertices to be connected to $v$ among $V\setminus \{v\}$, and then choose $m-k$ edges from the remaining $\binom{n}{2}-k$ edges to connect the rest pairs of vertices. 
+
+The expected number of triangles is:
+\begin{align*}
+    \mathbb{E}[T]&=\sum_{i<j<k} \mathbb{E}[A_{ij}A_{jk}A_{ki}]\\
+    &=\binom{n}{3}\frac{m(m-1)(m-2)}{\binom{n}{2}\left(\binom{n}{2}-1\right)\left(\binom{n}{2}-2\right)}\\
+\end{align*}
+
+this is due the dependence between the edges, so for a fixed triplet $(i,j,k)$, we first choose the edge $(i,j)$ with probability $\frac{m}{\binom{n}{2}}$, then $(j,k)$ with probability $\frac{m-1}{\binom{n}{2}-1}$, and finally $(k,i)$ with probability $\frac{m-2}{\binom{n}{2}-2}$.  
+
+The expected (global) clustering coefficient can be computed similarly, which we omit here.  
+
+\subsection{Small World}
+
+In reality, it is often found that the average distance between two vertices is small, but the clustering coefficient is large. This is known as the \textbf{small world phenomenon}, which cannot be modelled (properly) by the Erd\H{o}s-R\'{e}nyi random graphs.  
+
+\subsubsection{Watts-Strogatz}
+The \textbf{Watts-Strogatz model} is a random graph constructed with the following steps:
+\begin{itemize}
+    \item Start with a ring of $n$ vertices, where each vertex is connected to its $k$ nearest neighbours on each side (hence $2k$ edges per vertex)
+    \item Choose a vertex and rewire each of its edges incident to its clock-wise neighbour with probability $p$.
+    \item Repeat the previous process for all vertices (moving in the clock-wise direction).
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/figures/Week2/strogatz.png}
+    \caption{Watts-Strogatz model (\href{https://www.kth.se}{source})} % should include the precise source
+    \label{fig:watts-strogatz}
+\end{figure}
+
+When $n>2k$, there are in total $nk$ edges in the network, which remains constant throughout the rewiring process.
+
+\begin{remark}
+    Instead of a ring in with $n$ equal spaced vertices $\real^2$, we can also start with a torus in higher dimensions. For example, in $\real^3$, we fold a square lattices of $n^2$ vertices into a torus.
+\end{remark}  
+
+One of the currently most used modification of Watts-Strogatz is the \textbf{Newman-Moore-Strogatz} model, where instead of rewiring, we introduce random shortcuts:
+\begin{itemize}
+    \item Start with a ring of $n$ vertices, where each vertex is connected to its $k$ nearest neighbours.
+    \item Add shortcut between $v$ and $u\notin \text{bd}(v)$ with probability $p$.
+    \item Repeat for some iterations.
+\end{itemize}
+
+This gives an exact degree distribution with $d(v) \sim 2k+\mathrm{Binom}(n-2k-1, p)$.
+
+However, the degree distribution of real world networks often follows a power law, i.e. $p(d)\sim d^{-\alpha}$ for some $\alpha>0$.  
+
+\begin{remark}
+    Intuitively, the power-law distribution says that vertices tend to attach to "popular" vertices.
+\end{remark}
+
+\subsection{Barab\'{a}si-Albert}
+
+\subsection{Configuration Model}
+
+\subsection{Chung-Lu}
+
+\subsection{Geometric Random Graphs}
+
+\subsection{Expontnial Random Graph Models}
+
+
+
+
+\newpage
+
+
+
+
+\end{document}

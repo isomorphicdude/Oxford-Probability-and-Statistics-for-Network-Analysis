@@ -1,0 +1,102 @@
+\documentclass{article}
+
+\input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/commands.tex}
+\input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/theoremstyle.tex}
+\usepackage{tikz}
+
+\title{Week 3 Stein's Method for Graphs}
+
+\date{\today}
+
+\begin{document}
+% \author{\aut}
+\maketitle
+
+\section{Stein's Method for Graphs}
+
+\subsection{Motivation}
+Consider the problem of counting the number of triangles in the Erd\H{o}s-R\'{e}nyi random graph $G(n,p)$. We know that the expected number of triangles is $\binom{n}{3}p^3$. However, we would like to know the (approximate) distribution of the number of triangles. Central limit theorem is not applicable here, since the number of triangles is not a sum of independent random variables: 
+\begin{equation*}
+    T=\sum_{i<j<k} A_{ij}A_{jk}A_{ki}
+\end{equation*}
+
+the random variable $X_{i,j,k}=A_{ij}A_{jk}A_{ki}$ is not independent of one another as they may share edges.  
+
+Stein's Method allows us to approximate the distribution of $T$ by another known distribution and we also get an idea of convergence rate.  
+
+We introduce the general idea of Stein's Method and then consider the cases of a Poisson approximation and a normal approximation.
+
+\subsection{Basic Ingredients}
+
+The content of this section is based on \citep{anastasiou2022steins}.
+
+The main idea works as follows: if we have a random variable $Z$ following an unknown distribution $Q$, we can show it satisfies some equation $\mathbb{E}[(\mathcal{T}f (Z))]=0, \forall f$ if and only if it follows distribution $P$. In particular, it is approximately $P$-distributed if we can show that $\mathbb{E}[(\mathcal{T}f (Z))]\approx 0$ for all $f$.  
+
+More formally, we set up Stein's method for a target probability measure $P$ and any other measure $Q$. Let $\mathcal{G}(\mathcal{T})$ be a set of functions determined by a linear operator $\mathcal{T}$.  
+
+\begin{definition}
+    The \textbf{Stein operator} $\mathcal{T}$ is a linear operator such that
+    \begin{center}
+        $P=Q$ if and only if $\mathbb{E}_{X\sim Q}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$.
+    \end{center}
+    The set of functions $\mathcal{G}(\mathcal{T})$ such that $\mathbb{E}_{X\sim P}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$ is called the \textbf{Stein class} of $\mathcal{T}$.
+\end{definition}
+
+The equation $\mathbb{E}_{X\sim Q}[(\mathcal{T}g(Z))]=0$ is called the \textbf{Stein identity}.  
+
+With this set up, we can define the how close is $Z$ a $P$-distributed by introducing a measure for distance using the characterization above:
+
+\begin{definition}
+    The \textbf{Stein discrepancy} between $P$ and $Q$ is defined as
+    \begin{equation*}
+        \mathcal{D}(Q, \mathcal{T}, \mathcal{G})=\sup_{g \in \mathcal{G}(\mathcal{T})} \|\mathbb{E}_{X\sim Q}[(\mathcal{T}g(Z))]\|^*
+    \end{equation*}
+    for some norm $\|\cdot\|^*$.
+\end{definition}
+
+The closer this discrepancy is to zero, the closer $Q$ is to $P$. 
+
+Usually, this discrepancy is determined by various types of integral probability metrics (IPMs).
+
+\begin{definition}
+    An \textbf{Integral Probability Metric} is a function $d_{\mathcal{H}}$, s.t. 
+    \begin{equation*}
+        d_\mathcal{H}(P, Q) = \sup_{h \in \mathcal{H}} |\mathbb{E}_{X\sim P}[h(X)] - \mathbb{E}_{X\sim Q}[h(X)]|
+    \end{equation*}
+    The set $\mathcal{H} \subset L^1(P) \cap L^1(Q)$ is the class of test functions; if such function $d_\mathcal{H}$ is a metric, then $\mathcal{H}$ is called \textbf{measure determining}.
+\end{definition}
+
+An important example is the total variation distance, which we will use in the next section.  
+
+\begin{example}
+    The \textbf{total variation distance} is an IPM with $\mathcal{H}=\{1_A: A \in \mathcal{F}\}$, where $\mathcal{F}$ is the $\sigma$-algebra of events. The total variation distance is defined as  
+    \begin{equation*}
+        d_{TV}(P, Q) = \sup_{A \in \mathcal{F}} |P(A) - Q(A)|
+    \end{equation*}
+    It also has an alternative representation with $\mathcal{H} = \{f: \|f\|_\infty \leq 1\}$:
+    \begin{equation*}
+        d_{TV}(P, Q) = \frac{1}{2} \sup_{f \in \mathcal{H}}\left|\int f dP - \int f dQ\right|
+    \end{equation*}
+    A similar representation when the distributions admit Radon-Nikodym derivatives $\frac{dP}{d\mu}=p$ and $\frac{dQ}{d\mu}=q$ with respect to a $\sigma$-finite measure $\mu$:
+    \begin{equation*}
+        d_{TV}(P, Q) = \frac{1}{2} \int |p - q| d\mu
+    \end{equation*}
+\end{example}
+
+The proof for the second representation can be found \href{https://math.stackexchange.com/questions/3287889/show-that-the-total-variation-distance-of-probability-measures-mu-nu-is-equa}{here} and the other can be found \href{https://math.stackexchange.com/questions/1481101/definition-of-the-total-variation-distance-vp-q-frac12-int-p-qd-n}{here}.  
+
+
+
+
+\subsection{The Stein-Chen method for Poisson approximation}  
+
+
+
+
+
+\bibliographystyle{apalike}
+\bibliography{bibliography3}
+
+
+
+\end{document}

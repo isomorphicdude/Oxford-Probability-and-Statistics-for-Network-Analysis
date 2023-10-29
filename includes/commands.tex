@@ -1,0 +1,190 @@
+\usepackage{geometry}
+\geometry{left=3cm,right=3cm,top=2cm,bottom=2cm}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage[framemethod=default]{mdframed}% was framemethod=TikZ
+\usepackage{mathrsfs}
+\usepackage{comment}
+\usepackage{enumerate}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{hyperref}
+\hypersetup{
+colorlinks=true,
+allcolors=orange
+}
+\usepackage{cleveref}
+
+\usepackage[most]{tcolorbox}
+\usepackage{ragged2e}
+\usepackage{todonotes}
+\usepackage{cleveref}
+\usepackage{mathtools}
+\usepackage{svg, float}
+
+\usepackage[sectionbib]{natbib}
+\usepackage{chapterbib}
+
+
+\definecolor{astral}        {RGB}{46,116,181}
+\definecolor{cb-blue}       {RGB}{70, 130, 180}
+\definecolor{orange}        {RGB}{214,150, 92}
+
+
+% Name of the author!!!
+\newcommand{\aut}{AUTHOR}
+
+%
+\titleformat*{\section}{\LARGE \bfseries}
+\titleformat*{\subsection}{\Large \bfseries}
+\titleformat*{\subsubsection}{\Large \bfseries}
+% \titleformat*{\paragraph}{\large \bfseries}
+\titleformat*{\subparagraph}{\large \bfseries}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% General 
+\newcommand{\nextline}{\hfill\break}
+\newcommand{\nl}{\nextline\rm}
+% \newcommand{\placeholder}{{\bf\color{red} NOOOOOOT COMPLEEEEEEET! COOOOOOOM BAAAAAACK!!!}}
+\newcommand{\placeholder}{\todo{NOOOOOOT COMPLEEEEEEET! COOOOOOOM BAAAAAACK!!!}}
+\newcommand{\inc}{{\color{red}Incomplete!!!}}
+
+\DeclareMathOperator*{\esssup}{ess\,sup}
+
+\newcommand{\defeq}{\stackrel{\text{def.}}{=}}
+% FA and LA
+% inner product: \inne{a}{b}
+\newcommand{\inne}[2]{\left<{#1},{#2}\right>}
+
+% norm: \norm{a}
+\newcommand{\norm}[1]{\left\|{#1}\right\|}
+
+% Curly H
+\newcommand{\hbs}{$\mathscr{H}$ }
+\newcommand{\hbp}{\mathscr{H}}
+
+% Dual : \dual{x}
+\newcommand{\dual}[1]{{#1}^*}
+
+% Sequence from 1  to infty: \sequ{x_n}
+\newcommand{\sequ}[1]{\left({#1}\right)_1^\infty}
+
+% f: A-> B \func{f}{A}{B}
+\newcommand{\func}[3]{${#1}:{#2}\xrightarrow{}{#3}$}
+
+% interior
+\newcommand{\interior}{\textrm{int}}
+
+% Bounded linear funcs
+\newcommand{\blf}[2]{\mathcal{L}({#1},{#2})}
+
+\newcommand{\prf}{\textit{proof}:   }
+
+
+
+% Fields 
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\qq}{\mathbb{Q}}
+\newcommand{\comp}{\mathbb{C}}
+\newcommand{\inte}{\mathbb{Z}}
+\newcommand{\natu}{\mathbb{N}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+% If theoremstyle is n
+    % Theorems
+    % \newtheorem{example}{Example}[subsection]
+    % \newtheorem{definition}[example]{Definition}
+    % \newtheorem{proposition}[example]{Proposition}
+    % \newtheorem{remark}[example]{Remark}
+    % \newtheorem{theorem}[example]{Theorem}
+    % \newtheorem{lemma}[example]{Lemma}
+    % \newtheorem{corollary}[example]{Corollary}
+
+
+% for numbering the theorems            
+% \theoremstyle{plain}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newtheorem{theorem}{Theorem}[section]
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{proposition}[theorem]{Proposition}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % the following are not in italics
+% \theoremstyle{definition}
+% \newtheorem{definition}[theorem]{Definition}
+% \newtheorem{example}[theorem]{Example}
+% \newtheorem{remark}[theorem]{Remark}
+% \newtheorem{claim}[theorem]{Claim}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% proof box
+\newtcbtheorem[no counter]{pf}{Proof}{
+  enhanced,
+  rounded corners,
+  attach boxed title to top,
+  colback=white,
+  colframe=black!25,
+  fonttitle=\bfseries,
+  coltitle=black,
+  boxed title style={
+    rounded corners,
+    size=small,
+    colback=black!25,
+    colframe=black!25,
+  } 
+}{prf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% extra content box to put in contents not covered in the lecture notes
+% use the command \begin{unexaminable}
+\newmdenv[skipabove=7pt, skipbelow=7pt,
+    rightline=false, leftline=false, topline=false, bottomline=false,
+    backgroundcolor = gray!10,
+    innerleftmargin=1in, innerrightmargin=1in, innertopmargin=5pt,
+    leftmargin=-1in, rightmargin=-1in, linewidth=4pt,
+    innerbottommargin=5pt]{unexamBox}
+\newenvironment{unexaminable}{\begin{unexamBox}}{\end{unexamBox}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% clever ref settings
+\crefname{lemma}{lemma}{lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{theorem}{theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% formatting 
+% https://tex.stackexchange.com/questions/217497/aligning-stackrel-signs-beneath-each-other-using-split
+\newlength{\leftstackrelawd}
+\newlength{\leftstackrelbwd}
+\def\leftstackrel#1#2{\settowidth{\leftstackrelawd}%
+{${{}^{#1}}$}\settowidth{\leftstackrelbwd}{$#2$}%
+\addtolength{\leftstackrelawd}{-\leftstackrelbwd}%
+\leavevmode\ifthenelse{\lengthtest{\leftstackrelawd>0pt}}%
+{\kern-.5\leftstackrelawd}{}\mathrel{\mathop{#2}\limits^{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% colors
+\usepackage{xcolor}
+\definecolor{royal}{RGB}{0,35,102}
+\definecolor{navyblue}{cmyk}{1,0.5,0,0.3}
+\definecolor{c0}{cmyk}{0.83, 0.34, 0, 0.29}
+\definecolor{c1}{cmyk}{0, 0.5, 0.95, 0}
+\definecolor{c2}{cmyk}{0.72, 0, 0.72, 0.37}
+\definecolor{skyblue}{cmyk}{0.6,0.16,0,0}
+\definecolor{lightgreen}{cmyk}{0.5,0,0.5,0}
+\definecolor{pastelgreen}{cmyk}{0.25,0,0.25,0}
+\definecolor{mossgreen}{cmyk}{0.64,0.4,1,0}
+\definecolor{reddish}{cmyk}{0, 0.64, 0.64, 0.2}
+\definecolor{one}{cmyk}{0, 0.6, 0.46, 0.69}
+\definecolor{two}{cmyk}{0.11, 0, 0.72, 0.16}
+\definecolor{imperialorange}{RGB}{255,134,24}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% spacing
+\onehalfspacing
+\RaggedRight
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
