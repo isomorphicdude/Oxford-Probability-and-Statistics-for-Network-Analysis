@@ -4,6 +4,6 @@ This repository contains the (unofficial) lecture notes for the course SC2 Proba
 
 Term: Michaelmas 2023-2024
 
-To compile the notes, run `compile_pdf.sh` in the root directory. The script requires `pdflatex`.  
+To compile the notes, run `compile_pdf.sh` in the root directory, which will create the output `output/main.pdf`. The script requires `pdflatex`.  
 
 The `theoremstyle.tex` is adapted from the [Imperial-Probability-Theory](https://github.com/Samuel-CHLam/Imperial-Probability-Theory) notes, which is subject to [Creative Common Attribution 4.0 International (CC BY 4.0) license](https://github.com/Samuel-CHLam/Imperial-Probability-Theory#license)
