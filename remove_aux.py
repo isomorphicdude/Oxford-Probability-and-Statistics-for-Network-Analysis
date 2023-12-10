@@ -4,7 +4,7 @@ import logging
 
 to_remove = ['aux', 'gz', 'fls', 'log', 'out', 
              'toc', 'blg', 'fdb_latexmk', 
-            'bcf', 'xml', 'dvi', 'pdf', 'bbl']
+            'bcf', 'xml', 'dvi', 'bbl']
 
 logging.basicConfig(
                     level=logging.INFO,
@@ -19,7 +19,17 @@ if __name__ == "__main__":
             for dir in aux_list:    
                 try:
                     os.remove(dir)
-                    logging.info(f"Removed {dir}")
+                    logging.info(f"Removed: {dir}")
                 except:
-                    logging.warning(f"Failed to remove {dir}")
+                    logging.warning(f"Failed to remove: {dir}")
+                    
+        # during editing, pdf is produced in main/, which should be removed
+        pdf_list = glob.glob(f"main/*.pdf", recursive = True)
+        for dir in pdf_list:    
+            try:
+                os.remove(dir)
+                logging.info(f"Removed PDF file: {dir}")
+            except:
+                logging.warning(f"Failed to remove {dir}")
+                
         logging.info("Done")
