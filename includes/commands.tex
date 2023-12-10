@@ -2,7 +2,7 @@
 \geometry{left=3cm,right=3cm,top=2cm,bottom=2cm}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amsfonts, amssymb, amsthm}
-\usepackage[framemethod=default]{mdframed}% was framemethod=TikZ
+% \usepackage[framemethod=default]{mdframed}% was framemethod=TikZ
 \usepackage{mathrsfs}
 \usepackage{comment}
 \usepackage{enumerate}
@@ -137,18 +137,8 @@ allcolors=orange
     colframe=black!25,
   } 
 }{prf}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% extra content box to put in contents not covered in the lecture notes
-% use the command \begin{unexaminable}
-\newmdenv[skipabove=7pt, skipbelow=7pt,
-    rightline=false, leftline=false, topline=false, bottomline=false,
-    backgroundcolor = gray!10,
-    innerleftmargin=1in, innerrightmargin=1in, innertopmargin=5pt,
-    leftmargin=-1in, rightmargin=-1in, linewidth=4pt,
-    innerbottommargin=5pt]{unexamBox}
-\newenvironment{unexaminable}{\begin{unexamBox}}{\end{unexamBox}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % clever ref settings
 \crefname{lemma}{lemma}{lemmas}
 \Crefname{lemma}{Lemma}{Lemmas}
@@ -184,7 +174,7 @@ allcolors=orange
 \definecolor{imperialorange}{RGB}{255,134,24}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % spacing
-\onehalfspacing
+% \onehalfspacing
 \RaggedRight
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

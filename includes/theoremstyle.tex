@@ -2,6 +2,7 @@
 
 \usepackage{amsfonts, amsmath, amssymb, amsthm, thmtools, bm}
 \usepackage{avant} % Use the Avantgarde font for headings
+\usepackage[most]{tcolorbox}
 
 % Boxed/framed environments
 \newtheoremstyle{royalnumbox}%
@@ -9,10 +10,10 @@
 {0pt}% Space below
 {\normalfont}% Body font
 {}% Indent amount
-{\small\bf\sffamily\color{royal}}% Theorem head font
+{\small\bf\color{royal}}% Theorem head font
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
-{\sffamily \color{royal} 
+{ \color{royal} 
     \thmname{#1} 
     \thmnumber{#2} \thmnote{\bfseries\color{black}---\nobreakspace#3.}} % Optional theorem note
 \renewcommand{\qedsymbol}{$\blacksquare$}% Optional qed square
@@ -22,10 +23,10 @@
 {5pt}% Space below
 {\normalfont}% Body font
 {} % Indent amount
-{\small\bf\sffamily}% Theorem head font
+{\small\bf}% Theorem head font
 {\;}% Punctuation after theorem head
 {0.25em}% Space after theorem head
-{\sffamily
+{
     \thmname{#1}
     \thmnumber{#2}
     \thmnote{---\nobreakspace#3.}}% Optional theorem note
@@ -52,63 +53,185 @@
 
 \numberwithin{equation}{section}
 
-\RequirePackage[framemethod=default]{mdframed}
+\RequirePackage[framemethod=TikZ]{mdframed}
+
+\newcounter{definition}
+
+% % Definition box
+% \newtcolorbox{dBox}{
+%   enhanced,
+%   breakable,
+%   arc=5pt, outer arc=5pt,
+%   colback=reddish!10, 
+%   colframe=reddish,
+%   boxrule=1pt,
+%   left=5pt, 
+%   right=5pt, 
+%   top=5pt, 
+%   bottom=5pt,
+% %   skipabove=7pt, skipbelow=7pt
+% }
+
+
+
+% % Main Theorem box
+% \newtcolorbox{tBox}{
+%   enhanced,
+%   breakable,
+%   arc=5pt, 
+%   outer arc=5pt,
+%   colback=c0!10, 
+%   colframe=c0!10,
+%   boxrule=1pt,
+%   left=5pt, 
+%   right=5pt, 
+%   top=5pt, 
+%   bottom=5pt,
+% %   skipabove=7pt, skipbelow=7pt
+% }
+
+
+% % Lemma/Corollary/Proposition/Property box
+% \newtcolorbox{lBox}{
+%   enhanced,
+%   breakable,
+%   arc=5pt,
+%   outer arc=5pt,
+%   colback=c0!10,
+%   colframe=c0!10,
+%   boxrule=1pt,
+%   left=5pt,
+%   right=5pt,
+%   top=5pt,
+%   bottom=5pt,
+% %   skipabove=7pt, skipbelow=7pt
+% }
+
+% % Example/Remark/Exercise box
+% \newtcolorbox{exBox}{
+%   enhanced,
+%   breakable,
+%   arc=5pt, 
+%   outer arc=5pt,
+%   colback=mossgreen!10!white,
+%   colframe=mossgreen,
+%   boxrule=1pt,
+%   left=5pt,
+%   right=5pt,
+%   top=5pt,
+%   bottom=5pt,
+% %   skipabove=7pt, skipbelow=7pt
+% }
+
+% % Extra content box for contents not covered in the lecture notes
+% \newtcolorbox{unexamBox}{
+%   enhanced,
+%   breakable,
+%   arc=20pt, 
+%   outer arc=20pt,
+%   colback=gray!10,
+%   colframe=gray,
+%   boxrule=1pt,
+%   left=5pt, 
+%   right=5pt, 
+%   top=5pt, 
+%   bottom=5pt,
+% %   skipabove=7pt, skipbelow=7pt
+% }
 
 % Definition box
-\newmdenv[skipabove=7pt, skipbelow=7pt,
-rightline=false, leftline=true, topline=false, bottomline=false,
-backgroundcolor = reddish!10, 
-linecolor=reddish,
-innerleftmargin=5pt, innerrightmargin=30pt, innertopmargin=5pt,
-leftmargin=0cm, rightmargin=0cm, linewidth=4pt,
-innerbottommargin=5pt]{dBox}
+\newtcolorbox{dBox}{
+  enhanced,
+  breakable,
+  arc=5pt, outer arc=5pt,
+  colback=skyblue!10,  % Light blue
+  colframe=skyblue,    % Blue
+  boxrule=1pt,
+  left=5pt, 
+  right=5pt, 
+  top=5pt, 
+  bottom=5pt,
+}
 
 % Main Theorem box
-\newmdenv[skipabove=7pt, skipbelow=7pt,
-rightline=false, leftline=true, topline=false, bottomline=false,
-backgroundcolor=c0!10, 
-linecolor=c0,
-innerleftmargin=5pt, innerrightmargin=30pt, innertopmargin=5pt,
-leftmargin=0cm, rightmargin=0cm, linewidth=4pt, innerbottommargin=5pt]{tBox}
+\newtcolorbox{tBox}{
+  enhanced,
+  breakable,
+  arc=5pt, 
+  outer arc=5pt,
+  colback=yellow!10,   % Light yellow
+  colframe=yellow!80!black, % Dark yellow
+  boxrule=1pt,
+  left=5pt, 
+  right=5pt, 
+  top=5pt, 
+  bottom=5pt,
+}
 
 % Lemma/Corollary/Proposition/Property box
-\newmdenv[skipabove=7pt, skipbelow=7pt,
-rightline=false, leftline=true, topline=false, bottomline=false,
-backgroundcolor = c0!10, 
-linecolor=c0!80,
-innerleftmargin=5pt, innerrightmargin=30pt, innertopmargin=5pt,
-leftmargin=0cm, rightmargin=0cm, linewidth=4pt,
-innerbottommargin=5pt]{lBox}
+\newtcolorbox{lBox}{
+  enhanced,
+  breakable,
+  arc=5pt,
+  outer arc=5pt,
+  colback=orange!10,   % Light orange
+  colframe=orange!80!black, % Dark orange
+  boxrule=1pt,
+  left=5pt,
+  right=5pt,
+  top=5pt,
+  bottom=5pt,
+}
 
 % Example/Remark/Exercise box
-\newmdenv[skipabove=7pt, skipbelow=7pt,
-rightline=false, leftline=true, topline=false, bottomline=false,
-backgroundcolor = mossgreen!10!white,
-linecolor = mossgreen,
-innerleftmargin=5pt, innerrightmargin=30pt, innertopmargin=5pt,
-leftmargin=0cm, rightmargin=0cm, linewidth=4pt,
-innerbottommargin=5pt]{exBox}
+\newtcolorbox{exBox}{
+  enhanced,
+  breakable,
+  arc=5pt, 
+  outer arc=5pt,
+  colback=teal!10!white,   % Light teal
+  colframe=teal,           % Teal
+  boxrule=1pt,
+  left=5pt,
+  right=5pt,
+  top=5pt,
+  bottom=5pt,
+}
 
-% Proof box
-% \newmdenv[skipabove=7pt, skipbelow=7pt,
-% rightline=false, leftline=true, topline=false, bottomline=false,
-% linecolor=gray,
-% innerleftmargin=5pt, innerrightmargin=30pt, innertopmargin=5pt,
-% leftmargin=0cm, rightmargin=0cm, linewidth=4pt,
-% innerbottommargin=5pt]{proofBox}
+% Extra content box for contents not covered in the lecture notes
+\newtcolorbox{unexamBox}{
+  enhanced,
+  breakable,
+  arc=20pt, 
+  outer arc=20pt,
+  colback=gray!10,    % Light gray
+  colframe=gray,      % Gray
+  boxrule=1pt,
+  left=5pt, 
+  right=5pt, 
+  top=5pt, 
+  bottom=5pt,
+}
+
+\newenvironment{unexaminable}{\begin{unexamBox}}{\end{unexamBox}}
+
 
 
 
 % Creates an environment for each type of theorem and assigns it a theorem text style from the "Theorem Styles" section above and a colored box from above
 \newenvironment{definition}{\begin{dBox}\begin{definitionT}}{\end{definitionT}\end{dBox}}
+
 \newenvironment{theorem}{\begin{tBox}\begin{theoremT}}{\end{theoremT}\end{tBox}}
+
 \newenvironment{lemma}{\begin{lBox}\begin{lemmaT}}{\end{lemmaT}\end{lBox}}
+
 \newenvironment{proposition}{\begin{lBox}\begin{propositionT}}{\end{propositionT}\end{lBox}}
+
 \newenvironment{corollary}{\begin{lBox}\begin{corollaryT}}{\end{corollaryT}\end{lBox}}
+
 \newenvironment{property}{\begin{lBox}\begin{propertyT}}{\end{propertyT}\end{lBox}}
 
 
-% \newenvironment{proof*}{\begin{proofBox}\begin{proof}}{\end{proof}\end{proofBox}}
-\newenvironment{exercise}{\begin{exBox}\begin{exerciseT}}{\hfill{\color{royal}}\end{exerciseT}\end{exBox}}
 \newenvironment{remark}{\begin{exBox}\begin{remarkT}}{\end{remarkT}\end{exBox}}
+
 \newenvironment{example}{\begin{exBox}\begin{exampleT}}{{}\end{exampleT}\end{exBox}}
