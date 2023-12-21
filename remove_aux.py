@@ -32,4 +32,13 @@ if __name__ == "__main__":
             except:
                 logging.warning(f"Failed to remove {dir}")
                 
+        # also remove the pdf in the root directory
+        pdf_list = glob.glob(f"*.pdf", recursive=True)
+        for dir in pdf_list:    
+            try:
+                os.remove(dir)
+                logging.info(f"Removed PDF file: {dir}")
+            except:
+                logging.warning(f"Failed to remove {dir}")
+                
         logging.info("Done")
