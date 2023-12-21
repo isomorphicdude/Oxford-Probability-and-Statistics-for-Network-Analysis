@@ -4,7 +4,7 @@
 \input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/theoremstyle.tex}
 \usepackage{tikz}
 
-\title{Week 3 Stein's Method for Graphs}
+\title{Week 3 \& 4 Stein's Method for Graphs}
 
 \date{\today}
 
@@ -28,28 +28,32 @@ We introduce the general idea of Stein's Method and then consider the cases of a
 
 \subsection{Basic Ingredients}
 
-The content of this section is based on \citep{anastasiou2022steins}.
+\begin{unexaminable}
+    This section is not examinable. The content of this section is based on \citep{anastasiou2022steins}.
+\end{unexaminable}
 
 The main idea works as follows: if we have a random variable $Z$ following an unknown distribution $Q$, we can show it satisfies some equation $\mathbb{E}[(\mathcal{T}f (Z))]=0, \forall f$ if and only if it follows distribution $P$. In particular, it is approximately $P$-distributed if we can show that $\mathbb{E}[(\mathcal{T}f (Z))]\approx 0$ for all $f$.  
 
 More formally, we set up Stein's method for a target probability measure $P$ and any other measure $Q$. Let $\mathcal{G}(\mathcal{T})$ be a set of functions determined by a linear operator $\mathcal{T}$.  
 
 \begin{definition}
+    \label{def:stein_operator}
     The \textbf{Stein operator} $\mathcal{T}$ is a linear operator such that
     \begin{center}
-        $P=Q$ if and only if $\mathbb{E}_{X\sim Q}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$.
+        $P=Q$ if and only if $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$.
     \end{center}
-    The set of functions $\mathcal{G}(\mathcal{T})$ such that $\mathbb{E}_{X\sim P}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$ is called the \textbf{Stein class} of $\mathcal{T}$.
+    The set of functions $\mathcal{G}(\mathcal{T})$ such that $\mathbb{E}_{Z \sim P}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$ is called the \textbf{Stein class} of $\mathcal{T}$.
 \end{definition}
 
-The equation $\mathbb{E}_{X\sim Q}[(\mathcal{T}g(Z))]=0$ is called the \textbf{Stein identity}.  
+The equation $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ is called the \textbf{Stein identity}.  
 
 With this set up, we can define the how close is $Z$ a $P$-distributed by introducing a measure for distance using the characterization above:
 
 \begin{definition}
     The \textbf{Stein discrepancy} between $P$ and $Q$ is defined as
+    \label{def:stein_discrepancy}
     \begin{equation*}
-        \mathcal{D}(Q, \mathcal{T}, \mathcal{G})=\sup_{g \in \mathcal{G}(\mathcal{T})} \|\mathbb{E}_{X\sim Q}[(\mathcal{T}g(Z))]\|^*
+        \mathcal{D}(Q, \mathcal{T}, \mathcal{G})=\sup_{g \in \mathcal{G}(\mathcal{T})} \|\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]\|^*
     \end{equation*}
     for some norm $\|\cdot\|^*$.
 \end{definition}
@@ -59,9 +63,10 @@ The closer this discrepancy is to zero, the closer $Q$ is to $P$.
 Usually, this discrepancy is determined by various types of integral probability metrics (IPMs).
 
 \begin{definition}
-    An \textbf{Integral Probability Metric} is a function $d_{\mathcal{H}}$, s.t. 
+    \label{def:ipm}
+    An \textbf{Integral Probability Metric (IPM)} is a function $d_{\mathcal{H}}$, s.t. 
     \begin{equation*}
-        d_\mathcal{H}(P, Q) = \sup_{h \in \mathcal{H}} |\mathbb{E}_{X\sim P}[h(X)] - \mathbb{E}_{X\sim Q}[h(X)]|
+        d_\mathcal{H}(P, Q) = \sup_{h \in \mathcal{H}} |\mathbb{E}_{X\sim P}[h(X)] - \mathbb{E}_{Z\sim Q}[h(Z)]|
     \end{equation*}
     The set $\mathcal{H} \subset L^1(P) \cap L^1(Q)$ is the class of test functions; if such function $d_\mathcal{H}$ is a metric, then $\mathcal{H}$ is called \textbf{measure determining}.
 \end{definition}
@@ -69,10 +74,11 @@ Usually, this discrepancy is determined by various types of integral probability
 An important example is the total variation distance, which we will use in the next section.  
 
 \begin{example}
-    The \textbf{total variation distance} is an IPM with $\mathcal{H}=\{1_A: A \in \mathcal{F}\}$, where $\mathcal{F}$ is the $\sigma$-algebra of events. The total variation distance is defined as  
-    \begin{equation*}
+    The \textbf{total variation distance} is an IPM with $\mathcal{H}=\{1_A: A \in \mathcal{F}\}$, where $\mathcal{F}$ is the $\sigma$-algebra of events, which admits test functions $h(x) = I(x\in A)$. The total variation distance is defined as  
+    \begin{equation}
         d_{TV}(P, Q) = \sup_{A \in \mathcal{F}} |P(A) - Q(A)|
-    \end{equation*}
+        \label{eq:total_variation_distance}
+    \end{equation}
     It also has an alternative representation with $\mathcal{H} = \{f: \|f\|_\infty \leq 1\}$:
     \begin{equation*}
         d_{TV}(P, Q) = \frac{1}{2} \sup_{f \in \mathcal{H}}\left|\int f dP - \int f dQ\right|
@@ -83,14 +89,149 @@ An important example is the total variation distance, which we will use in the n
     \end{equation*}
 \end{example}
 
-The proof for the second representation can be found \href{https://math.stackexchange.com/questions/3287889/show-that-the-total-variation-distance-of-probability-measures-mu-nu-is-equa}{here} and the other can be found \href{https://math.stackexchange.com/questions/1481101/definition-of-the-total-variation-distance-vp-q-frac12-int-p-qd-n}{here}.  
+The proof for the second representation can be found \href{https://math.stackexchange.com/questions/3287889/show-that-the-total-variation-distance-of-probability-measures-mu-nu-is-equa}{here} and the third can be found \href{https://math.stackexchange.com/questions/1481101/definition-of-the-total-variation-distance-vp-q-frac12-int-p-qd-n}{here}.  
+
+In fact, the concept of Stein discrepancy and general IPMs are related by Stein's equation.
+
+\begin{definition}
+    \label{def:stein_equation}
+    The \textbf{Stein's equation} for $h\in \mathcal{H}$ is a functional equation:
+    \begin{equation*}
+        \mathcal{T}g (z) = h(z) - \mathbb{E}_{X\sim P}[h(X)]
+    \end{equation*}
+    evaluated over $z$ on the support of $P$, where $g$ is a solution to the Stein equation.
+\end{definition}
+
+If the solution $g$ exists, then we can take the expectation over $Q$ to get:
+\begin{align*}
+    \mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))] &= \mathbb{E}_{Z\sim Q}[h(Z) - \mathbb{E}_{X\sim P}[h(X)]]\\
+    &= \mathbb{E}_{Z\sim Q}[h(Z)] - \mathbb{E}_{X\sim P}[h(X)]\\
+\end{align*}
+
+Now taking the supremum over $h \in \mathcal{H}$, we recover the form of an IPM. 
 
 
 
+\subsection{Stein-Chen Method for Poisson Approximation}  
+Following the framework in the previous section, we can define the Stein operator (\Cref{def:stein_operator}) for Poisson approximation:
+\begin{equation}
+    \mathcal{T}g(z) = \lambda g(z) - zg(z)
+\end{equation}
 
-\subsection{The Stein-Chen method for Poisson approximation}  
+for $g: \mathbb{N}_0 \to \mathbb{R}$. This gives a characterization of the Poisson distribution with parameter $\lambda>0$:
+
+\begin{proposition}
+    \label{prop: direction1 poisson}
+    If $Z\sim \text{Po}(\lambda)$, then $\mathbb{E}[(\mathcal{T}g(Z))]=0$ for all $g$ bounded.
+\end{proposition}
+
+\begin{proof}
+This is a direct computation, noting the $Z=0$ gives zero expectation when $g$ is bounded:  
+    \begin{align*}
+        \lambda \mathbb{E}[g(Z+1)] &= \lambda \sum_{k=0}^\infty g(k+1) \frac{\lambda^k}{k!} e^{-\lambda}\\
+        &= \lambda \sum_{k=1}^\infty g(k) \frac{\lambda^{k-1}}{(k-1)!} e^{-\lambda}\\
+        &= \sum_{k=1}^\infty g(k) \frac{\lambda^k}{(k-1)!} e^{-\lambda}\\
+        &= \sum_{k=1}^\infty g(k) \frac{\lambda^k}{k!} e^{-\lambda} \cdot k\\
+        &= \mathbb{E}[Zg(Z)]\\
+    \end{align*}
+\end{proof}
 
 
+The IPM we will use here is the total variation distance (\Cref{eq:total_variation_distance}), which leads to the Stein's equation (\Cref{def:stein_equation}):
+
+\begin{equation}
+    \mathcal{T}g(z) = I(j \in A) - \mathbb{E}[I(j \in A)]
+    \label{eq:poisson_stein_equation}
+\end{equation}
+
+We show this equation has a \textit{unique} solution.
+
+\begin{lemma}
+    \label{lem:poisson_stein_equation}
+    Given the Stein's equation above, we have a unique solution
+    \begin{equation}
+        g(z+1) = \frac{z!}{\lambda^{z+1}} e^\lambda \sum_{k=0}^z \frac{\lambda^k}{k!} (I(k\in A) - \mathbb{E}[I(k\in A)])
+    \end{equation}
+
+    this solution can also be written as 
+    \begin{equation}
+        g(z+1) = -\frac{z!}{\lambda^{z+1}} e^\lambda \sum_{k=z+1}^\infty \frac{\lambda^k}{k!} (I(k\in A) - \mathbb{E}[I(k\in A)])
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    We first show the claimed solution satisfies the Stein's equation, which is easily verified by direct computation. To show uniqueness, let $z=0$ in \Cref{eq:poisson_stein_equation} and we get $\lambda g(1) = I(0\in A) - \mathbb{E}[I(0\in A)]$. So if $f$ is another solution to \Cref{eq:poisson_stein_equation}, then $f(1)=g(1)$. Now we can use induction to show $f(z)=g(z)$ for all $z\in \mathbb{N}_0$.
+\end{proof}
+
+To bound the total variation distance, we require additional bounds on $g$.  
+
+\begin{lemma}
+    \label{lem:poisson_stein_bound}
+For the solution $g$ to the Stein's equation \Cref{eq:poisson_stein_equation}, we have:
+\begin{equation}
+    \sup_{j \in \mathbb{N}_0} |g(j)| \leq \min (1, \lambda^{-1/2})
+    \label{eq:poisson_stein_bound1}
+\end{equation}
+and 
+\begin{equation}
+    \sup_{j \in \mathbb{N}_0} |g(j+1) - g(j)| \leq \min (1, \lambda^{-1})
+    \label{eq:poisson_stein_bound2}
+\end{equation}
+
+Here $\lambda^{-1}$ is referred to as the \textit{magic factor}.
+\end{lemma}
+
+\begin{proof}
+    The proof is omitted.
+\end{proof}
+
+Now we give the converse of \Cref{prop: direction1 poisson}.
+
+\begin{proposition}
+    \label{prop: direction2 poisson}
+    If $\mathbb{E}[(\mathcal{T}g(Z))]=0$ for all $g$ bounded, then $Z\sim \text{Po}(\lambda)$.
+\end{proposition}
+
+\begin{proof}
+    Since $g$ is an arbitrary bounded function, we take it as the solution obtained in \Cref{lem:poisson_stein_equation}, which is bounded by the previous lemma. Then taking the expectation of \Cref{eq:poisson_stein_equation} finishes the proof.
+\end{proof}
+
+Now we can bound the total variation distance between $Z$ and $\text{Po}(\lambda)$:
+\begin{equation*}
+    d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) = \sup_{g} |\mathbb{E}[\lambda g(Z+1) - Zg(Z)]|
+\end{equation*}
+
+To see this is actually useful, we consider a bound for Bernoulli random variables. 
+
+\begin{example}
+    \label{ex:bernoulli_poisson}
+    Let $X_1, \ldots, X_n$ be independent Bernoulli random variables, where $X_i \sim \text{Ber}(p_i)$ and $Z = \sum_{i=1}^n X_i$. Set $\lambda = \sum_{i=1}^n p_i$. Then we can compute the Stein's equation $\mathbb{E}[\lambda g(W+1) - Wg(W)]$.  Now since $X_i$ is binary and $W-X_i$ is independent of $X_i$, we have:  
+    \begin{align*}
+        \mathbb{E}[Wg(W)] &= \mathbb{E}[\sum_{i=1}^n X_i g(W)]\\
+        &= \sum_{i=1}^n \mathbb{E}[X_i g(W + X_i - 1)]\\
+        &= \sum_{i=1}^n \mathbb{E}[X_i] \mathbb{E}[g(W + X_i - 1)]\\
+        &= \sum_{i=1}^n p_i \mathbb{E}[g(W + X_i - 1)]\\
+    \end{align*}
+
+    where in the second step we use the fact that $X_i=0$ when $g$ is bounded yields zero expectation. Thus, 
+    \begin{align*}
+        \mathbb{E}[\lambda g(W+1) - Wg(W)] &= \sum_{i=1}^n p_i \mathbb{E}[g(W + 1)] - \sum_{i=1}^n p_i \mathbb{E}[g(W + X_i - 1)]\\
+        &= \sum_{i=1}^n p_i \mathbb{E}[\mathbb{E}[g(W+1) - g(W + X_i - 1) \mid X_i]]\\
+        &= \sum_{i=1}^n p_i^2 \mathbb{E}[g(W+1) - g(W) \mid X_i=1]\\
+        & \leq \sum_{i=1}^n p_i^2 \mathbb{E}[|g(W+1) - g(W)| \mid X_i=1]
+    \end{align*}
+    where we used conditional expectation.   
+    Using using \Cref{lem:poisson_stein_bound} now gives 
+    \[|\mathbb{E}[\lambda g(W+1) - Wg(W)]| \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2\]
+    So the total variation distance is bounded by
+    \begin{equation*}
+        d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2
+    \end{equation*}
+    Note this bound is non-asympotic and holds for any $n$.
+\end{example}
+
+
+\subsection{Stein's Method for Normal Approximation}
 
 
 
