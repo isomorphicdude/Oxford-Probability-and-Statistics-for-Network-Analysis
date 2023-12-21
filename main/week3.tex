@@ -36,8 +36,7 @@ The main idea works as follows: if we have a random variable $Z$ following an un
 
 More formally, we set up Stein's method for a target probability measure $P$ and any other measure $Q$. Let $\mathcal{G}(\mathcal{T})$ be a set of functions determined by a linear operator $\mathcal{T}$.  
 
-\begin{definition}
-    \label{def:stein_operator}
+\begin{definition}\label{def:stein_operator}
     The \textbf{Stein operator} $\mathcal{T}$ is a linear operator such that
     \begin{center}
         $P=Q$ if and only if $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$.
@@ -50,8 +49,7 @@ The equation $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ is called the \textbf{S
 With this set up, we can define the how close is $Z$ a $P$-distributed by introducing a measure for distance using the characterization above:
 
 \begin{definition}
-    The \textbf{Stein discrepancy} between $P$ and $Q$ is defined as
-    \label{def:stein_discrepancy}
+    The \textbf{Stein discrepancy} between $P$ and $Q$ is defined as\label{def:stein_discrepancy}
     \begin{equation*}
         \mathcal{D}(Q, \mathcal{T}, \mathcal{G})=\sup_{g \in \mathcal{G}(\mathcal{T})} \|\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]\|^*
     \end{equation*}
@@ -62,8 +60,7 @@ The closer this discrepancy is to zero, the closer $Q$ is to $P$.
 
 Usually, this discrepancy is determined by various types of integral probability metrics (IPMs).
 
-\begin{definition}
-    \label{def:ipm}
+\begin{definition}\label{def:ipm}
     An \textbf{Integral Probability Metric (IPM)} is a function $d_{\mathcal{H}}$, s.t. 
     \begin{equation*}
         d_\mathcal{H}(P, Q) = \sup_{h \in \mathcal{H}} |\mathbb{E}_{X\sim P}[h(X)] - \mathbb{E}_{Z\sim Q}[h(Z)]|
@@ -93,8 +90,7 @@ The proof for the second representation can be found \href{https://math.stackexc
 
 In fact, the concept of Stein discrepancy and general IPMs are related by Stein's equation.
 
-\begin{definition}
-    \label{def:stein_equation}
+\begin{definition}\label{def:stein_equation}
     The \textbf{Stein's equation} for $h\in \mathcal{H}$ is a functional equation:
     \begin{equation*}
         \mathcal{T}g (z) = h(z) - \mathbb{E}_{X\sim P}[h(X)]
@@ -146,8 +142,7 @@ The IPM we will use here is the total variation distance (\Cref{eq:total_variati
 
 We show this equation has a \textit{unique} solution.
 
-\begin{lemma}
-    \label{lem:poisson_stein_equation}
+\begin{lemma}\label{lem:poisson_stein_equation}
     Given the Stein's equation above, we have a unique solution
     \begin{equation}
         g(z+1) = \frac{z!}{\lambda^{z+1}} e^\lambda \sum_{k=0}^z \frac{\lambda^k}{k!} (I(k\in A) - \mathbb{E}[I(k\in A)])
@@ -165,8 +160,7 @@ We show this equation has a \textit{unique} solution.
 
 To bound the total variation distance, we require additional bounds on $g$.  
 
-\begin{lemma}
-    \label{lem:poisson_stein_bound}
+\begin{lemma}\label{lem:poisson_stein_bound}
 For the solution $g$ to the Stein's equation \Cref{eq:poisson_stein_equation}, we have:
 \begin{equation}
     \sup_{j \in \mathbb{N}_0} |g(j)| \leq \min (1, \lambda^{-1/2})
@@ -187,8 +181,7 @@ Here $\lambda^{-1}$ is referred to as the \textit{magic factor}.
 
 Now we give the converse of \Cref{prop: direction1 poisson}.
 
-\begin{proposition}
-    \label{prop: direction2 poisson}
+\begin{proposition}\label{prop: direction2 poisson}
     If $\mathbb{E}[(\mathcal{T}g(Z))]=0$ for all $g$ bounded, then $Z\sim \text{Po}(\lambda)$.
 \end{proposition}
 
@@ -203,8 +196,7 @@ Now we can bound the total variation distance between $Z$ and $\text{Po}(\lambda
 
 To see this is actually useful, we consider a bound for Bernoulli random variables. 
 
-\begin{example}
-    \label{ex:bernoulli_poisson}
+\begin{example}\label{ex:bernoulli_poisson}
     Let $X_1, \ldots, X_n$ be independent Bernoulli random variables, where $X_i \sim \text{Ber}(p_i)$ and $Z = \sum_{i=1}^n X_i$. Set $\lambda = \sum_{i=1}^n p_i$. Then we can compute the Stein's equation $\mathbb{E}[\lambda g(W+1) - Wg(W)]$.  Now since $X_i$ is binary and $W-X_i$ is independent of $X_i$, we have:  
     \begin{align*}
         \mathbb{E}[Wg(W)] &= \mathbb{E}[\sum_{i=1}^n X_i g(W)]\\
@@ -236,7 +228,7 @@ To see this is actually useful, we consider a bound for Bernoulli random variabl
 
 
 \bibliographystyle{apalike}
-\bibliography{bibliography3}
+\bibliography{bibliography3.bib}
 
 
 
