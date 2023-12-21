@@ -13,9 +13,7 @@
 \maketitle
 
 \section{Random Graphs}
-In order to judge whether a network summary is ”unusual” or whether a motif (pattern) is ”frequent”, there is an underlying assumption of randomness in the network. The randomness can be intrinsic to the network, and/or may stem from errors in the data.  
-
-With the random models, we would like to compute important statistics such as \textbf{the degree distribution}, \textbf{the clustering coefficient}, and \textbf{the number of triangles}.
+In order to judge whether a network summary is ”unusual” or whether a motif (pattern) is ”frequent”, there is an underlying assumption of randomness in the network. The randomness can be intrinsic to the network, and/or may stem from errors in the data. With the random models, we would like to compute important statistics such as \textbf{the degree distribution}, \textbf{the clustering coefficient}, and \textbf{the number of triangles}.
 
 \subsection{Erd\H{o}s-R\'{e}nyi}
 The first configuration of Erd\H{o}s-R\'{e}nyi random graphs specifies edges with a probability $p$. Namely, for $V=\{1,2,\ldots,n\}$, the probability of an edge between $i$ and $j$ is $p$ for all $i,j\in V$.
@@ -98,7 +96,7 @@ When $n>2k$, there are in total $nk$ edges in the network, which remains constan
     Instead of a ring in with $n$ equal spaced vertices $\real^2$, we can also start with a torus in higher dimensions. For example, in $\real^3$, we fold a square lattices of $n^2$ vertices into a torus.
 \end{remark}  
 
-One of the currently most used modification of Watts-Strogatz is the \textbf{Newman-Moore-Strogatz} model, where instead of rewiring, we introduce random shortcuts:
+One of the most popular modification of Watts-Strogatz is the \textbf{Newman-Moore-Strogatz} model, where instead of rewiring, we introduce random shortcuts:
 \begin{itemize}
     \item Start with a ring of $n$ vertices, where each vertex is connected to its $k$ nearest neighbours.
     \item Add shortcut between $v$ and $u\notin \text{bd}(v)$ with probability $p$.
@@ -107,13 +105,50 @@ One of the currently most used modification of Watts-Strogatz is the \textbf{New
 
 This gives an exact degree distribution with $d(v) \sim 2k+\mathrm{Binom}(n-2k-1, p)$.
 
-However, the degree distribution of real world networks often follows a power law, i.e. $p(d)\sim d^{-\alpha}$ for some $\alpha>0$.  
+However, the degree distribution of real world networks often follows a power law, i.e. $p(d)\sim d^{-\gamma}$ for some $\gamma>0$.  
 
 \begin{remark}
     Intuitively, the power-law distribution says that vertices tend to attach to "popular" vertices.
 \end{remark}
 
-\subsection{Barab\'{a}si-Albert}
+\subsection{Barab\'{a}si-Albert}  
+
+\begin{definition}
+    A probability measure with p.d.f. $p(d)$ is said to follow a \textbf{power law} if there exists $\gamma>0$ and some constant $C>0$ such that $p(d)\sim C d^{-\gamma}$ as $d\to \infty$, where $\gamma$ is called the \textbf{power-law exponent}.
+\end{definition}
+
+To explain this power-law behaviour, Albert and Barab\'{a}si proposed the \textbf{preferential attachment model}, which has the following construction:
+\begin{itemize}
+    \item Start with $m_0$ vertices, the edges between which are formed arbitrarily.  
+    \item (Growth) At each time $t$, add a new vertex with $m\leq m_0$ edges that connect to $m$ existing vertices.
+    \item (Preferential attachment) The probability that the new vertex connects to vertex $v_i$ is given by:
+    \begin{equation*}
+        \pi_i = \frac{d(v_i)}{\sum_j d(v_j)}
+    \end{equation*}
+\end{itemize}
+
+The resulting graph may contain self-loops and multi-edges. A more mathematically rigorous way to define this model is given in \citep{barabasi2016network}.  
+
+\begin{unexaminable}
+    To see why the distribution of degrees follows a power law, we consider a continuous-time approximation to the degree of vertex $v_i$, denoted by $k_i(t)$. Then the rate of change is given by:
+    \begin{equation*}
+        \frac{d k_i}{dt} = m \frac{k_i}{\sum_j k_j}
+    \end{equation*}
+    But noting that $\sum_j k_j = 2mt - m$, we can solve this equation  to obtain:
+    \begin{equation*}
+        k_i(t) = m \left( \frac{t}{t_i} \right)^{\frac{1}{2}}
+    \end{equation*}
+
+    where $t_i$ is the time when vertex $v_i$ is added (we used the initial condition $k_i(t_i)=m$).
+
+    To compute the degree distribution, note $\Pr(k_i(t)>k) = \Pr(t_i < \frac{m^2}{k^2} t) = \frac{m^2}{k^2}$, if we assume the vertices were added uniformly over time: $t_i \sim \mathrm{Unif}(0,t)$. Now differentiating with respect to $k$, we obtain:
+    \begin{equation*}
+        \Pr(d(v_i)=k) \approx 2m^2 k^{-3}
+    \end{equation*}
+    for $k$ large. This is a power law with $\gamma=3$.
+\end{unexaminable}
+
+
 
 \subsection{Configuration Model}
 
@@ -126,7 +161,8 @@ However, the degree distribution of real world networks often follows a power la
 
 
 
-\newpage
+\bibliographystyle{apalike}
+\bibliography{bibliography2}
 
 
 
