@@ -41,7 +41,7 @@ More formally, we set up Stein's method for a target probability measure $P$ and
     \begin{center}
         $P=Q$ if and only if $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$.
     \end{center}
-    The set of functions $\mathcal{G}(\mathcal{T})$ such that $\mathbb{E}_{Z \sim P}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$ is called the \textbf{Stein class} of $\mathcal{T}$.
+    The set of functions $\mathcal{G}(\mathcal{T})$ such that $\mathbb{E}_{Z \sim P}[(\mathcal{T}g(Z))]=0, \forall g \in \mathcal{G}(\mathcal{T})$ is called the \textbf{Stein class} of $\mathcal{T}$.
 \end{definition}
 
 The equation $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ is called the \textbf{Stein identity}.  
@@ -163,12 +163,12 @@ To bound the total variation distance, we require additional bounds on $g$.
 \begin{lemma}\label{lem:poisson_stein_bound}
 For the solution $g$ to the Stein's equation \Cref{eq:poisson_stein_equation}, we have:
 \begin{equation}
-    \sup_{j \in \mathbb{N}_0} |g(j)| \leq \min (1, \lambda^{-1/2})
+    \sup_{k \in \mathbb{N}_0} |g(k)| \leq \min (1, \lambda^{-1/2})
     \label{eq:poisson_stein_bound1}
 \end{equation}
 and 
 \begin{equation}
-    \sup_{j \in \mathbb{N}_0} |g(j+1) - g(j)| \leq \min (1, \lambda^{-1})
+    \sup_{k \in \mathbb{N}_0} |g(k+1) - g(k)| \leq \min (1, \lambda^{-1})
     \label{eq:poisson_stein_bound2}
 \end{equation}
 
@@ -197,30 +197,118 @@ Now we can bound the total variation distance between $Z$ and $\text{Po}(\lambda
 To see this is actually useful, we consider a bound for Bernoulli random variables. 
 
 \begin{example}\label{ex:bernoulli_poisson}
-    Let $X_1, \ldots, X_n$ be independent Bernoulli random variables, where $X_i \sim \text{Ber}(p_i)$ and $Z = \sum_{i=1}^n X_i$. Set $\lambda = \sum_{i=1}^n p_i$. Then we can compute the Stein's equation $\mathbb{E}[\lambda g(W+1) - Wg(W)]$.  Now since $X_i$ is binary and $W-X_i$ is independent of $X_i$, we have:  
+    Let $X_1, \ldots, X_n$ be independent Bernoulli random variables, where $X_i \sim \text{Ber}(p_i)$ and $Z = \sum_{i=1}^n X_i$. Set $\lambda = \sum_{i=1}^n p_i$. Then we can compute the Stein's equation $\mathbb{E}[\lambda g(Z+1) - Zg(Z)]$.  Now since $X_i$ is binary and $Z-X_i$ is independent of $X_i$, we have:  
     \begin{align*}
-        \mathbb{E}[Wg(W)] &= \mathbb{E}[\sum_{i=1}^n X_i g(W)]\\
-        &= \sum_{i=1}^n \mathbb{E}[X_i g(W + X_i - 1)]\\
-        &= \sum_{i=1}^n \mathbb{E}[X_i] \mathbb{E}[g(W + X_i - 1)]\\
-        &= \sum_{i=1}^n p_i \mathbb{E}[g(W + X_i - 1)]\\
+        \mathbb{E}[Zg(Z)] &= \mathbb{E}[\sum_{i=1}^n X_i g(Z)]\\
+        &= \sum_{i=1}^n \mathbb{E}[X_i g(Z + X_i - 1)]\\
+        &= \sum_{i=1}^n \mathbb{E}[X_i] \mathbb{E}[g(Z + X_i - 1)]\\
+        &= \sum_{i=1}^n p_i \mathbb{E}[g(Z + X_i - 1)]\\
     \end{align*}
 
     where in the second step we use the fact that $X_i=0$ when $g$ is bounded yields zero expectation. Thus, 
     \begin{align*}
-        \mathbb{E}[\lambda g(W+1) - Wg(W)] &= \sum_{i=1}^n p_i \mathbb{E}[g(W + 1)] - \sum_{i=1}^n p_i \mathbb{E}[g(W + X_i - 1)]\\
-        &= \sum_{i=1}^n p_i \mathbb{E}[\mathbb{E}[g(W+1) - g(W + X_i - 1) \mid X_i]]\\
-        &= \sum_{i=1}^n p_i^2 \mathbb{E}[g(W+1) - g(W) \mid X_i=1]\\
-        & \leq \sum_{i=1}^n p_i^2 \mathbb{E}[|g(W+1) - g(W)| \mid X_i=1]
+        \mathbb{E}[\lambda g(Z+1) - Zg(Z)] &= \sum_{i=1}^n p_i \mathbb{E}[g(Z + 1)] - \sum_{i=1}^n p_i \mathbb{E}[g(Z + X_i - 1)]\\
+        &= \sum_{i=1}^n p_i \mathbb{E}[\mathbb{E}[g(Z+1) - g(Z + X_i - 1) \mid X_i]]\\
+        &= \sum_{i=1}^n p_i^2 \mathbb{E}[g(Z+1) - g(Z) \mid X_i=1]\\
+        & \leq \sum_{i=1}^n p_i^2 \mathbb{E}[|g(Z+1) - g(Z)| \mid X_i=1]
     \end{align*}
     where we used conditional expectation.   
     Using using \Cref{lem:poisson_stein_bound} now gives 
-    \[|\mathbb{E}[\lambda g(W+1) - Wg(W)]| \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2\]
+    \[|\mathbb{E}[\lambda g(Z+1) - Zg(Z)]| \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2\]
     So the total variation distance is bounded by
     \begin{equation*}
         d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2
     \end{equation*}
     Note this bound is non-asympotic and holds for any $n$.
 \end{example}
+
+\subsubsection{Local dependence}  
+When the random variables are not independent, the computation of $\mathbb{E}[Wg(W)]$ is more complicated.  
+
+\begin{theorem}\label{thm:poisson_stein_local}
+    Let $X_\alpha, \alpha \in I$ with each $X_\alpha \sim \text{Ber}(p_\alpha)$ and $Z = \sum_{\alpha \in I} X_\alpha$. Let $\lambda = \sum_{\alpha \in I}$. Suppose $\forall \alpha \in I$, there exists a set $A_\alpha \subseteq I$, s.t. $X_\alpha$ is independent of $\sum_{\beta \notin A_\alpha} X_\beta$. Define 
+    \begin{equation*}
+        \eta_\alpha = \sum_{\beta \in A_\alpha} X_\beta
+    \end{equation*}
+    Then the total variation distance is bounded by
+    \begin{equation*}
+        d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \sum_{\alpha\in I}[(p_{\alpha}\mathbb{E}(\eta_{\alpha})+\mathbb{E}(X_{\alpha}(\eta_{\alpha}-X_{\alpha}))]\operatorname*{min}\left(1,\lambda^{-1}\right)
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+
+    As before, we aim to bound the total variation distance by bounding $\mathbb{E}|\lambda g(Z+1) - Zg(Z)|$, where $g$ is the solution to the Stein's equation.  
+
+    Let $Z_\alpha = Z - \eta_\alpha$, we compute the term $\mathbb{E}[Zg(Z)]$ as follows:  
+    \begin{align*}
+        \mathbb{E}[Zg(Z)] &= \mathbb{E}[\sum_{\alpha \in I} X_\alpha g(Z)]\\
+        &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(Z - X_\alpha + 1)]\\
+        &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(Z_\alpha + \eta_\alpha -X_\alpha +  1)]\\
+        &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(Z_\alpha + 1)] + \mathbb{E}[X_\alpha (g(Z_\alpha + \eta_\alpha -X_\alpha +  1) - g(Z_\alpha + 1))]\\
+        &= \sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z_\alpha + 1)] \\
+        &+ p_\alpha \mathbb{E}[g(Z+1)] - p_\alpha \mathbb{E}[g(Z+1)] \\
+        &+ \mathbb{E}[X_\alpha (g(Z_\alpha + \eta_\alpha -X_\alpha +  1) - g(Z_\alpha + 1))] \\
+    \end{align*}
+
+    Rearranging the last term leads to 
+    \[\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z + 1)] + \underbrace{p_\alpha \mathbb{E}[g(Z_\alpha+1) - g(Z+1)]}_{R_{1,\alpha}} + \underbrace{\mathbb{E}[X_\alpha (g(Z_\alpha + \eta_\alpha -X_\alpha +  1) - g(Z_\alpha + 1))]}_{R_{2, \alpha}}\] 
+
+    Hence the equation we need to bound is
+    \begin{equation*}
+        \mathbb{E}[\lambda g(Z+1) - Zg(Z)] =  R_1 + R_2
+    \end{equation*}
+
+    For $R_1=\sum_\alpha R_{1,\alpha}$, we have
+    \begin{align*}
+        |R_1| &= \left|\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z_\alpha+1) - g(Z+1)]\right| \\
+        &= \left|\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z_\alpha + \eta_\alpha +1) - g(Z_\alpha+1)]\right|\\
+        &\leq \sum_{\alpha \in I} p_\alpha |\mathbb{E}[g(Z_\alpha + \eta_\alpha +1) - g(Z_\alpha+1)]|\\
+    \end{align*}
+    Now we apply conditional expectation and telescoping sum to the inner term:
+    \begin{align*}
+        |\mathbb{E}[g(Z_\alpha + \eta_\alpha +1) - g(Z_\alpha+1)]| &= \left|\mathbb{E}\left[\mathbb{E}[\sum_{k=0}^{m-1} g(Z_\alpha + 1 + k+1) - g(Z_\alpha + 1 + k)\mid \eta_\alpha = m]\right]\right|\\
+        &\leq \mathbb{E}\left[\mathbb{E}[\sum_{k=0}^{m-1} |g(Z_\alpha + 1 + k+1) - g(Z_\alpha + 1 + k)|\mid \eta_\alpha = m]\right]\\
+        &\leq \mathbb{E}\left[\mathbb{E}[\sum_{k=0}^{m-1} \min (1, \lambda^{-1})\mid \eta_\alpha = m]\right]\\
+        &= \min (1, \lambda^{-1}) \mathbb{E}[ \eta_\alpha]\\
+    \end{align*}
+
+    which gives the bound for $R_1$ as:
+    \begin{equation*}
+        |R_1| \leq \min (1, \lambda^{-1}) \sum_{\alpha \in I} p_\alpha \mathbb{E}[ \eta_\alpha]
+    \end{equation*}
+
+    For $R_2=\sum_\alpha R_{2,\alpha}$, we apply the method above to $g(Z_\alpha + \eta_\alpha - X_\alpha + 1) - g(Z_\alpha + 1)$, which gives the bound:
+    \begin{equation*}
+        |R_2| \leq \min (1, \lambda^{-1}) \sum_{\alpha \in I} p_\alpha \mathbb{E}[ X_\alpha (\eta_\alpha - X_\alpha)]
+    \end{equation*}
+
+    Combing those two bounds gives the desired result.
+\end{proof}  
+
+We are now ready to approximate the number of triangles in Erd\H{o}s-R\'{e}nyi random graph $G(n,p)$.  We use an index set $\Gamma_n$:
+
+\begin{equation*}
+    \Gamma_{n}=\{\alpha=(u,v,w):1\leq u<v<w\leq n\}
+\end{equation*}
+
+Then with the same notation as before, let 
+$$
+X_{\alpha}=X_{u,v,w} = A_{u v} A_{v w} A_{w u}
+$$
+
+which equals 1 if and only if $uvw$ is a triangle, each of the $X_\alpha$ is a Bernoulli random variable with parameter $p^3$. 
+
+\begin{theorem}
+    Let $Z = \sum_{\alpha \in \Gamma_n} X_\alpha$ and $\lambda = \binom{n}{3}p^3$.
+    \begin{equation*}
+        d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \binom{n}{3}(3np^3 + 3np^2) \min (1, \lambda^{-1})
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    
+\end{proof}
 
 
 \subsection{Stein's Method for Normal Approximation}
