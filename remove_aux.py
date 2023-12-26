@@ -1,10 +1,22 @@
 import os
 import glob
+import argparse
 import logging
 
-to_remove = ['aux', 'gz', 'fls', 'log', 'out', 
-             'toc', 'blg', 'fdb_latexmk', 
-            'bcf', 'xml', 'dvi', 'bbl']
+parser = argparse.ArgumentParser(description='Remove aux files')
+# if debug is true, then will not remove log files
+parser.add_argument('--debug', 
+                    action='store_true',
+                    help='If true, will not remove log files')
+
+debug = parser.parse_args().debug
+
+to_remove = ['aux', 'gz', 'fls', 'out', 
+            'toc', 'blg', 'fdb_latexmk', 
+        'bcf', 'xml', 'dvi', 'bbl']
+    
+if not debug:
+    to_remove.append('log')
 
 logging.basicConfig(
                     level=logging.INFO,
