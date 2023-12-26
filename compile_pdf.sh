@@ -10,7 +10,8 @@ fi
 mkdir -p output
 
 # Compile 'main.tex' to PDF using pdflatex (you can change the compiler if needed)
-pdflatex -output-directory=output main.tex
+latexmk -synctex=1 -interaction=nonstopmode -file-line-error -pdf -outdir=output main.tex
+
 
 # Check if compilation was successful
 if [ $? -eq 0 ]; then
@@ -22,5 +23,7 @@ if [ $? -eq 0 ]; then
     python remove_aux.py
 else
     echo "Compilation failed. Check for LaTeX errors."
+    # clean everything except log files
+    python remove_aux.py --debug
 fi
 
