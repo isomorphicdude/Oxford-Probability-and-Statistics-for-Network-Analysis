@@ -1,0 +1,78 @@
+\documentclass{article}
+
+\input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/commands.tex}
+\input{/Users/isomorphicdude/My/Random_Latex/SC2-SM7-Network-Notes/includes/theoremstyle.tex}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Week 5}
+
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Threshold Behaviours} 
+
+\subsection{Motivating Example}
+
+In $G(n,p)$, if $p=\frac{c}{n}$ with $c<1$, then the largest connected component is of size $O(\log n)$, whereas if $c>1$, then the largest connected component is of linear size with probability $1$ as $n\to \infty$.  
+
+\subsection{A Simple Approach}
+We use the approach in \citep{krivelevich2012phase} and use the Depth-First Search (DFS) algorithm on the random graph. 
+
+\subsubsection{Depth-First Search}
+The DFS operates on the vertex set $V$ with three sets of vertices at each step:
+\begin{itemize}
+    \item $S$ is the set that has been explored
+    \item $T$ is the set of vertices to be explored
+    \item $U = V\setminus (S\cup T)$ is the set of vertices under investigation
+\end{itemize}
+
+The algorithm starts with $S=\emptyset$, $T=V$ and $U=\emptyset$. At each step, if $U$ is nonempty, let $v$ be the last vertex added to $U$, we perform the following:
+\begin{enumerate}
+    \item If $v$ has a neighbour $u$ in $S$, move $u$ from $T$ to $U$.
+    \item If $v$ has no neighbour in $S$, move $v$ from $U$ to $S$.
+\end{enumerate}
+
+If $U$ is empty, we pick a vertex $v$ from $T$ and move it to $U$ (select the vertex with the smallest index). If $U\cup T=\emptyset$, query all remaining pairs in $S$ and stop.  
+
+The period of time between two consecutive emptyings of $U$ is called an \textbf{epoch}, which reveals a connected component.  
+
+\begin{proposition}
+    The DFS algorithm has the following properties:
+    \begin{enumerate}
+        \item The number of epochs is equal to the number of connected components.
+        \item There are no edges between sets $S$ and $T$ at any time.
+        \item The set $U$ always spans a path.
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    Those directly follow from the algorithm.
+\end{proof}
+
+This particular formulation of the DFS algorithm allows for the application on an Erd\H{o}s-R\'{e}nyi random graph, where we query the existence of an edge between two vertices by a Bernoulli trial with probability $p$.  
+
+Denote $X_i\in \{0,1\}$ as the outcome of the $i$-th query, with each $X_i \sim \text{Bernoulli}(p)$ for $i=1, \ldots, \binom{n}{2}$. 
+
+\begin{proposition}
+    Let $S(t), U(t), T(t)$ be the sets at time $t$ in the DFS algorithm. Then, 
+    \begin{equation*}
+        |U(t)|\leq1+\sum_{i=1}^{t}X_{i} \quad \mathrm{and} \quad |S(t)\cup U(t)|\geq\sum_{i=1}^{t}X_{i}
+    \end{equation*}
+    At all times, $|S(t)|+|U(t)|+|T(t)|=n$.
+\end{proposition}
+
+The $1$ comes from the initial vertex $v$ in $U$ at the beginning of each epoch. 
+
+
+
+
+
+\bibliographystyle{apalike}
+\bibliography{bibliography4.bib}
+\end{document}
