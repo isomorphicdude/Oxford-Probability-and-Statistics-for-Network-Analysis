@@ -17,12 +17,15 @@
 
 \section{Threshold Behaviours} 
 
-In $G(n,p)$, if $p=\frac{c}{n}$ with $c<1$, then the largest connected component is of size $O(\log n)$, whereas if $c>1$, then the largest connected component is of linear size with probability $1$ as $n\to \infty$.  
+We begin with an example of a threshold behaviour in a random graph.  
 
-\subsection{A Simple Approach}
-We use the approach in \citep{krivelevich2012phase} and use the Depth-First Search (DFS) algorithm on the random graph. 
+\begin{example}
+    In $G(n,p)$, if $p=\frac{c}{n}$ with $c<1$, then the largest connected component is of size $O(\log n)$, whereas if $c>1$, then the largest connected component is of linear size with probability $1$ as $n\to \infty$.      
+\end{example}
 
-\subsubsection{Depth-First Search}
+To show this, we use the approach in \citep{krivelevich2012phase} and use the Depth-First Search (DFS) algorithm on the random graph. 
+
+\subsection{Depth-First Search}
 The DFS operates on the vertex set $V$ with three sets of vertices at each step:
 \begin{itemize}
     \item $S$ is the set that has been explored
@@ -67,7 +70,7 @@ Denote $X_i\in \{0,1\}$ as the outcome of the $i$-th query, with each $X_i \sim 
 
 The $1$ comes from the initial vertex $v$ in $U$ at the beginning of each epoch. 
 
-\subsubsection{Small Connected Components}
+\subsection{Small Connected Components}
 
 We will first show that the size of any connected component cannot exceed some constant associated with the probability $p$ with high probability as $n\to \infty$.  
 
@@ -170,7 +173,7 @@ The proof of this lemma is given in problem sheet 0.
 \end{remark}
 
 
-\subsubsection{Large Connected Components}
+\subsection{Large Connected Components}
 
 We also state another result from \citep{krivelevich2012phase} that shows the existence of a linear size connected component with high probability as $n\to \infty$.  
 
