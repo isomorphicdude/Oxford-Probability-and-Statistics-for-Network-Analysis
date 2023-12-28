@@ -34,8 +34,8 @@ The DFS operates on the vertex set $V$ with three sets of vertices at each step:
 
 The algorithm starts with $S=\emptyset$, $T=V$ and $U=\emptyset$. At each step, if $U$ is nonempty, let $v$ be the last vertex added to $U$, we perform the following:
 \begin{enumerate}
-    \item If $v$ has a neighbour $u$ in $S$, move $u$ from $T$ to $U$.
-    \item If $v$ has no neighbour in $S$, move $v$ from $U$ to $S$.
+    \item If $v$ has a neighbour $u$ in $T$, move $u$ from $T$ to $U$.
+    \item If $v$ has no neighbour in $T$, move $v$ from $U$ to $S$.
 \end{enumerate}
 
 If $U$ is empty, we pick a vertex $v$ from $T$ and move it to $U$ (select the vertex with the smallest index). If $U\cup T=\emptyset$, query all remaining pairs in $S$ and stop.  
@@ -69,9 +69,121 @@ Denote $X_i\in \{0,1\}$ as the outcome of the $i$-th query, with each $X_i \sim 
 
 The $1$ comes from the initial vertex $v$ in $U$ at the beginning of each epoch. 
 
+\subsubsection{Small Connected Components}
+
+We will first show that the size of any connected component cannot exceed some constant associated with the probability $p$ with high probability as $n\to \infty$.  
+
+\begin{theorem}\label{thm:small_connected_components}
+    Let $\varepsilon \in (0,1)$ be fixed and let $G\sim G(n,p)$ with $p=\frac{1-\varepsilon}{n}$, then any connected component $C$ of $G$, satisfies
+    \begin{equation*}
+        \mathbb{P}(|C|\leq \frac{7}{\varepsilon^2}\log n)\to 1 \quad \text{as} \quad n\to \infty
+    \end{equation*}
+\end{theorem}
+
+The proof of this theorem is based on the following lemma, which bounds the number of successes $W$ in an interval of length $\ell$ during a sequence of Bernoulli trials.  
+
+\begin{lemma}\label{lem:bernoulli_trials}
+    Let $X_1, \ldots, X_N \overset{i.i.d.}{\sim} \text{Bernoulli}(p)$. Let $k, \ell \in \mathbb{N}$ with $k > \ell p$. Then, define the random variable $Y_t$ as:
+    \begin{equation*}
+        Y_t = \sum_{i=t}^{t+\ell-1}X_i
+    \end{equation*}
+    for $t=1, \ldots, N-\ell+1$. And the random variable $W$ as:
+    \begin{equation*}
+        W = \sum_{t=1}^{N-\ell+1} \mathbf{1}_{\{Y_t\geq k\}}
+    \end{equation*}
+    Then,
+    \begin{equation*}
+        \mathbb{P}(W\geq 1)\leq (N-\ell+1)\exp\left(-\frac{(k-\ell p)^2}{2(\ell p + (k - \ell p ) / 3)}\right)
+    \end{equation*}
+\end{lemma}
+
+We delay the proof of this lemma to the end of this section and first prove \Cref{thm:small_connected_components}.  
+
+\begin{proof}[Proof of \Cref{thm:small_connected_components}]
+    Assume for the sake of contradiction that $G$ contains a connected component $C$ with more than $\frac{7}{\varepsilon^2}\log n$ vertices.  Let $k+1=\lfloor \frac{7}{\varepsilon^2}\log n \rfloor + 1$ be the smallest integer which is larger than $\frac{7}{\varepsilon^2}\log n$. We show the probability of such a component to exist tends to $0$ as $n\to \infty$.  
+
+    \medskip
+
+    During the epoch when $C$ was created, consider the moment when the algorithm has received a positive response for the $(k+1)$-th time (the $k+1$-th vertex of $C$ is found). 
+    % Let $\Delta S = S\cap C$ be the set of vertices in $C$ that have been found before this moment, then $|\Delta S \cup U| = k$, 
+    Before this moment the algorithm has recevied exactly $k$ positive responses.  
+
+    The total number of queries up to this moment during this epoch is at most
+
+    \begin{equation*}
+        \binom{k}{2} + k(n-k) < kn
+    \end{equation*}
+
+    Set $\ell = kn$ and $N=\binom{n}{2}$, then by \Cref{lem:bernoulli_trials}, we have such a component $C$ with probability at most
+
+    \begin{align*}
+        \binom{n}{2} \exp \left( -\frac{(k-\ell p)^2}{2(\ell p + (k-\ell p)/3)} \right) &= \binom{n}{2} \exp\left(-\frac{k\varepsilon^2}{2(1-2\varepsilon/3)}\right) \\
+        &\leq \binom{n}{2} \exp\left(\frac{k\varepsilon^2}{2(1-2\varepsilon/3)} - \frac{7 \log n}{2 (1-2\varepsilon/3)}\right) \\
+    \end{align*}
+
+    as $k\geq \frac{7}{\varepsilon^2}\log n - 1$. Now note $\binom{n}{2} < n^2$ and $\varepsilon<1$, so the probability of such a component $C$ existing is at most
+    \begin{equation*}
+        n^2 \exp\left(\frac{k\varepsilon^2}{2(1-2\varepsilon/3)}\right) n^{-7/2(1-2\varepsilon/3)} < e^{3/2} n^{-3/2}
+    \end{equation*}
+
+    Letting $X$ denote the number of connected components of size at least $\frac{7}{\varepsilon^2}\log n$, we have by Markov's inequality that
+    \begin{equation*}
+        \mathbb{P}(X\geq 1) \leq \mathbb{E}(X) < e^{3/2} n^{-1/2}
+    \end{equation*}
+
+    which tends to $0$ as $n\to \infty$.
+\end{proof}
+
+To show the lemma, we require the following Chernoff bound.  
+
+\begin{lemma}\label{lem:chernoff}
+    If $X\sim \text{Binomial}(N,p)$, then for any $N, k >0$,
+    \begin{equation*}
+        \mathbb{P}(X-N p\geq k)\leq \exp\left(-{\frac{k^{2}}{2(N p+k/3)}}\right)
+    \end{equation*}
+\end{lemma}
+
+The proof of this lemma is given in problem sheet 0.  
+
+\begin{proof}[Proof of \Cref{lem:bernoulli_trials}]
+    Let $W$ denote the number of intervals of length $\ell \in \{1, \ldots, N\}$ in which at least $k$ of the random variables $X_i$ take the value 1. We want to bound $\mathbb{P}(W \geq 1)$ from above.
+
+    Using Markov's inequality,
+    \[
+    \mathbb{P}(W \geq 1) \leq \mathbb{E}(W).
+    \]
+    
+    Now
+    \[
+    \mathbb{E}(W) = (N - \ell + 1)\mathbb{P}\left(\sum_{i=1}^{\ell} X_i \geq k \right).
+    \]
+    
+    From \Cref{lem:chernoff}, we have
+    \[
+    \mathbb{P}\left(\sum_{i=1}^{\ell} X_i \geq k\right) = \mathbb{P}\left(\sum_{i=1}^{\ell} X_i - \ell p \geq k - \ell p\right) \leq \exp \left(-\frac{(k-\ell p)^2}{2(\ell p+(\ell p)^2/3)}\right)
+    \]
+    
+    Combining these bounds yields the assertion.
+\end{proof}
 
 
+\begin{remark}
+    The proof of \Cref{thm:small_connected_components} is based on the fact that the DFS algorithm must receive $k$ positive responses during \textbf{an interval/window within the epoch for that connected component} among the queries to ensure a size of at least $k$.
+\end{remark}
 
+
+\subsubsection{Large Connected Components}
+
+We also state another result from \citep{krivelevich2012phase} that shows the existence of a linear size connected component with high probability as $n\to \infty$.  
+
+\begin{theorem}
+    Let $\varepsilon \in (0,\frac{1}{10})$ be fixed and let $G\sim G(n,p)$ with $p=\frac{1+\varepsilon}{n}$, let the largest connected component be $C_{\max}$. Then,
+    \begin{equation*}
+        \mathbb{P}(|C_{\max}|\geq \frac{1}{5}\varepsilon^2 n)\to 1 \quad \text{as} \quad n\to \infty
+    \end{equation*}
+\end{theorem}
+
+The proof can be found in the lecture notes.
 
 \bibliographystyle{apalike}
 \bibliography{bibliography4.bib}
