@@ -135,7 +135,7 @@ We delay the proof of this lemma to the end of this section and first prove \Cre
     which tends to $0$ as $n\to \infty$.
 \end{proof}
 
-To show the lemma, we require the following Chernoff bound.  
+To show \Cref{lem:bernoulli_trials}, we require the following Chernoff bound.  
 
 \begin{lemma}\label{lem:chernoff}
     If $X\sim \text{Binomial}(N,p)$, then for any $N, k >0$,
@@ -184,8 +184,37 @@ We also state another result from \citep{krivelevich2012phase} that shows the ex
     \end{equation*}
 \end{theorem}
 
-The proof can be found in the lecture notes.
+The proof can be found in the lecture notes which is not examinable.
 
+\section{Shortest Paths}
+In this section, we study the distribution of the length of the shortest path between two vertices in a Newman-Watts-Strogatz (NWS) random graph. The important idea is to use continuous-time analysis for discrete-time processes.  
+
+\subsection{First Simplification}
+
+We consider the continuous circle model from \citep{Newman_2000}: let $C$ be a circle of circumference $L$. A $\mathrm{Poisson}(L\rho/2), L\rho>1$ number of shortcuts are added uniformly at random to the circle. The chords between points have length zero. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/newman1999.png}
+    \caption{The continuous circle model \citep{Newman_2000}}
+    \label{fig:newman1999}
+\end{figure}
+
+For two randomly chosen points $P$ and $Q$ on the circle, we are interested in the distribution of the length of the shortest path $\mathcal{D}$ between them.  
+
+\subsection{Second Simplification}
+
+
+\subsection{Poisson Approximation}
+
+
+\subsection{Unconditioning}
+
+
+
+
+
+\newpage
 \bibliographystyle{apalike}
 \bibliography{bibliography4.bib}
 \end{document}
