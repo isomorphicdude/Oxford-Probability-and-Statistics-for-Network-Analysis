@@ -187,7 +187,9 @@ We also state another result from \citep{krivelevich2012phase} that shows the ex
 The proof can be found in the lecture notes which is not examinable.
 
 \section{Shortest Paths}
-In this section, we study the distribution of the length of the shortest path between two vertices in a Newman-Watts-Strogatz (NWS) random graph. The important idea is to use continuous-time analysis for discrete-time processes.  
+In this section, we study the distribution of the length of the shortest path between two vertices in a Newman-Watts-Strogatz (NWS) random graph. The important idea is to use continuous-time analysis for discrete-time processes. 
+
+This section will mainly consist of heuristic arguments based on \citep{Reinert2001}.
 
 \subsection{First Simplification}
 
@@ -203,6 +205,32 @@ We consider the continuous circle model from \citep{Newman_2000}: let $C$ be a c
 For two randomly chosen points $P$ and $Q$ on the circle, we are interested in the distribution of the length of the shortest path $\mathcal{D}$ between them.  
 
 \subsection{Second Simplification}
+The mental picture that is useful for this problem is to imagine two kinds of liquid entering the network at points $P$ and $Q$ simultaneously and flowing along the paths. The first time the two liquids meet is roughly half the length of the shortest path.  
+
+To make this more formal, we consider a pure growth (Yule) process.
+
+\begin{definition}
+    A \textbf{pure growth (Yule) process} $S(t)$ is a continuous-time Markov chain with state space $\mathbb{N}$ with rate $\rho$ if it satisfies $S(0) = k \geq 1$ and
+    \begin{equation*}        
+        S(t) = \sum_{i=1}^k N_t^{(i)}
+    \end{equation*}
+    where $N_t^{(i)}$ are independent Poisson processes with rate $\rho$.
+\end{definition}
+
+\begin{remark}
+    The pure growth process can also be viewed as the following branching process: at time $t$, each individual waits for an exponential time with rate $\rho$ and then splits into two individuals.
+\end{remark}
+
+In the current context, the pure growth process $S(t)$ should have a similar behaviour to the liquid (we only consider starting from $P$ and ignore $Q$ for now):
+
+\begin{itemize}
+    \item The process goes in both directions along the circle
+    \item Offspring arise when taking shortcuts and we assert that shortcuts take zero time to traverse
+    \item The offspring of the process should be thought as the intervals spanned on the circle (\Cref{fig:newman1999})
+\end{itemize}
+
+Therefore, we see that the process should have rate $2\rho$, as for each direction, the probability of encountering a shortcut is $2 \times (1/L) \times (\rho L/2) = \rho$, since a shortcut has two endpoints and they are uniformly distributed with number of shortcuts drawn from $\mathrm{Poisson}(L\rho/2)$.  
+
 
 
 \subsection{Poisson Approximation}
