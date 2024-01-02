@@ -210,9 +210,9 @@ The mental picture that is useful for this problem is to imagine two kinds of li
 To make this more formal, we consider a pure growth (Yule) process.
 
 \begin{definition}
-    A \textbf{pure growth (Yule) process} $S(t)$ is a continuous-time Markov chain with state space $\mathbb{N}$ with rate $\rho$ if it satisfies $S(0) = k \geq 1$ and
+    A \textbf{pure growth (Yule) process} $M(t)$ is a continuous-time Markov chain with state space $\mathbb{N}$ with rate $\rho$ if it satisfies $S(0) = k \geq 1$ and
     \begin{equation*}        
-        S(t) = \sum_{i=1}^k N_t^{(i)}
+        M(t) = \sum_{i=1}^k N_t^{(i)}
     \end{equation*}
     where $N_t^{(i)}$ are independent Poisson processes with rate $\rho$.
 \end{definition}
@@ -221,7 +221,7 @@ To make this more formal, we consider a pure growth (Yule) process.
     The pure growth process can also be viewed as the following branching process: at time $t$, each individual waits for an exponential time with rate $\rho$ and then splits into two individuals.
 \end{remark}
 
-In the current context, the pure growth process $S(t)$ should have a similar behaviour to the liquid (we only consider starting from $P$ and ignore $Q$ for now):
+In the current context, the pure growth process $M(t)$ should have a similar behaviour to the liquid (we only consider starting from $P$ and ignore $Q$ for now):
 
 \begin{itemize}
     \item The process goes in both directions along the circle
@@ -231,7 +231,116 @@ In the current context, the pure growth process $S(t)$ should have a similar beh
 
 Therefore, we see that the process should have rate $2\rho$, as for each direction, the probability of encountering a shortcut is $2 \times (1/L) \times (\rho L/2) = \rho$, since a shortcut has two endpoints and they are uniformly distributed with number of shortcuts drawn from $\mathrm{Poisson}(L\rho/2)$.  
 
+It can be shown that 
+\begin{proposition}
+    If the pure growth process $M(t)$ has rate $2\rho$, then $\mathbb{E}[M(t)] = e^{2\rho t}$.
+\end{proposition}  
+\begin{proof}
+    A proof can be found on Pg. 82 of \citep{Norris_1997}.
+\end{proof}
 
+Now if $N(t)$ is another pure growth process with the same rate starting from $Q$, then we say the two processes meet each other if their offsprings (which are intervals on the circle) overlap/intersect. If we further let $V_t$ denotes the number of intersecting pairs of intervals at time $t$, then the event $\{V_t=0\}$ is equivalent to the shortest path between $P$ and $Q$ being longer than $t$:
+\begin{equation}
+    \mathbb{P}(\mathcal{D}>t) = \mathbb{P}(V_t=0)
+\end{equation} 
+
+So we are interested in the distribution of $V_t$. To do this, we need to consider the total length covered by the offsprings at time $t$.  
+
+\begin{proposition}\label{prop:total_length}
+    Let $s(t)$ denote the total length covered by $M(t)$ at time $t$. Then, we can approximate it by 
+    \begin{equation}
+        \mathbb{E}[s(t)] \approx \frac{1}{\rho} e^{2\rho t}
+    \end{equation}
+
+    We have similar results for $N(t)$ and $u(t)$.  
+\end{proposition}
+
+The proof is based on the following theorem, which can be found in \hyperlink{http://galton.uchicago.edu/ ̃lalley/Courses/312/Branching.pdf}{this note}.
+
+\begin{theorem}\label{thm:branching}
+    Let $M(t)$ be a pure growth process with rate $2\rho$, then 
+    \begin{equation*}
+        \frac{M(t)}{e^{2\rho t}} \to W \quad a.s.
+    \end{equation*}
+    where $W$ follows an $\mathrm{Exp}(1)$ distribution.  
+\end{theorem}
+
+\begin{proof}[(Sketch) Proof of \Cref{prop:total_length}]
+    Write
+    \begin{equation*}
+        \frac{M(t-h)}{M(t)}=\frac{M(t-h)e^{-2\rho(t-h)}}{M(t)e^{-2\rho t}}e^{-2\rho h}
+    \end{equation*}
+    and recall \Cref{thm:branching}. Then,
+    \begin{equation*}
+        \operatorname*{lim}_{t\rightarrow\infty}\frac{M(t-h)}{M(t)}=e^{-2\rho h}\mathrm{\,almost\,surely.}
+    \end{equation*}
+    If $X(t)$ is the average age at time $t$, then we have 
+    \begin{equation*}
+        \mathbb{P}(X(t)<h) = \frac{M(t)-M(t-h)}{M(t)}
+    \end{equation*}
+    where the numerator represents the number of offpsrings born in the interval $[t-h,t]$, hence has ages less than $h$. Therefore, we see $X(t)$ has an exponential distribution with rate $2\rho$ approximately.  So the average age is approximately $\frac{1}{2\rho}$.   
+
+    Now we note an offspring with age $h$ can cover an interval of length $2h$ (as it extends in both directions) and there are on average $e^{2\rho h}-1$ offsprings at time $t$ (as the process starts with one individual). Therefore, the total length covered by $M(t)$ at time $t$ is approximately $\frac{1}{2\rho}e^{2\rho t}$.
+\end{proof}  
+
+\begin{figure}
+        \centering
+        \begin{tikzpicture}
+                \coordinate (M) at (0,0);
+                \coordinate (A) at (0,2);
+                \coordinate (C) at (135:2);
+                \coordinate (D) at (45:2);
+                \coordinate (E) at (60:2);
+                \coordinate (F) at (15:2);
+                \begin{scope}
+                \clip[draw] circle [radius=2];
+                \draw [step=2,very thin,gray](-2,-2) grid (2,2);
+                \end{scope}
+                \draw (A) node[circle,inner sep=1.5pt,fill] {} (C) node[circle,inner sep=1.5pt,fill] {} (M) node[circle,inner sep=1.5pt,fill] {} (D) node[circle,inner sep=1.5pt,fill] {} (E) node[circle,inner sep=1.5pt, fill] {} (F) node[circle,inner sep=1.5pt, fill] {};
+                \draw[-] (M) -- (C) (M) -- (A) (M) -- (D);
+                \draw[dotted,|-|]
+                    (0,2cm+10pt)
+                    arc[start angle=90,end angle=135,radius=2cm+10pt]
+                 node[midway,fill=white,sloped] {\tiny{$(0, 0+1/\rho)$}};
+                \draw[dotted,|-|]
+                    (60:2cm+10pt)
+                    arc[start angle=60,end angle=15,radius=2cm+10pt]
+                    node[midway,fill=white,sloped] {\tiny{$(a, a+1/\rho)$}};
+        \end{tikzpicture}
+        \caption{An interval can begin with $a$ and end with $a+1/\rho$ which intersects with the interval $(0, 0+1/\rho)$. It could also begin with $a$ and end with $a-1/\rho$.}
+        \label{fig:total_length}
+\end{figure}
+
+We now approximate $V_t$. 
+
+\begin{proposition}\label{prop:intersecting_pairs}
+    Let $V_t$ denote the number of intersecting pairs of intervals at time $t$. Then, 
+    \begin{equation}
+        V_t \approx \frac{2}{L\rho} e^{4\rho t}
+    \end{equation}
+\end{proposition}
+
+\begin{proof}[Sketch of Proof]
+    We will approximate $V_t$ through its mean, namely:
+    \begin{align*}
+        \mathbb{E}[V_t] &= \mathbb{E}\left[\sum_{i=1}^{M(t)}\sum_{j=1}^{N(t)}\mathbf{1}_{\{I_i\cap J_j\neq \emptyset\}}\right] \\
+        &\approx e^{4\rho t} \mathbb{P}(I_1\cap J_1\neq \emptyset)\\
+        &= e^{4\rho t} \frac{2}{L\rho}
+    \end{align*}
+
+    since we have roughly $e^{4\rho t}$ pairs of intervals and each has length approximately $1/\rho$ by \Cref{prop:total_length}; and for any interval $(a, a+1/\rho)$, it intersects with another interval if $a$ falls into that interval, which happens with probability $2/(L\rho)$, since each interval has length $1/\rho$ and the circumference is $L$, with intersection happening in two directions (\Cref{fig:total_length}).
+\end{proof}
+
+We obtain an easier expression to work with by solving for $t$,  
+\begin{equation}
+    V_t \approx y
+\end{equation}
+Namely, set $y=2e^{2x}$, we can find $\tau_x$ such that $V_{\tau_x} \approx y$, where
+\begin{equation*}
+    \tau_{x}={\frac{1}{2\rho}}\left\{{\frac{1}{2}}\log(L\rho)+x\right\}
+\end{equation*}
+
+We are now ready to characterise the distribution of the shortest path through $V_t$.  
 
 \subsection{Poisson Approximation}
 
