@@ -410,6 +410,69 @@ Here $\approx$ is used in the sense that the difference between the two expressi
 
 \subsection{Unconditioning}
 
+To estimate the distribution $V_{\tau_x}$, we need to remove the conditioning on $M(\tau_x)$ and $N(\tau_x)$.  
+
+\begin{theorem}
+    As $L\to \infty$, we have
+    \begin{equation*}
+        \mathbb{P}(\mathcal{D} > 2\tau_x) \approx \mathbb{P}(V_{\tau_x} = 0) \rightarrow \int_{0}^{\infty} \frac{e^{-y}}{1+e^{2x}y} dy
+    \end{equation*}
+    where $\mathcal{D}$ is the length of the shortest path between $P$ and $Q$ and $\tau_x=\frac{1}{2\rho}(\frac{1}{2}\log(L\rho)+x)$.
+\end{theorem}
+
+\begin{proof}
+    Recall for $\lambda=\frac{2}{L}\sum_{i=1}^{m}\sum_{j=1}^{n} \min(s_i, u_j)$, we have
+    \begin{equation*}
+        \mathbb{P}(V_{\tau_x} = 0 | M(\tau_x) = m, N(\tau_x) = n) \approx e^{-\lambda}
+    \end{equation*}
+    If $M(\tau_x)=m$ and if $T_1^M, \ldots, T_m^M$ denote the times when the $m$ intervals of $M(\tau_x)$ were created, then for $0<v\leq \tau_x$,
+    \begin{equation*}
+        M(v) = \sum_{i=1}^m \mathbf{1}(v\geq T_i^M)
+    \end{equation*}
+    We have analogous results for $N(v)$. Now note that the length of an interval is $2$ times its age, so $s_i = 2 (\tau_x - T_i^M)$ and $u_j = 2 (\tau_x - T_j^N)$. Therefore, we have
+    \begin{align*}
+        \frac{2}{L} \sum_{i=1}^m \sum_{j=1}^n \min(s_i, u_j) &= \frac{2}{L} \sum_{i=1}^m \sum_{j=1}^n \min(2(\tau_x - T_i^M), 2(\tau_x - T_j^N)) \\
+        &= \frac{4}{L} \sum_{i=1}^m \sum_{j=1}^n \min(\tau_x - T_i^M, \tau_x - T_j^N) \\
+        &= \frac{4}{L} \sum_{i=1}^m \sum_{j=1}^n (\tau_x - \max(T_i^M, T_j^N)) \\
+        &= \frac{4}{L} \sum_{i=1}^m \sum_{j=1}^n \int_0^{\tau_x} \mathbf{1}(v \geq T_i^M) \mathbf{1}(v \geq T_j^N) dv \\
+        &= \frac{4}{L} \int_0^{\tau_x} M(v) N(v) dv
+    \end{align*}  
+    Therefore, integrating with $M$ and $N$ gives
+    \begin{equation*}
+        \mathbb{P}(V_{\tau_x} = 0) = \int_0^{\infty} \int_0^{\infty}\exp\left(-\frac{4}{L} \int_0^{\tau_x} M(v) N(v) dv\right) \mathrm{d}\mathbb{P}_M \mathrm{d}\mathbb{P}_N
+    \end{equation*}
+
+    To evaluate this integral, we recall \Cref{thm:branching}, $\frac{M(t)}{e^{2\rho t}} \to W$ where $W$ follows an $\mathrm{Exp}(1)$ distribution. Therefore, by approximating $e^{2\rho t} M(t) \to W$ almost surely and taking $W, W' \overset{i.i.d}{\sim} \mathrm{Exp}(1)$, we have  
+    \begin{align*}
+        \int_0^{\tau_x} M(v)N(v) dv &= \int_0^{\tau_x} e^{4\rho v} M(v)e^{-2\rho v} N(v)e^{-2\rho v} dv \\
+        &\approx \int_0^{\tau_x} e^{4\rho v} W W' dv \\
+        &= WW'\frac{1}{4\rho} (e^{4\rho \tau_x} - 1) \\
+        &\approx \frac{1}{4\rho} WW' e^{2x} (\sqrt{L \rho})^2 \\
+        &= \frac{L}{4} WW' e^{2x}
+    \end{align*}
+    Computing explicitly, we have:
+\begin{equation*}
+    \int_0^{\infty} \int_0^{\infty} \exp(-uy e^2x) e^{-u} e^{-y} \mathrm{d}u \mathrm{d}y = \int_0^{\infty} \frac{e^{-y}}{1+e^{2x}y} \mathrm{d}y
+\end{equation*}
+where $u$ and $y$ are the random variables corresponding to $W$ and $W'$ respectively.  
+\end{proof}
+
+Showing the approximation works is beyond the scope of this course, but can be found in \citep{Reinert2001}, which is the following:
+
+\begin{theorem}
+    If $T$ denotes the random variable with distribution
+    \begin{equation*}
+        \mathbb{P}(T>t) = \int_0^{\infty} \frac{e^{-y}}{1+e^{2t}y} \mathrm{d}y
+    \end{equation*}
+    and $D^* = \frac{1}{\rho} (\frac{1}{2}\log(L\rho) + T)$, then 
+    \begin{equation*}
+        \sup_t | \mathbb{P}(\mathcal{D} \leq t) - \mathbb{P}(D^* \leq t) | =\mathcal{O}((L\rho)^{-1/5} \log^2(L\rho))
+    \end{equation*}
+\end{theorem}
+
+Note that $\mathbb{E}[T] = \frac{1}{2} \gamma \approx 0.2886$ where $\gamma$ is the Euler-Mascheroni constant.
+
+
 
 
 
