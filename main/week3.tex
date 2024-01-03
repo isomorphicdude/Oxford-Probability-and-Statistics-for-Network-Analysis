@@ -223,10 +223,10 @@ To see this is actually useful, we consider a bound for Bernoulli random variabl
 \end{example}
 
 \subsubsection{Local dependence}  
-When the random variables are not independent, the computation of $\mathbb{E}[Wg(W)]$ is more complicated.  
+When the random variables are not independent, the computation of $\mathbb{E}[Wg(W)]$ is more complicated.  Here we let $A_\alpha$ denote the set elements that are dependent on $X_\alpha$.  
 
 \begin{theorem}\label{thm:poisson_stein_local}
-    Let $X_\alpha, \alpha \in I$ with each $X_\alpha \sim \text{Ber}(p_\alpha)$ and $Z = \sum_{\alpha \in I} X_\alpha$. Let $\lambda = \sum_{\alpha \in I}$. Suppose $\forall \alpha \in I$, there exists a set $A_\alpha \subseteq I$, s.t. $X_\alpha$ is independent of $\sum_{\beta \notin A_\alpha} X_\beta$. Define 
+    Let $X_\alpha, \alpha \in I$ with each $X_\alpha \sim \text{Ber}(p_\alpha)$ and $Z = \sum_{\alpha \in I} X_\alpha$. Let $\lambda = \sum_{\alpha \in I} p_\alpha$. Suppose $\forall \alpha \in I$, there exists a set $A_\alpha \subseteq I$, s.t. $X_\alpha$ is independent of $\sum_{\beta \notin A_\alpha} X_\beta$. Define 
     \begin{equation*}
         \eta_\alpha = \sum_{\beta \in A_\alpha} X_\beta
     \end{equation*}
