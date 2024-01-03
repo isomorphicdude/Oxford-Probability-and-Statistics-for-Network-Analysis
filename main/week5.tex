@@ -239,9 +239,9 @@ It can be shown that
     A proof can be found on Pg. 82 of \citep{Norris_1997}.
 \end{proof}
 
-Now if $N(t)$ is another pure growth process with the same rate starting from $Q$, then we say the two processes meet each other if their offsprings (which are intervals on the circle) overlap/intersect. If we further let $V_t$ denotes the number of intersecting pairs of intervals at time $t$, then the event $\{V_t=0\}$ is equivalent to the shortest path between $P$ and $Q$ being longer than $t$:
+Now if $N(t)$ is another pure growth process with the same rate starting from $Q$, then we say the two processes meet each other if their offsprings (which are intervals on the circle) overlap/intersect. If we further let $V_t$ denotes the number of intersecting pairs of intervals at time $t$, then the event $\{V_t=0\}$ is (roughly) equivalent to the shortest path between $P$ and $Q$ being longer than $2t$:
 \begin{equation}
-    \mathbb{P}(\mathcal{D}>t) = \mathbb{P}(V_t=0)
+    \mathbb{P}(\mathcal{D}>2t) \approx \mathbb{P}(V_t=0)
 \end{equation} 
 
 So we are interested in the distribution of $V_t$. To do this, we need to consider the total length covered by the offsprings at time $t$.  
@@ -343,6 +343,69 @@ Namely, set $y=2e^{2x}$, we can find $\tau_x$ such that $V_{\tau_x} \approx y$, 
 We are now ready to characterise the distribution of the shortest path through $V_t$.  
 
 \subsection{Poisson Approximation}
+
+Suppose at time $t$, there are intervals $I_1, \ldots, I_m$ with lengths $s_1, \ldots, s_m$ for process $M(t)$ and $J_1, \ldots, J_n$ with lengths $u_1, \ldots, u_n$ for process $N(t)$. Then, define
+\begin{equation*}
+    X_{ij} = \mathbf{1}(I_i\cap J_j\neq \emptyset) \mathbf{1}(I_i \nsubseteq J_j) \mathbf{1}(J_j \nsubseteq I_i)
+\end{equation*}
+
+We will approximate the sum 
+\begin{equation*}
+    V_{t} = \sum_{i=1}^{m}\sum_{j=1}^{n}X_{ij}
+\end{equation*}
+by a Poisson random variable with mean 
+\begin{equation*}
+    \lambda = \mathbb{E}[V_t] \approx \sum_{i=1}^{m}\sum_{j=1}^{n}\frac{2}{L\rho} \min(s_i, u_j)
+\end{equation*}
+which follows similarly from the proof of \Cref{prop:intersecting_pairs}. We have
+\begin{theorem}
+    With the same notation as above, the total variation distance is bounded by 
+    \begin{equation*}
+        d_{TV}(\mathcal{L}(V_t), \mathrm{Po}(\lambda)) \leq \frac{4}{L}(m+n) l_{su}
+    \end{equation*}
+    where $l_{su} = \max(\max_i s_i, \max_j u_j)$.  
+\end{theorem}
+
+\begin{proof}
+    Recall the result of \Cref{thm:poisson_stein_local}. We need to have a set $A_\alpha$ such that $X_\alpha$ is independent of $\sum_{\beta\notin A_\alpha}X_\beta$ and $\eta_\alpha = \sum_{\beta \in A_\alpha}X_\beta$, then
+    \begin{equation*}
+        d_{TV}(\mathcal{L}(V_t), \text{Po}(\lambda)) \leq \sum_{\alpha\in I}[(p_{\alpha}\mathbb{E}(\eta_{\alpha})+\mathbb{E}(X_{\alpha}(\eta_{\alpha}-X_{\alpha}))]\operatorname*{min}\left(1,\lambda^{-1}\right)
+    \end{equation*}
+    Following this idea, we set 
+    \begin{equation*}
+        A_{(i,j)}=\{(k,\ell)\in I:\{k,\ell\}\cap\{i,j\}\neq\emptyset\}
+    \end{equation*}
+    with $\alpha = (i,j)$. Then, noting $|A_{(i,j)}| = m+n-2$, we have
+    \begin{align*}
+        \sum_{\alpha\in I}p_{\alpha}\mathrm{E}\eta_{\alpha} &\leq(m+n){\frac{2}{L}}l_{s u}\sum_{\alpha\in I}p_{\alpha} \\
+        &\leq(m+n){\frac{2}{L}}l_{s u}\lambda
+    \end{align*}
+    On the other hand,
+    \begin{align*}
+        \sum_{\alpha\in I}\mathbb{E}(X_{\alpha}(\eta_{\alpha}-X_{\alpha})) &= \sum_{\alpha\in I} \sum_{\beta\neq \alpha \in A_\alpha} \mathbb{E}(X_{\alpha}X_{\beta}) \\
+        &= \sum_{\alpha\in I} \sum_{\beta\neq \alpha \in A_\alpha} \mathbb{E}(X_{\alpha})\mathbb{E}(X_{\beta}) \\
+        &\leq(m+n){\frac{2}{L}}l_{s u}\lambda
+    \end{align*}
+    where we used pair-wise independence. Now noting $\lambda>1$, we have the desired result.
+\end{proof}
+
+As a corollary, we obtain a mixed Poisson approximation for $V_{\tau_x}$ (this is mixed as we condition on the number of intervals and their lengths at time $\tau_x$). Given $M(\tau_x)=m$ and $N(\tau_x)=n$, we have
+
+\begin{corollary}
+    Using the same notations as above, we have
+    \begin{equation*}
+        d_{TV}(\mathcal{L}(V_{\tau_x}|M(\tau_x)=m, N(\tau_x)=n), \mathrm{Po}(\lambda)) \leq \frac{4}{L}(m+n) l_{su}
+    \end{equation*}
+    where $\lambda = \frac{2}{L}\sum_{i=1}^{m}\sum_{j=1}^{n} \min(s_i, u_j)$.
+\end{corollary}
+
+Therefore, the probability of having no intersecting pairs at time $\tau_x$ is approximately  
+
+\begin{equation*}
+    \mathbb{P} (V_{\tau_x} = 0 | M(\tau_x) = m, N(\tau_x) = n) \approx e^{-\lambda}
+\end{equation*}
+
+Here $\approx$ is used in the sense that the difference between the two expressions tends to $0$ as $L\to \infty$.  
 
 
 \subsection{Unconditioning}
