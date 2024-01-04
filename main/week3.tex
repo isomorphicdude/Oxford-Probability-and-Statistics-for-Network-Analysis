@@ -136,7 +136,7 @@ This is a direct computation, noting the $Z=0$ gives zero expectation when $g$ i
 The IPM we will use here is the total variation distance (\Cref{eq:total_variation_distance}), which leads to the Stein's equation (\Cref{def:stein_equation}):
 
 \begin{equation}
-    \mathcal{T}g(z) = I(j \in A) - \mathbb{E}[I(j \in A)]
+    \mathcal{T}g(z) = I(z \in A) - \mathbb{E}[I(X \in A)]
     \label{eq:poisson_stein_equation}
 \end{equation}
 
@@ -294,7 +294,7 @@ We are now ready to approximate the number of triangles in Erd\H{o}s-R\'{e}nyi r
 
 Then with the same notation as before, let 
 $$
-X_{\alpha}=X_{u,v,w} = A_{u v} A_{v w} A_{w u}
+X_{\alpha}=X_{u,v,w} = \mathbf{1}(u\sim v) \mathbf{1}(v\sim w) \mathbf{1}(w\sim u)
 $$
 
 which equals 1 if and only if $uvw$ is a triangle, each of the $X_\alpha$ is a Bernoulli random variable with parameter $p^3$. 
@@ -307,14 +307,191 @@ which equals 1 if and only if $uvw$ is a triangle, each of the $X_\alpha$ is a B
 \end{theorem}
 
 \begin{proof}
-    
+    Using the same notation as above with $p_\alpha=p^3$ and $A_\alpha$ with $\alpha=(u,v,w)$ be defined as 
+    \begin{equation*}
+        A_{\alpha} = \{(a,b,c) \mid |(u,v,w)\cap (a,b,c)|\geq 2\}
+    \end{equation*}
+    It is easy to see $|A_\alpha| = 3(n-3) < 3n$, thus $\mathbb{E}[\eta_\alpha]\leq 3np^3$. Moreover, we have  
+    \begin{equation*}
+        \mathbb{E}[X_\alpha(\eta_\alpha - X_\alpha)] = \mathbb{E}[X_\alpha \sum_{\beta \in A_\alpha, \beta \neq \alpha} X_\beta] = \sum_{\beta \in A_\alpha, \beta \neq \alpha} p^5 \leq 3np^5
+    \end{equation*}
+    Using \Cref{thm:poisson_stein_local} gives the desired result.
 \end{proof}
 
 
 \subsection{Stein's Method for Normal Approximation}
+Similarly, we set up the Stein operator (\Cref{def:stein_operator}) for normal approximation:  
+
+\begin{equation}\label{eq:stein_operator_normal}
+    \mathcal{T}g(z) = g'(z) - zg(z)
+\end{equation}
+
+for all continuous and piecewise continuously differentiable functions $g: \mathbb{R} \to \mathbb{R}$ with $\mathbb{E}[|g'(Z)|]<\infty$. This gives a characterization of the normal distribution with mean $\mu$ and variance $\sigma^2$:  
+
+\begin{theorem}[\citep{stein1972bound}]\label{thm:stein_operator_normal}
+    If $Z\sim \mathcal{N}(0, 1)$, then 
+    \begin{equation*}
+        \mathbb{E}[(\mathcal{T}g(Z))]:=\mathbb{E}[Zg(Z) - g'(Z)] = 0
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    
+\end{proof}
+
+We do not consider the total variation distance here, but instead use the \textbf{weak convergence} of measures, which is motivated by the following exmaple.  
+
+\begin{example}[(Total vairation might not be the best choice)]
+
+    Let $X\sim \mathrm{Binom}(n,p)$ and $Y\sim \mathcal{N}(0,1)$, then we know from the central limit theorem that
+    \begin{equation*}
+        \frac{X-np}{\sqrt{np(1-p)}} \xrightarrow{d} Y
+    \end{equation*}
+    where $\xrightarrow{d}$ denotes weak convergence. However, if we have set $A_n :=\{0, 1, \ldots, n\}$, then $\mathbb{P}(X\in A_n) = 1$ and $\mathbb{P}(Y\in A_n) = 0$, for all $n\in \mathbb{N}$.
+\end{example}
+
+We now define the notion of weak convergence of probability measures.  
+
+\begin{definition}
+   Let $(P_n)_{n\in \mathbb{N}}$ be a sequence of probability measures on $\mathbb{R}$ and $P$ be another probability measure on $\mathbb{R}$. Then \textbf{weak convergence} is equivalent to the following statements:
+   \begin{itemize}
+    \item $P_n(A) \to P(A)$ for all $A \in \mathcal{B}(\mathbb{R})$ such that $P(\partial A)=0$.
+    \item $\int f dP_n \to \int f dP$ for all bounded continuous functions $f$.
+    \item $\int f dP_n \to \int f dP$ for all bounded, infintely-often differentiable continuous functions $f$.
+   \end{itemize}
+\end{definition}
+
+This motivates the Steins's equation (\Cref{def:stein_equation}):
+\begin{equation}\label{eq:stein_equation_normal}
+    \mathcal{T}g(z) = h(z) - \mathbb{E}[h(X)]
+\end{equation}
+
+where $h$ is a bounded measurable function.
 
 
+\begin{lemma}\label{lem:stein_equation_normal}
+    Given the Stein's equation above, we have a unique bounded solution $g_h$, if:
+    \begin{itemize}
+        \item $h:\mathbb{R} \to \mathbb{R}$ is bounded and measurable.
+        \item $\mathbb{E}[|h(Z)|] < \infty$.
+        \item $h$ is continuous and piecewise continuously differentiable with $\|h'\|_\infty < \infty$.
+    \end{itemize}
 
+        Then the solution can be written as
+        \begin{equation*}
+            g_h(z) = e^{z^2/2} \int_{-\infty}^z (h(w) - \mathbb{E}[h(X)]) e^{-w^2/2} dw
+        \end{equation*}
+        which can also be written as
+        \begin{equation*}
+            g_h(z) = -e^{z^2/2} \int_{z}^\infty (h(w) - \mathbb{E}[h(X)]) e^{-w^2/2} dw
+        \end{equation*}
+    \end{lemma}
+
+    \begin{proof}
+        Multiplying both sides of \Cref{eq:stein_equation_normal} by $e^{-z^2/2}$, we note:
+        \begin{align*}
+            e^{-z^2/2} g'(z) - e^{-z^2/2}zg(z) &= e^{-z^2/2} (h(z) - \mathbb{E}[h(X)]) 
+        \end{align*}
+        The LHS is simply the derivative of $e^{-z^2/2}g(z)$, so we can integrate both sides to get:
+        \begin{align*}
+            e^{-z^2/2}g(z) &= \int_{-\infty}^z e^{-w^2/2} (h(w) - \mathbb{E}[h(X)]) dw +C\\
+            g(z) &= e^{z^2/2} \int_{-\infty}^z e^{-w^2/2} (h(w) - \mathbb{E}[h(X)]) dw + Ce^{z^2/2}\\
+        \end{align*}
+        Note the solution $g$ is bounded if and only if $C=0$ as otherwise $g\to infty$ as $z\to \infty$.  
+        To obtain the second form, we note that 
+        \begin{equation*}
+            \int_{-\infty}^{+\infty} (h(w) - \mathbb{E}[h(X)]) e^{-w^2/2} dw = 0
+        \end{equation*}
+        as $e^{-w^2/2}$ is the density of $\mathcal{N}(0,1)$, so the second form follows from symmetry.
+    \end{proof}
+
+The bounds on the solution is given by the following lemma.  
+\begin{lemma}\label{lem:stein_equation_normal_bound}
+    Given $h$ bounded and $g_h$ being its solution in \Cref{lem:stein_equation_normal}, we have:
+    \begin{equation*}
+        \|g_h\|_\infty \leq \sqrt{\frac{\pi}{2}} \|h - \mathbb{E}[h(X)]\|_\infty
+    \end{equation*}
+    and 
+    \begin{equation*}
+        \|g_h'\|_\infty \leq 2 \|h-\mathbb{E}[h(X)]\|_\infty
+    \end{equation*}
+    For $h$ being continuous and piecewise continuously differentiable, we have:
+    \begin{align*}
+        \|g_h\|_\infty &\leq 2 \|h'\|_\infty \\
+        \|g_h'\|_\infty &\leq \sqrt{\frac{2}{\pi}} \|h'\|_\infty\\
+        \|g_h''\|_\infty &\leq 2 \|h'\|_\infty
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    The proof is omitted.
+\end{proof}
+
+We can now give the converse of \Cref{thm:stein_operator_normal} to characterize the normal distribution.  
+
+\begin{theorem}[\citep{stein1986}]
+    If $\mathbb{E}[(\mathcal{T}g(Z))]=\mathbb{E}[Zg(Z) - g'(Z)] = 0$ for all bounded $g$, then $Z\sim \mathcal{N}(0,1)$.
+\end{theorem}
+
+\begin{proof}
+    The idea is to take a particular $h$ and use weak convergence. Let $h$ be defined as 
+    \begin{equation*}
+        h_w(z) = \mathbf{1}_{(-\infty, w]}(z)
+    \end{equation*}
+    where $w\in \mathbb{R}$. Then it is clearly continuous (a.s.) and piecewise continuously differentiable. Moreover, since the solution $g_h$ is in particular bounded by the previous lemma, we have:  
+    \begin{equation*}
+        0 = \mathbb{E}[Zg_h(Z)-g_h'(Z)] = \mathbb{E}[h(Z)] - \mathbb{E}[h(X)]=\mathbb{P}(Z\leq w) - \Phi(X\leq w)
+    \end{equation*}
+    which implies $Z\sim \mathcal{N}(0,1)$ as $w$ is arbitrary.
+\end{proof}
+
+Now for independent $X_1, \ldots, X_n$ with zero mean and variance $1/n$, we can bound the weak convergence of their sum to the standard normal distribution.  
+
+\begin{theorem}
+    Let $Z = \sum_{i=1}^{n} X_i$ with $X_i$ being independent and $\mathbb{E}[X_i]=0$ and $\mathbb{E}[X_i^2]=1/n$. Then we have for any continuous and piecewise continuously differentiable $h$:
+    \begin{equation*}
+        \left|\mathbb{E}[h(Z)] - \mathbb{E}[h(X)]\right| \leq \|h'\|_\infty \left( \frac{2}{\sqrt{n}} + \sum_{i=1}^{n} \mathbb{E}[|X_i|^3]\right)
+    \end{equation*}
+    where $X\sim \mathcal{N}(0,1)$.
+\end{theorem}
+
+\begin{proof}
+    We would like to bound $\mathbb{E}[g'(Z)-Zg(Z)]$. Let $Z_i = Z - X_i$, so $Z_i$ is independent of $X_i$. Then we have:
+    \begin{align*}
+        \mathbb{E}[Zg(Z)] &= \mathbb{E}[\sum_{i=1}^{n} X_i g(Z)]\\
+        &= \sum_{i=1}^{n} \mathbb{E}[X_i g(Z_i + X_i)]\\
+        &= \sum_{i=1}^{n} \mathbb{E}[X_i (g(Z_i) + X_i g'(Z_i) + \frac{X_i^2}{2} g''(Z_i +\theta X_i))]\\
+        &= \sum_{i=1}^{n} \mathbb{E}[X_i] \mathbb{E}[g(Z_i)] + \mathbb{E}[X_i^2] \mathbb{E}[g'(Z_i)] + \frac{1}{2} \mathbb{E}[X_i^3] \mathbb{E}[g''(Z_i +\theta X_i)]\\
+        &= \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(Z_i)] + R
+    \end{align*}
+
+    where $R$ is the remainder term. Now we bound $R$ as follows:
+    \begin{align*}
+        |R| &\leq \frac{1}{2} \sum_{i=1}^{n} \mathbb{E}[|X_i|^3] \|g''\|_\infty\\
+        &\leq \sum_{i=1}^{n} \mathbb{E}[|X_i|^3] \|h'\|_\infty\\
+    \end{align*}
+
+    Therefore, we have:
+    \begin{equation*}
+        \mathbb{E}[g'(Z)-Zg(Z)] = \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(Z) -g'(Z_i)] - R
+    \end{equation*}
+
+    Again by Taylor expansion or the mean value theorem, we have:
+    \begin{align*}
+        \left|\frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(Z) -g'(Z_i)]\right| &\leq \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[|Z-Z_i| \|g''\|_\infty]\\ 
+        &\leq \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[|X_i| \|g''\|_\infty] \\
+        &\leq \frac{2}{\sqrt{n}} \|h''\|_\infty
+    \end{align*}
+    where we have used \Cref{lem:stein_equation_normal_bound} and Cauchy-Schwarz inequality in the last step (namely, $\mathbb{E}[|X_i| \cdot 1]^2 \leq \mathbb{E}[|X_i|^2] \cdot 1=1/n \implies \mathbb{E}[|X_i|]\leq 1/\sqrt{n}$). Combining the two bounds using triangle inequality gives the desired result.
+\end{proof}
+
+
+\subsubsection{Dissociated Decompositions}
+
+
+\subsubsection{Triangles in $G(n,p)$}
+
+
+\newpage
 \bibliographystyle{apalike}
 \bibliography{bibliography3.bib}
 
