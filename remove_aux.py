@@ -8,8 +8,13 @@ parser = argparse.ArgumentParser(description='Remove aux files')
 parser.add_argument('--debug', 
                     action='store_true',
                     help='If true, will not remove log files')
+# when flag added, will not remove pdf files
+parser.add_argument('--not_remove_pdf',
+                    action='store_true',
+                    help='If true, will remove pdf files')
 
 debug = parser.parse_args().debug
+not_remove_pdf = parser.parse_args().not_remove_pdf
 
 to_remove = ['aux', 'gz', 'fls', 'out', 
             'toc', 'blg', 'fdb_latexmk', 
@@ -35,22 +40,24 @@ if __name__ == "__main__":
                 except:
                     logging.warning(f"Failed to remove: {dir}")
                     
-        # during editing, pdf is produced in main/, which should be removed
+        # during editing, pdf is produced, which should be removed
         pdf_list = glob.glob(f"main/*.pdf", recursive = True)
-        for dir in pdf_list:    
-            try:
-                os.remove(dir)
-                logging.info(f"Removed PDF file: {dir}")
-            except:
-                logging.warning(f"Failed to remove {dir}")
-                
-        # also remove the pdf in the root directory
-        pdf_list = glob.glob(f"*.pdf", recursive=True)
-        for dir in pdf_list:    
-            try:
-                os.remove(dir)
-                logging.info(f"Removed PDF file: {dir}")
-            except:
-                logging.warning(f"Failed to remove {dir}")
+        
+        if not not_remove_pdf:
+            for dir in pdf_list:    
+                try:
+                    os.remove(dir)
+                    logging.info(f"Removed PDF file: {dir}")
+                except:
+                    logging.warning(f"Failed to remove {dir}")
+                    
+            # also remove the pdf in the root directory
+            pdf_list = glob.glob(f"*.pdf", recursive=True)
+            for dir in pdf_list:    
+                try:
+                    os.remove(dir)
+                    logging.info(f"Removed PDF file: {dir}")
+                except:
+                    logging.warning(f"Failed to remove {dir}")
                 
         logging.info("Done")
