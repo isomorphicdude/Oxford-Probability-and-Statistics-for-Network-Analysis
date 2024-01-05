@@ -2,9 +2,9 @@
 
 
 
-\input{includes/commands}
-\input{includes/theoremstyle}
-%\input{Chapter/thmstyle2} An alternative format
+\include{includes/commands}
+\include{includes/theoremstyle}
+%\include{Chapter/thmstyle2} An alternative format
 \usepackage{standalone,docmute,  subfiles}
 
 
@@ -17,24 +17,27 @@
 \date{2023-2024}
 
 \begin{document}
-\input{other/title}
-\input{other/preface}
+\include{other/title}
+\include{other/preface}
 
 \newpage
 
 \tableofcontents
 
 %\newpage
-% \input{other/Content}
+% \include{other/Content}
 
 \newpage
-\input{main/week1-preliminaries}
+\include{week1-preliminaries}
 \newpage
-\input{main/week2}
+\include{week2}
 \newpage
-\input{main/week3}
+\include{week3}
 \newpage
-\input{main/week5}
+\include{week5}
 
+% \newpage
+% \bibliographystyle{apalike}
+% \bibliography{references.bib}
 
 \end{document}
