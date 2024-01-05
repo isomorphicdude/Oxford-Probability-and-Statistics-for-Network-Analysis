@@ -486,7 +486,110 @@ Now for independent $X_1, \ldots, X_n$ with zero mean and variance $1/n$, we can
 
 
 \subsubsection{Dissociated Decompositions}
+We will use the same notation as the lecture notes with $W=\sum_{i\in I} X_i$, where $I$ is a finite index set and $X_i$ are random variables.
 
+\begin{definition}\label{def:dissociated_decomposition}
+    A \textbf{dissociated decomposition} of $W$ for index $i$ is 
+    \begin{align*}
+        W &= W_i + Z_i \\
+        W &= W_{ik} + V_{ik} + Z_i
+    \end{align*}
+    where we assume there exists $K_i\subseteq I$ for each $i\in I$ with the following:
+    \begin{itemize}
+        \item $W_i$ is independent of $X_i$.
+        \item $Z_i=\sum_{k\in K_i} X_k$ is a sum dependent on $X_i$.
+        \item $W_{ik}$ is independent of $X_i$ and $X_k$, for $k\in K_i$.
+        \item $V_{ik}=\sum_{j \in K_k\setminus K_i} X_j$ is a sum dependent on $X_k$ but not $X_i$.
+    \end{itemize}
+\end{definition}
+
+We now provide a bound for $W$ in the case of dependent random variables.
+
+\begin{theorem}
+    Assume $W$ admits a dissociated decomposition as decribed above. Let $X_i, i\in I$ with $\mathbb{E}[X_i]=0$ and $\mathrm{Var}(W)=1$. Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$:
+
+    \begin{equation*}
+        \left|\mathbb{E}[h(W)] - \mathbb{E}[h(X)]\right| \leq 4||h^{\prime}||\sum_{i\in I}\sum_{j,k\in K_{i}}\left(\mathbb{E}(|X_{i}X_{j}X_{k}|+\mathbb{E}(|X_{i}X_{j}|)\mathbb{E}(|X_{k}|)\right)
+    \end{equation*}
+    where the $X$ without subscript is $\mathcal{N}(0,1)$.  
+\end{theorem}
+
+\begin{proof}
+    Recall $W = W_i + Z_i$ and $Z_i = \sum_{k\in K_i} X_k$ with $W_i$ independent of $X_i$. Then we can write:
+    \begin{align*}
+        1 &= \mathbb{E}[W^2] = \sum_{i\in I} \mathbb{E}[X_i W] \\
+        &= \sum_{i\in I} \mathbb{E}[X_i Z_i] \\
+        &= \sum_{i\in I}\sum_{k\in K_i} \mathbb{E}[X_i X_k]
+    \end{align*}
+    Now since the goal is to bound $|\mathbb{E}[Wg(W)-g'(W)]|$, we can use the same technique as before:
+    \begin{align*}
+        \mathbb{E}[Wg(W)-g'(W)] &= \underbrace{\left\{\mathbb{E}[W g(W)]-\sum_{i\in I}\mathbb{E}[X_{i}Z_{i}g^{\prime}(W_{i})]\right\}}_{R_1} \\
+        &+\underbrace{\sum_{i\in I}\left\{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]-\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k}]{\mathbb{E}}[g^{\prime}(W_{i k})]\right\}}_{R_2}\\
+        &+\underbrace{\sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[X_{i}X_{k}]\left\{\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]-\operatorname{\mathbb{E}}[g^{\prime}(W)]\right\}}_{R_3}
+    \end{align*}
+    where in the last sum we used $1=\sum_{i\in I}\sum_{k\in K_i} \mathbb{E}[X_i X_k]$. Now we bound each term separately.
+
+
+\paragraph{Bounding $R_1$} For $R_1$, we have by Taylor expansion:
+\begin{align*}
+    Wg(W) &= \sum_{i\in I} X_i g(W_i + Z_i)\\
+    &= \sum_{i\in I} X_i g(W_i) + X_i Z_i g'(W_i) + \frac{X_i Z_i^2}{2} g''(W_i + \theta_i Z_i)\\
+\end{align*}
+for some $\theta_i \in (0,1)$. Taking expectation and using \Cref{def:dissociated_decomposition} make the first term zero, and we have:
+\begin{align*}
+    \left|\mathbb{E}[W g(W)]-\sum_{i\in I}\mathbb{E}[X_{i}Z_{i}g^{\prime}(W_{i})]\right| &= \left|\sum_{i\in I}\mathbb{E}\left[\frac{X_{i}Z_{i}^{2}}{2}g^{\prime \prime}\left(W_{i}+\theta_{i} Z_{i}\right)\right]\right|\\
+    &\leq \left|\sum_{i\in I}\mathbb{E}\left[\frac{X_{i}Z_{i}^{2}}{2}\|g^{\prime \prime}\|_{\infty}\right]\right|\\
+    &=\frac{1}{2} \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\mathbb{E}\left[X_{i} Z_{i}^{2}\right]\\
+\end{align*}
+
+which we can re-write as $\frac{1}{2} \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\sum_{j,k\in K_{i}}\mathbb{E}[|X_{i}|X_{j}X_{k}]$. Thus, we have:
+\begin{equation*}
+    |R_1| \leq \frac{1}{2} \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\sum_{j,k\in K_{i}}\mathbb{E}[|X_{i}X_{j}X_{k}|]
+\end{equation*}  
+
+
+\paragraph{Bounding $R_2$} For $R_2$, recall that $W_{ik}$ is independent of $X_i$ and $X_k$, so we have:
+
+\begin{align*}
+    \sum_{i\in I}\left\{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]-\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k}]{\mathbb{E}}[g^{\prime}(W_{i k})]\right\} &= \sum_{i\in I}\left\{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]-\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} g^{\prime}(W_{i k})]\right\}\\
+\end{align*}
+
+Using Taylor expansion again, we have:
+\begin{equation*}
+    X_i Z_i g'(W_i) = \sum_{k\in K_i} X_i X_k \left( g'(W_{ik}) + V_{ik} g''(W_{ik} + \theta_{ik} V_{ik})\right)
+\end{equation*}
+
+for some $\theta_{ik} \in (0,1)$. Taking expectation and subtraction yields:
+\begin{equation*}
+    \sum_{i\in I}\left\{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]-\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} g^{\prime}(W_{i k})]\right\} = \sum_{i\in I}\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} V_{ik} g^{\prime \prime}(W_{i k}+\theta_{i k} V_{i k})]
+\end{equation*}
+
+Using the definition of $V_{ik}$ and triangle inequality:
+\begin{align*}
+    \left|\sum_{i\in I}\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} V_{ik} g^{\prime \prime}(W_{i k}+\theta_{i k} V_{i k})]\right| &\leq \sum_{i\in I}\sum_{k\in K_{i}}{\mathbb{E}}[|X_{i}X_{k}| |V_{ik}| \|g^{\prime \prime}\|_{\infty}]\\
+    &\leq \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\sum_{k\in K_{i}}\sum_{j\in K_k\setminus K_i}{\mathbb{E}}[|X_{i}X_{k}X_{j}|]\\
+    &= \|g^{\prime \prime}\|_{\infty} \sum_{k\in I}\sum_{i\in K_{k}}\sum_{j\in K_k\setminus K_i}{\mathbb{E}}[|X_{i}X_{k}X_{j}|]\\
+    &\leq \|g^{\prime \prime}\|_{\infty} \sum_{k\in I}\sum_{i\in K_{k}}\sum_{j\in K_k}{\mathbb{E}}[|X_{i}X_{k}X_{j}|]\\
+\end{align*}
+
+where in the penultimate step we used the fact that $k \in K_i \iff i \in K_k$. 
+\paragraph{Bounding $R_3$} For $R_3$, we expand $g'(W_{ik})$ using Taylor expansion for some $\rho_{ik} \in (0,1)$:
+
+\begin{align*}
+    \left\|\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]-\operatorname{\mathbb{E}}[g^{\prime}(W)]\right\| &=\left|\operatorname{\mathbb{E}}[g^{\prime}(W) - (Z_i+V_{ik}) g''(W_{ik} - \rho_{ik} (Z_i+V_{ik}))] - \operatorname{\mathbb{E}}[g^{\prime}(W)]\right|\\
+    &\leq \|g''\|_\infty \mathbb{E}[|Z_i+V_{ik}|]\\
+\end{align*}
+
+Now this gives:
+\begin{align*}
+    \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[X_{i}X_{k}]\left\{\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]-\operatorname{\mathbb{E}}[g^{\prime}(W)]\right\} &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|Z_i+V_{ik}|]\\
+    &=\|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|\sum_{j\in K_i} X_j + \sum_{j\in K_k\setminus K_i} X_j|]\\
+    &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k,j\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|X_j|]\\
+\end{align*}
+
+Combing those and use \Cref{lem:stein_equation_normal_bound} gives the desired result.  
+
+\end{proof}
 
 \subsubsection{Triangles in $G(n,p)$}
 
