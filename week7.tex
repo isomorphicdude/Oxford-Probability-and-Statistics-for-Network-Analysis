@@ -1,0 +1,313 @@
+\documentclass{article}
+
+\input{includes/commands.tex}
+\input{includes/theoremstyle.tex}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Week 7}
+
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+\section{Applied Network Analysis}
+This section is a brief summary of the results and methods from the last few lectures.
+
+\subsection{Sampling from Networks}
+\paragraph{Set up} We have population as an index set $U=\{1,2,\ldots, N\}$. With each unit, there is a quantity of interest $y_i$. Let the population total be:
+\begin{equation*}
+    \tau = \sum_{i\in U} y_i
+\end{equation*}
+and let the population average be:
+\begin{equation*}
+    \mu = \frac{\tau}{N}
+\end{equation*}
+The population variance is:
+\begin{equation*}
+    \sigma^2 = \frac{1}{N}\sum_{i\in U} (y_i-\mu)^2
+\end{equation*}
+
+We further denote a sample subset as $S\subset U$ with size $n=|S|$ and $S=\{i_1, \ldots, i_n\}$. We are interested in how to estimate $\tau$,  $\mu$, and $\sigma^2$ from the sample.
+
+\subsubsection{Sampling with Replacement}
+
+\paragraph{Estimating $\mu$} The sample mean is an unbiased estimator of the population mean: 
+\begin{equation*}
+    \hat{\mu} = \frac{1}{n}\sum_{i\in S} y_i
+\end{equation*}
+and the variance of the sample mean is:
+\begin{equation*}
+    \mathrm{Var}(\hat{\mu}) = \frac{\sigma^2}{n}
+\end{equation*}
+
+\paragraph{Estimating $\tau$} The estimator is given by:
+\begin{equation*}
+    \hat{\tau} = N\hat{\mu}
+\end{equation*}
+and the variance of the estimator is:
+\begin{equation*}
+    \mathrm{Var}(\hat{\tau}) = N^2\mathrm{Var}(\hat{\mu}) = \frac{N^2\sigma^2}{n}
+\end{equation*}
+
+\paragraph{Estimating $\sigma^2$} The estimator is given by:
+\begin{equation*}
+    \hat{\sigma}^2 = \frac{1}{n-1}\sum_{i\in S} (y_i-\bar{y})^2
+\end{equation*}
+and the variance of the estimator is:
+\begin{equation*}
+    \mathrm{Var}(\hat{\sigma}^2) = \frac{1}{n-1}\left(\frac{1}{n}\sum_{i\in S} (y_i-\mu)^4 - \frac{n-3}{n}\sigma^4\right)
+\end{equation*}
+
+
+\subsubsection{The Horvitz-Thompson Estimator}
+\paragraph{Estimating $\mu$} The Horvitz-Thompson estimator is given by:
+\begin{equation*}
+    \hat{\mu} = \frac{1}{N}\sum_{i\in S} \frac{y_i}{\pi_i}
+\end{equation*}
+where $\pi_i$ is the probability of selecting unit $i$ into the sample. Note this has an alternative for of $\sum_{i\in U} Z_i\frac{y_i}{\pi_i}$, where $Z_i=\mathbf{1}(i\in S)$ is the indicator function, taking the expectation shows that this is an unbiased estimator of $\mu$.  The variance of the estimator is:
+\begin{equation*}
+    \mathrm{Var}(\hat{\mu}) = \frac{1}{N^2}\sum_{i\in U}\sum_{j\in U}y_{i}y_{j}\left({\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}}-1\right).
+\end{equation*}
+
+where $\pi_{i,j}$ is the probability of selecting both unit $i$ and $j$ into the sample; the variance is computed by $\mathrm{Var}(\hat{\mu}) = \frac{1}{N^2} \sum_{i\in U}\frac{y_{i}^{2}}{\pi_{i}^{2}}\mathrm{Var}Z_{i}+\sum_{i\in U}\sum_{j\in U,j\neq i}\frac{y_{i}y_{j}}{\pi_{i}\pi_{j}}\mathrm{Cov}(Z_{i},Z_{j})$ and noting $\pi_{i,i}=\pi_{i}$. In practice, this is summed over $S$, 
+\begin{equation*}
+    \hat{\mathrm{Var}}\left(\hat{\tau}_{\pi}\right)~=~\sum_{i\in{\cal S}}\sum_{j\in{\cal S}}y_{i}y_{j}\left(\frac{1}{\pi_{i}\pi_{j}}-\frac{1}{\pi_{i j}}\right).
+\end{equation*}
+
+\paragraph{Estimating $\tau$} The estimator is given by:
+\begin{equation*}
+    \hat{\tau} = \sum_{i\in S} \frac{y_i}{\pi_i}
+\end{equation*}
+
+The variance can be deduced from above by multiplying $N^2$.
+
+\begin{example}[Simple Random Sampling]\label{ex:srs}
+    In a population of size $N$, there are $\binom{N}{n}$ possible samples of size $n$. Thus, the probability of containing a unit ($k$-tuple) is 
+    \begin{equation*}
+        \pi_{(i_1, \ldots, i_k)} = \frac{\binom{N-k}{n-k}}{\binom{N}{n}}
+    \end{equation*}
+    since there are $\binom{N-k}{n-k}$ ways to choose the remaining $n-k$ units from the remaining $N-k$ units.  
+    In particular, for $\pi_i$ and $\pi_{i,j}$, we have:
+    \begin{align*}
+        \pi_i &= \frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{n}{N}\\
+        \pi_{i,j} &= \frac{\binom{N-2}{n-2}}{\binom{N}{n}} = \frac{n(n-1)}{N(N-1)}
+    \end{align*}
+    For $n\geq 2$, we can see the variance of the Horvitz-Thompson estimator is less than that of the common estimator for the population total:
+    \begin{equation*}
+        \mathrm{Var}\,(\hat{\tau}_{\pi})=\frac{N^{2}(N-n)}{n(N-1)}\sigma^{2}<\frac{N^{2}}{n}\sigma^{2}
+    \end{equation*}
+\end{example}
+
+\subsubsection{Horvitz-Thompson for Networks}
+
+We need to define the population to be the quantity of interest. Here for network ${\mathcal{G}}=(\mathcal{V},{\mathcal{E}})$, we let the population be all vertices and verterx pairs:
+\begin{equation*}
+    U=\mathcal{V}\cup \{(u,v):u,v\in \mathcal{V}, u\neq v\}
+\end{equation*}
+So it has size:
+\begin{equation*}
+    N=|\mathcal{V}|+|\mathcal{V}|(|\mathcal{V}|-1)
+\end{equation*}
+
+\paragraph{Induced Subgraph Sampling} We first choose a vertex set $S_0$ and choose the induced edges from the vertex set. In this case, the sample $S$ is:
+\begin{equation*}
+    S = S_0 \cup \{(u,v): u,v\in S_0, u\neq v\}
+\end{equation*}
+with size $|S|=n+n(n-1)$. The probability of choosing a vertex is:
+\begin{equation*}
+    \pi_i = \frac{n}{|\mathcal{V}|}
+\end{equation*}
+and the probability of choosing an edge is (recall from \Cref{ex:srs}):
+\begin{equation*}
+    \pi_{i,j} = \frac{n(n-1)}{|\mathcal{V}|(|\mathcal{V}|-1)}
+\end{equation*}
+
+Note those probabilities assume the size of population is known.  
+
+
+\begin{example}[Estimating the number of edges]
+    Here the quantity of interest is the indicator function for each pair $y_{i,j}=\mathbf{1}((i,j)\in \mathcal{E})$. The Horvitz-Thompson estimator is:
+    \begin{equation*}
+        \hat{\tau}_{\pi}=\frac{|\mathcal{V}|(|\mathcal{V}|-1)}{n(n-1)}\sum_{u\in S}\sum_{\nu\in S}1((u,\nu)\in\mathcal{E}),
+    \end{equation*}
+\end{example}
+
+\paragraph{Star Sampling (1-hop Snow Ball)} We first choose a random sample $S_0$ of $n$ vertices and we sample all edges incident to the vertices in $S_0$. Usually, the adjacent vertices are added (but they can also be excluded). Therefore, the two cases are:
+\begin{align*}
+    S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\}\\
+    S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\} \cup \{v: (u,v)\in \mathcal{E}, u\in S_0\}
+\end{align*}
+\begin{example}[Not in snowball]
+    For a vertex $v\in \mathcal{V}$, the probability of it not being in the initial sample $S_0$ is:
+    \begin{align*}
+        \mathbb{P}(v\notin S_0) &= \mathbb{P}[\left(\{\nu\}\cup N(\nu)\right)\cap S_{0}=\emptyset]\\
+        &= \mathbb{P}[S_{0}\subset V\setminus(\{\nu\}\cup N(\nu))]\\
+        &= \frac{\binom{|\mathcal{V}|-(d(\nu)+1)}{n}}{\binom{|\mathcal{V}|}{n}}
+    \end{align*}
+\end{example}
+
+We also note that other quantities of interest can be estimated in a similar way \begin{example}[Triangles]
+    Defining $y_{i,j,k}=\mathbf{1}((i,j),(j,k),(k,i)\in \mathcal{E})$, the sample will need to have the triplets.
+\end{example}
+
+An important note is that the network considered in the settings above is \textbf{fixed}. If the network is \textbf{random}, then we should be cautious, as the samples do not reflect the real network structure. (\textit{e.g.} the snowball sample is always connected, but the real network may not be connected).  
+
+
+\subsection{Fitting Network Models}
+\begin{itemize}
+    \item In Erd\H{o}s-R\'{e}nyi random graphs, the MLE for $p$ is $\hat{p}=\frac{m}{\binom{n}{2}}$, where $m$ is the number of edges in the sample.
+    \item MCMC can be used to sample graphs. Use \verb|ergm| in \verb|R|. Cons are: flat likelihood and convergence takes long for exponential graph models, non-unique stationary distribution.
+    \item Can assess model fit by looking at statistics: vertex degree, clustering coefficient, and shortest path length.
+    \item For example, the number of triangles is approximately $\mathrm{Poisson}(p^3\binom{n}{3})$ and since the no. of triangles increase with $p$, we can test $H_0: p>p_0$. 
+    \item QQ plot can be used to compare the distribution of the statistics from the model and the sample.
+\end{itemize}
+
+% \subsection{Nonparametric Methods}
+\subsubsection{Monte Carlo Tests} 
+Let $\alpha = \frac{m}{1+n}$, where $n$ is the number of simulations and $m$ is a rank to be determined. We let the test statistic be $T$. The Monte Carlo test is:
+\begin{enumerate}
+    \item Observe the actual value of $T^*$ from the sample.
+    \item Simulate random sample $T_1, \ldots, T_n$ from the null distribution.
+    \item Order the set $\{T^*, T_1, \ldots, T_n\}$ in decreasing order (if reject for large $T$) or increasing order (if reject for small $T$).
+    \item Reject null if $T^*$ has rank less than or equal to $m$.
+\end{enumerate}
+
+The basis of this test is that under $H_0$, $T^*$ is equally likely to be any of the $T_i$'s. Thus, the probability of $T^*$ being in the top $m$ is $\alpha$. 
+
+\begin{remark}
+    Usually $n$ is chosen with $m\geq 5$. For smaller values of $\alpha$, $n$ is chosen to be larger.  
+\end{remark}
+
+\paragraph{Conditional Uniform Graph Tests} Suppose we want to see how unusual our statistic is, given the degree sequence. We can simulate graphs with the same degree sequence and count the number of times the simulated statistic is at least as extreme as the observed statistic.
+
+\begin{remark}
+    In $\mathcal{G}(n,p)$, the number of edges asymptotically determines
+the number of triangles when the number of edges is moderately large. Thus
+conditioning on the number of edges (or the vertex degrees, which determine
+the number of edges) gives degenerate results.
+\end{remark}
+
+\subsubsection{Scale Free Networks}
+Recall a network is scale-free if the degree distribution follows a power law:
+\begin{equation*}
+    \mathbb{P}(d(V)=k)\sim C k^{-\gamma}
+\end{equation*}
+
+To find $C$ and $\gamma$, we first observe that taking the log on both sides gives:
+\begin{equation*}
+    \log \mathbb{P}(d(V)=k)\sim \log C - \gamma \log k
+\end{equation*}
+
+So we can fit a least square line to the log-log plot of the degree distribution, that is, we find  $a=\log C$ and $b=\gamma$ minimising the following:
+\begin{equation*}
+    \sum_k (y(k)-a-b x(k))^{2}
+\end{equation*}
+
+where $x(k)=\log k$ and $y(k)=\log \mathbb{P}(d(V)=k)$ or $y(k)=\log \mathbb{P}(d(V)\geq k)$.
+
+\begin{remark}
+    If one is only interested in the behaviour of the tail of the distribution, then one may fit a least-squares regression line only after some point $\log k_0$.
+\end{remark}
+
+\subsection{Edge Inference}
+\paragraph{Exponential Random Graph}
+Recall the exponential random graph has the form:
+\begin{equation*}
+    \mathbb{P}(\mathbf{X}=\mathbf{x})={\frac{1}{\kappa}}\exp\left\{\theta^{T}\mathbf{z}(\mathbf{x})\right\}
+\end{equation*}
+
+where we have 
+\begin{itemize}
+    \item $\mathbf{X}$ is the adjacency matrix and $\mathbf{x}$ is a realisation of $\mathbf{X}$.
+    \item $\theta$ is the parameter vector.
+    \item $\mathbf{z}(\mathbf{x})$ is the vector of sufficient statistics.
+    \item $\kappa(\theta)$ is the normalising constant.
+\end{itemize}
+We are interested in the odds of one edge $(i,j)$ being present, given the rest of the network. Thus, we can define:
+\begin{align*}
+    {\bf X}_{i,j}^{+}&=\{X_{k,l},k,l=1,\dots,n,\{k,l\}\neq\{i,j\};X_{i,j}=X_{j,i}=1\}\\
+    {\bf X}_{i,j}^{-}&=\{X_{k,l},k,l=1,\dots,n,\{k,l\}\ne\{i,j\};X_{i,j}=X_{j,i}=0\}\\
+    \mathbf{X}_{i,j}^{c}&=\{X_{k,l},k,l=1,\cdot\cdot\cdot,n,\{k,l\}\neq\{i,j\}\}
+\end{align*}
+
+where the first two matrices are with and without the edge $(i,j)$, and the last one is the rest of the network. We can then define the odds ratio:  
+\begin{equation*}
+    \frac{\mathbb{P}(X_{i,j}=1;\mathbf{X}_{i,j}^{c})}{\mathbb{P}(X_{i,j}=0;\mathbf{X}_{i,j}^{c})}=\frac{\exp\left\{\theta^{T}\mathbf{z}(\mathbf{x}_{i,j}^{+})\right\}}{\exp\left\{\theta^{T}\mathbf{z}(\mathbf{x}_{i,j}^{-})\right\}}=\exp\left\{\theta^{T}\left(\mathbf{z}(\mathbf{x}_{i,j}^{+})-\mathbf{z}(\mathbf{x}_{i,j}^{-})\right)\right\}
+\end{equation*}
+
+
+
+
+\subsection{Motifs}
+
+We are interested in the local structure of a network, which is often captured by the motif.
+\begin{definition}
+    A \textbf{motif} is a small subgraph with a fixed number of vertices and with
+    a given topology.
+\end{definition}
+
+Examples of motifs include triangles and stars. Different parametric models for random graphs give different estimates for the number of motifs. We will use the Polya-Aeppli distribution to model the number of motifs.  
+
+\begin{definition}
+    A random variable $X$ follows a Polya-Aeppli distribution with parameters $\lambda$ and $a$ if it has the following probability mass function:
+    \begin{equation*}
+        \mathbb{P}(W=w)=e^{-\lambda}a^{w}\sum_{c=1}^{w}\frac{1}{c!}\binom{w-1}{c-1}\left(\frac{\lambda(1-a)}{a}\right)^{c}
+    \end{equation*}
+    for $w=1,2,\ldots$ and $0<a<1$. If $w=0$, then $\mathbb{P}(W=0)=e^{-\lambda}$.
+\end{definition}
+
+Alternatively, if $W=\sum_{i=1}^{N}X_{i}$ with $X_{i}\sim\mathrm{Geom}(1-a)$\footnote{Here the geometric distribution has p.m.f. $a^{k-1}(1-a)$ with support $k\geq 1$. } and $N\sim \mathrm{Poisson}(\lambda)$, then $W$ follows a Polya-Aeppli distribution with parameters $\lambda$ and $a$.  
+
+The parameters of the Polya-Aeppli distribution can be estimated by the method of moments from the sample mean $\hat{\mu}$ and sample variance $\hat{\sigma}^2$:
+\begin{align*}
+    \hat{a} &= \frac{\hat{\sigma}^2 - \hat{\mu}}{\hat{\sigma}^2+\hat{\mu}}\\
+    \hat{\lambda} &= (1-\hat{a})\hat{\mu}
+\end{align*}
+
+
+\subsection{Modules and Communities}
+We would like to apply a clustering method to find out more about the structure of the network. As a guidance to how many communities a network should be split into, often modularity is used.  
+\begin{definition}
+    Assume that the vertex set is partitioned into \( g \) groups, and
+\( c_v \) is the unique group that \( v \) is assigned to. 
+Then the \textbf{modularity} is defined as
+\[
+Q = \frac{1}{2m} \sum_{u,v} \left( a_{uv} - \frac{d(u)d(v)}{2m} \right) \mathbf{1}(c_u, c_v),
+\]
+where \( m \) is the number of edges, \((a_{uv}) \) is an entry in the adjacency matrix, and \( d(v) \)
+is the degree of vertex \( v \).
+\end{definition}
+
+\paragraph{Girvan-Newman algorithm} The algorithm is based on the idea that edges with high betweenness are likely to be between communities (recall betweenness is the number of shortest paths passing through an edge).
+
+The algorithm is as follows:
+\begin{enumerate}
+    \item Compute the betweenness of all edges in the network.
+    \item Remove the edge with the highest betweenness.
+    \item Recompute the betweenness of all edges affected by the removal.
+    \item Repeat steps 2 and 3 until no edges remain.
+\end{enumerate}
+
+\paragraph{Stochastic Block Model}
+Recall that in a Stochastic Block Model, the probability of an edge between two vertices depends on the group they belong to: 
+\begin{equation*}
+    p_{i,j}=\mathbb{P}(u\sim v|u\,\mathrm{is~of~type}\,i,v{\mathrm{~is~of~type}}\,j)
+\end{equation*}
+
+
+We can fit the model to a network and obtain the parameters to determine community structure. However, the naive approach does not perform well. Thus, a degree-corrected version is proposed.  For every vertex $u$, we introduce a parameter $\theta_u$ to model the degree of $u$. For every class $k$,
+
+\begin{equation*}
+    \sum_{u}\theta_{u}\mathbf{1}(c_{u}=k)=1
+\end{equation*}
+
+where $c_u$ is the community that $u$ belongs to. The probability of an edge between $u$ and $v$ is then:
+\begin{equation*}
+    p_{u,v}=\theta_{u}\theta_{v}p_{c_{u},c_{v}}
+\end{equation*}
+
+\end{document}
