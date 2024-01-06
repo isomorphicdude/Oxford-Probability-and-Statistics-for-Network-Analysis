@@ -6,8 +6,11 @@ if [ ! -f "main.tex" ]; then
     exit 1
 fi
 
-# Create the output directory if it doesn't exist
-mkdir -p output
+# first compile all other tex files
+# find . -maxdepth 1 -name "*.tex" ! -name "main.tex" -print0 | while IFS= read -r -d $'\0' file; do
+#     # Compile each .tex file with latexmk
+#     latexmk -synctex=1 -interaction=nonstopmode -file-line-error -pdf "$file"
+# done
 
 # Compile 'main.tex' to PDF using pdflatex (you can change the compiler if needed)
 latexmk -synctex=1 -interaction=nonstopmode -file-line-error -pdf main.tex
@@ -20,6 +23,8 @@ if [ $? -eq 0 ]; then
     # # Clean up unnecessary files (log files, auxiliary files)
     # find . -type f -regex '.*\.\(aux\|log\|toc\|out\|gz\|bbl\|blg\|snm\|nav\|vrb\|fls\|fdb_latexmk\|synctex.gz\)' -exec rm {} \;
     # run py script to clean up unnecessary files
+    # wait for 5 seconds
+    sleep 5
     python remove_aux.py --not_remove_pdf
 else
     echo "Compilation failed. Check for LaTeX errors."
