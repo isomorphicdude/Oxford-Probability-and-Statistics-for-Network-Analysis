@@ -20,14 +20,14 @@ The first configuration of Erd\H{o}s-R\'{e}nyi random graphs specifies edges wit
 \begin{definition}
     A random graph $G(n,p)$ is a graph on $n$ vertices where the adjacency matrix satisfies
     \begin{equation*}
-        \Pr(A_{ij}=1)=p
+        \mathbb{P}(A_{ij}=1)=p
     \end{equation*}
     The edges are independent of each other.
 \end{definition}
 
 In this case, the expected number of edges is $m=\binom{n}{2}p$ and the degree of a vertex $v$ follows a binomial distribution with parameters $n-1$ and $p$:
 $$
-\Pr(d(v)=k)=\binom{n-1}{k}p^k(1-p)^{n-1-k}
+\mathbb{P}(d(v)=k)=\binom{n-1}{k}p^k(1-p)^{n-1-k}
 $$
 
 Also, by independence, we can compute the number of triangles by:
@@ -49,14 +49,14 @@ An alternative configuration is to specify the number of edges $m$ and choose un
 \begin{definition}
     A random graph $G(n,m)$ is a graph on $n$ vertices where the adjacency matrix satisfies
     \begin{equation*}
-        \Pr(A_{ij}=1)=\frac{m}{\binom{n}{2}}
+        \mathbb{P}(A_{ij}=1)=\frac{m}{\binom{n}{2}}
     \end{equation*}
     The edges are independent of each other.
 \end{definition}
 
 The degree distribution here is hypergeometric:
 $$
-\Pr(d(v)=k)=\frac{\binom{n-1}{k}\binom{\binom{n}{2}-k}{m-k}}{\binom{\binom{n}{2}}{m}}
+\mathbb{P}(d(v)=k)=\frac{\binom{n-1}{k}\binom{\binom{n}{2}-k}{m-k}}{\binom{\binom{n}{2}}{m}}
 $$
 
 where $k=0,1,\ldots,\min(n-1,m)$. To see this, note that we can choose $k$ vertices to be connected to $v$ among $V\setminus \{v\}$, and then choose $m-k$ edges from the remaining $\binom{n}{2}-k$ edges to connect the rest pairs of vertices. 
@@ -75,7 +75,7 @@ The expected (global) clustering coefficient can be computed similarly, which we
 
 In reality, it is often found that the average distance between two vertices is small, but the clustering coefficient is large. This is known as the \textbf{small world phenomenon}, which cannot be modelled (properly) by the Erd\H{o}s-R\'{e}nyi random graphs.  
 
-\subsubsection{Watts-Strogatz}
+\subsubsection{Watts-Strogatz Model}
 The \textbf{Watts-Strogatz model} is a random graph constructed with the following steps:
 \begin{itemize}
     \item Start with a ring of $n$ vertices, where each vertex is connected to its $k$ nearest neighbours on each side (hence $2k$ edges per vertex)
@@ -111,7 +111,7 @@ However, the degree distribution of real world networks often follows a power la
     Intuitively, the power-law distribution says that vertices tend to attach to "popular" vertices.
 \end{remark}
 
-\subsection{Barab\'{a}si-Albert}  
+\subsection{Barab\'{a}si-Albert Model}
 
 \begin{definition}
     A probability measure with p.d.f. $p(d)$ is said to follow a \textbf{power law} if there exists $\gamma>0$ and some constant $C>0$ such that $p(d)\sim C d^{-\gamma}$ as $d\to \infty$, where $\gamma$ is called the \textbf{power-law exponent}.
@@ -141,26 +141,125 @@ The resulting graph may contain self-loops and multi-edges. A more mathematicall
 
     where $t_i$ is the time when vertex $v_i$ is added (we used the initial condition $k_i(t_i)=m$).
 
-    To compute the degree distribution, note $\Pr(k_i(t)>k) = \Pr(t_i < \frac{m^2}{k^2} t) = \frac{m^2}{k^2}$, if we assume the vertices were added uniformly over time: $t_i \sim \mathrm{Unif}(0,t)$. Now differentiating with respect to $k$, we obtain:
+    To compute the degree distribution, note $\mathbb{P}(k_i(t)>k) = \mathbb{P}(t_i < \frac{m^2}{k^2} t) = \frac{m^2}{k^2}$, if we assume the vertices were added uniformly over time: $t_i \sim \mathrm{Unif}(0,t)$. Now differentiating with respect to $k$, we obtain:
     \begin{equation*}
-        \Pr(d(v_i)=k) \approx 2m^2 k^{-3}
+        \mathbb{P}(d(v_i)=k) \approx 2m^2 k^{-3}
     \end{equation*}
     for $k$ large. This is a power law with $\gamma=3$.
 \end{unexaminable}
 
+\subsection{Stochastic Block Model}
+
+This is also called Erd\H{o}s-R\'{e}nyi mixture model. The graph is constructed as follows:
+\begin{itemize}
+    \item Start with $n$ vertices, which are partitioned into $L$ blocks $V_1,\ldots,V_L$.
+    \item Edges are formed independently between vertices in different blocks with probability $p_{ij}$.
+\end{itemize}
+
+In this case, we can compute the expected value of the degree of a vertex $v$ as:
+\begin{equation*}
+    \mathbb{E}[d(v)] = \mathbb{E}[\mathbb{E}[d(v) \mid v \in V_i]] = \sum_{\ell=1}^L  \alpha_{\ell}\left((|\mathcal{V}|\alpha_{\ell}-1)p_{\ell,\ell}+\sum_{k\ne\ell}|\mathcal{V}|\alpha_{k}p_{k,\ell}\right)
+\end{equation*}
+
+where $\alpha_{\ell} = \frac{|V_{\ell}|}{|\mathcal{V}|}$ is the proportion of vertices in block $\ell$.
+
+A variant of this model is to assign each vertex a block at random with:  
+
+\begin{equation*}
+    \mathbb{P}(v\in V_{\ell}) = \alpha_{\ell}
+\end{equation*}  
+
+This leads to a different expected degree:
+ \begin{equation*}
+    \operatorname{\mathbb{E}}[d(V)]=(|V|-1)\sum_{\ell=1}^{L}\sum_{k=1}^{L}\alpha_{\ell}\alpha_{k}p_{k,\ell}
+ \end{equation*}
+
+ which is computed similarly $\mathbb{E}[d(v)]=\mathbb{E}[\mathbb{E}[d(v) \mid v \in V_i]]=\sum_{\ell=1}^{L}\alpha_{\ell}\left(\sum_{k}(|\mathcal{V}|-1)\alpha_{k} p_{k, \ell}\right)$, since we do not know how many vertices are in each block, so $|\mathcal{V}|\alpha_{\ell}$ disappears.
 
 
-\subsection{Configuration Model}
 
-\subsection{Chung-Lu}
+\subsection{The Configuration Model}  
+Given a feasible degree sequence $(d(i))_{1\leq i \leq n}$, the configuration model constructs a random graph as follows: 
+\begin{itemize}
+    \item For each vertex $i$, create $d(i)$ half-edges.
+    \item Choose two half-edges uniformly at random and connect them.
+    \item Repeat until all half-edges are connected.
+\end{itemize}
+
+\paragraph{Multi-edges} Here we assume that all degrees are at least $1$ and $\sum_i d(i) = 2m$. The expected number of edges between vertices $i$ and $j$ is given by:
+\begin{equation*}
+    \frac{d(i)d(j)}{2m-1}
+\end{equation*}
+
+as each of the half-edge of $i$ can choose any of the $d(j)$ half-edges of $j$ with probability $\frac{1}{2m-1}$.  
+
+\paragraph{Self-loops} For vertex $i$, the probability that it connects to itself is given by:
+\begin{equation*}
+    \frac{d(i) (d(i)-1)}{2(2m-1)}
+\end{equation*}
+since there are $d(i)$ half-edges of $i$ and each of them can choose any of the $d(i)-1$ half-edges of $i$ with probability $\frac{1}{2m-1}$; the number is divided by $2$ since each edge is counted twice.  Hence the expected number of self loops is:
+\begin{equation*}
+    \sum_{i=1}^{n}\frac{d(i)(d(i)-1)}{2(2m-1)}=\frac{\mathbb{E}[d(V)^{2}]-\mathbb{E}[d(V)]}{2(\mathbb{E}[d(V)]-1/n)}
+\end{equation*}
+
+where $d(V)$ is the degree of a randomly chosen vertex and 
+\begin{equation*}
+    \mathbb{E}[d(V)] = \frac{1}{n} \sum_{i=1}^{n} d(i) = \frac{2m}{n}
+\end{equation*}
+
+Therefore, if $\mathbb{E}[d(V)^{2}]$ is bounded, then the expected number of self-loops is remains bounded, whereas the number of edges grow. Hence, self-loops are negligible in the limit. A similar argument can be made for multi-edges.  
+
+\begin{unexaminable}
+    The validity of the configuration model is mentioned in Part C of PS 1, which discusses the Havel-Hakimi algorithm. The following content is not examinable.
+\end{unexaminable}
+
+\begin{definition}
+    A sequence is said to be \textbf{graphical} if it is the degree sequence of some graph.
+\end{definition}
+
+The Havel-Hakimi algorithm constructs a graph with a given degree sequence.
+\begin{theorem}[Havel-Hakimi algorithm]
+    Let $A=(s, t_1, \ldots, t_s, d_1, \ldots, d_n)$ be a sequence of non-negative integers. Then $A$ is graphical if and only if $A'=(t_1-1, t_2-1, \ldots, t_s-1, d_1, \ldots, d_s)$ is graphical.
+\end{theorem}
+\begin{proof}[Sketch of proof]
+    The proof is by induction on $n$. The base case is trivial. We consider two cases: 
+    \begin{enumerate}
+        \item If all $s$ vertices of degree $t_i$ are adjacent to the first, then we remove the first vertex $S$ and subtract $1$ from the first $s$ entries of $A$. Done by induction.
+        \item Otherwise, $S$ is adjacent to some $D_j$ with degree $d_j \leq t_i$. If $d_j=t_i$, switch their places and the degree sequence remains unchanged. If $t_i>d_j$, then $\exists W \sim T_i$, but $W \nsim D_j$. So we can delete the edge $S-D_j$ and $T_i-W$ and add the edges $S-T_i$ and $D_j-W$. The degree sequence remains unchanged. So we can repeat this to reduce the problem to case 1.
+    \end{enumerate}
+\end{proof}
+
+
+\subsubsection{Chung-Lu Model}
+
+The Chung-Lu model is a variant of the configuration model. We start with weights of non-negative integers $\{w_i\}_{1\leq i \leq n}$ and construct a random graph as follows:
+\begin{itemize}
+    \item Compute $\theta_i = \frac{w_i}{\sqrt{\sum_j w_j}}$ for $1\leq i \leq n$.
+    \item Connect two vertices $i$ and $j$ with probability $\min \{\theta_i \theta_j, 1\}$ independently of all other edges.
+\end{itemize}
+
+Often we assume $\max_i w_i^2 < \sum_j w_j$ so that $\theta_i < 1$ for all $i$.
 
 \subsection{Geometric Random Graphs}
+In this model, we assume that the vertices are points in $\real^d$ and the probability of an edge between two vertices is a function of their distance. Namely, we construct as follows:
+\begin{itemize}
+    \item Choose distribution $\mu$ on $\real^d$.
+    \item Vertices $X_1,\ldots,X_n$ are i.i.d. samples from $\mu$.
+    \item Choose value $r>0$.
+    \item Connect vertices $i$ and $j$ if $\|X_i-X_j\|_2\leq r$.
+\end{itemize}
 
-\subsection{Expontnial Random Graph Models}
+
+\subsection{Exponential Random Graph Models}
+Exponential random graphs incorporate covariates into the probability of an edge. We model the whole adjacency matrix $\mathbf{X}$ as a random variable with the following distribution:
+\begin{equation*}
+    \mathbb{P}(\mathbf{X}=\mathbf{A}) = \frac{\exp(\theta^T \mathbf{z}(\mathbf{A}))}{Z(\theta)}
+\end{equation*}
+
+where $\theta$ is a vector of parameters, $\mathbf{z}(\mathbf{A})$ is a vector of statistics of $\mathbf{A}$, and $Z(\theta)$ is the normalising constant. 
 
 
-
-
+\newpage
 \bibliographystyle{apalike}
 \bibliography{bibliography2.bib}
 
