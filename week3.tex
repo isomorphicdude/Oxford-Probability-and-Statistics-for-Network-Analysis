@@ -299,7 +299,7 @@ $$
 
 which equals 1 if and only if $uvw$ is a triangle, each of the $X_\alpha$ is a Bernoulli random variable with parameter $p^3$. 
 
-\begin{theorem}
+\begin{theorem}\label{thm:triangle_poisson_dependent}
     Let $Z = \sum_{\alpha \in \Gamma_n} X_\alpha$ and $\lambda = \binom{n}{3}p^3$.
     \begin{equation*}
         d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \binom{n}{3}(3np^3 + 3np^2) \min (1, \lambda^{-1})
@@ -311,7 +311,7 @@ which equals 1 if and only if $uvw$ is a triangle, each of the $X_\alpha$ is a B
     \begin{equation*}
         A_{\alpha} = \{(a,b,c) \mid |(u,v,w)\cap (a,b,c)|\geq 2\}
     \end{equation*}
-    It is easy to see $|A_\alpha| = 3(n-3) < 3n$, thus $\mathbb{E}[\eta_\alpha]\leq 3np^3$. Moreover, we have  
+    It is easy to see $|A_\alpha| = 3(n-3) + 1 < 3n$, thus $\mathbb{E}[\eta_\alpha]\leq 3np^3$. Moreover, we have  
     \begin{equation*}
         \mathbb{E}[X_\alpha(\eta_\alpha - X_\alpha)] = \mathbb{E}[X_\alpha \sum_{\beta \in A_\alpha, \beta \neq \alpha} X_\beta] = \sum_{\beta \in A_\alpha, \beta \neq \alpha} p^5 \leq 3np^5
     \end{equation*}
@@ -336,7 +336,23 @@ for all continuous and piecewise continuously differentiable functions $g: \math
 \end{theorem}
 
 \begin{proof}
-    
+    We can compute $\mathbb{E}[g'(Z)]$ using integration by parts:
+    \begin{align*}
+        \mathbb{E}[g'(Z)] &= \int_{-\infty}^\infty g'(z) \frac{1}{\sqrt{2\pi}} e^{-z^2/2} dz\\
+        &= {\frac{1}{\sqrt{2\pi}}}\int_{-\infty}^{0}g^{\prime}(z)\left(\int_{-\infty}^{z}-x e^{-x^{2}/2}d x\right)\,d z \\
+        &+ {\frac{1}{\sqrt{2\pi}}}\int_{0}^{\infty}g^{\prime}(z)\left(\int_{z}^{\infty}x e^{-x^{2}/2}d x\right)\,d z
+    \end{align*}
+
+    Now we exchange the order of integration by Fubini's theorem:
+    \begin{align*}
+        \mathbb{E}[g'(Z)] &= \int_{x=-\infty}^0 \left(\int_{z=x}^0 g'(z) dz\right) (-x) e^{-x^2/2} dx + \int_{x=0}^\infty \left(\int_{z=0}^x g'(z) dz\right) xe^{-x^2/2} dx\\
+        &={\frac{1}{\sqrt{2\pi}}}\int_{-\infty}^{\infty}[g(x)-g(0)]x e^{-x^{2}/2}d x \\
+        &=\mathbb{E}[Z g(Z)]
+    \end{align*}
+    as $X$ has mean zero.
+    \begin{unexaminable}
+        The condition for Fubini is easily checked, as $\int_0^\infty |g'(z)| f_Z(z) dz \leq \mathbb{E}[|g'(z)|] < \infty$.
+    \end{unexaminable}
 \end{proof}
 
 We do not consider the total variation distance here, but instead use the \textbf{weak convergence} of measures, which is motivated by the following exmaple.  
@@ -505,7 +521,7 @@ We will use the same notation as the lecture notes with $W=\sum_{i\in I} X_i$, w
 
 We now provide a bound for $W$ in the case of dependent random variables.
 
-\begin{theorem}
+\begin{theorem}\label{thm:stein_equation_normal_dependent}
     Assume $W$ admits a dissociated decomposition as decribed above. Let $X_i, i\in I$ with $\mathbb{E}[X_i]=0$ and $\mathrm{Var}(W)=1$. Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$:
 
     \begin{equation*}
@@ -592,6 +608,116 @@ Combing those and use \Cref{lem:stein_equation_normal_bound} gives the desired r
 \end{proof}
 
 \subsubsection{Triangles in $G(n,p)$}
+For the number of triangles in $G=\mathcal{G}(n,p)$, we consider the following set up.  
+
+Let index set be 
+\[
+\Gamma_n = \{(u,v,w): 1\leq u<v<w\leq n\}
+\]
+
+and let 
+
+\[
+Y_\alpha = Y_{u,v,w} = \mathbf{1}(u\sim v) \mathbf{1}(v\sim w) \mathbf{1}(w\sim u)
+\]
+
+which equals 1 if and only if $uvw$ is a triangle. Also let $T$ be:
+\[
+T = \sum_{\alpha \in \Gamma_n} Y_\alpha
+\]
+
+Again if $|\{u,v,w\}\cap \{a,b,c\}|\leq 1$, then $Y_\alpha$ and $Y_\beta$ are independent. Let $K_\alpha$ contain $\alpha$ and all those tuples $\beta$ such that $|\alpha\cap \beta|\geq 2$. Recall from \Cref{thm:stein_equation_normal_dependent} that we need to have centered random variables with variance of sum being $1$. So, we standaridise to obtain $X_\alpha$:
+
+\[
+    X_{\alpha}=\frac{Y_{\alpha}-p^{3}}{\sqrt{\mathrm{Var}(T)}}
+\]
+
+A straightforward calculation shows:
+\[
+    \sigma^{2}=\operatorname{Var}(T)={\binom{n}{3}}p^{3}[1-p^{3}+3(n-3)p^{2}(1-p)]
+\]
+
+to see this, note $\mathrm{Var}(T) = \sum_\alpha \mathrm{Var}(Y_\alpha) + \sum_{\alpha\neq \beta} \mathrm{Cov}(Y_\alpha, Y_\beta)$, where $\mathrm{Var}(Y_\alpha) = p^3(1-p^3)$ and $\mathrm{Cov}(Y_\alpha, Y_\beta) = p^5(1-p)$ if $\alpha$ and $\beta$ share exactly two vertices, and 0 otherwise (see proof of \Cref{thm:triangle_poisson_dependent}). Now we can write as before $W = \sum_{\alpha \in \Gamma_n} X_\alpha$ with:
+
+\[
+    W_{\alpha}=\sum_{\beta\notin K_{\alpha}}X_{\beta}{\mathrm{~and~}}Z_{\alpha}=\sum_{\beta\in K_{\alpha}}X_{\beta}
+\]
+
+To obain a dissociated decomposition of $W$, we further deocompose $W_\alpha$ as follows:
+\[
+    W_{\alpha}=\sum_{\gamma\in K_{\alpha}\cup K_{\beta}}X_{\gamma}+\sum_{\gamma\in K_{\beta}\setminus K_{\alpha}}X_{\gamma}
+\]
+
+Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
+
+\begin{theorem}\label{thm:triangle_gnp_normal}
+    Let $W$ be the standardised number of triangles in $\mathcal{G}(n,p)$ with $n\geq 3$ and $p\in (0,1)$. Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$: 
+    \[
+        |\mathbb{E} [h(W)]- \mathbb{E}[h(X)]| \leq \frac{4}{3}\times\frac{29n^{5}p^{3}}{\sigma^{3}}||h^{\prime}||
+    \]
+
+    If $p$ does not depend on $n$, then this expression is of order $\mathcal{O}(n^{-1})$.
+\end{theorem}
+
+\begin{proof}
+    Using \Cref{thm:stein_equation_normal_dependent} which gives:
+    \begin{equation*}
+        \left|\mathbb{E}[h(W)] - \mathbb{E}[h(X)]\right| \leq 4||h^{\prime}||\sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\left(\mathbb{E}[|X_{\alpha}X_{\beta}X_{\gamma}|]+\mathbb{E}[|X_{\alpha}X_{\beta}|]\mathbb{E}[|X_{\gamma}|]
+        \right)
+    \end{equation*}
+    First, computing explicitly the expectations leads to:
+    \begin{equation*}
+        \mathbb{E}[|X_{\alpha}|]={\frac{2}{\sigma}}p^{3}(1-p^{3}),\quad\mathbb{E}[|X_{\alpha}|^{2}]={\frac{1}{\sigma^{2}}}p^{3}(1-p^{3})
+    \end{equation*}
+    and
+    \begin{equation*}
+        \mathbb{E}[|X_{\alpha}^{3}|]={\frac{1}{\sigma^{3}}}(p^{3}(1-p^{3})^{3}+(1-p^{3})p^{9})\leq2{\frac{p^{3}}{\sigma^{3}}}
+    \end{equation*}
+    where we have used the crude bound $|X_\alpha| \leq \frac{1}{\sigma}$ (as the numerator is less than $1$). Now for the first double sum, we have:
+    \begin{align*}
+        \sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\mathbb{E}[|X_{\alpha}X_{\beta}X_{\gamma}|] &\leq \sum_{\alpha\in I} \mathbb{E}[|X_\alpha|^3] + 3\sum_{\alpha\in I}\sum_{\beta \in K_\alpha, \beta \neq \alpha} \mathbb{E}[|X_\alpha^2 X_\beta|] + \sum_{\alpha \in I} \sum_{\beta, \gamma \in K_\alpha\setminus \{\alpha\}, \beta \neq \gamma} \mathbb{E}[|X_\alpha X_\beta X_\gamma|]\\
+        &\leq \binom{n}{3} \frac{2p^3}{\sigma^3} + 3\binom{n}{3} (3n) \frac{1}{\sigma} \frac{p^3(1-p^3)}{\sigma^2} + \binom{n}{3} (3n)^2 \left(\frac{1}{\sigma}\right)^2 \frac{2}{\sigma}p^{3}(1-p^{3}) \\
+        &\leq \binom{n}{3} \frac{22n^2p^3}{\sigma^3} < \frac{11n^5p^3}{3\sigma^3}
+    \end{align*}
+
+    where we used the fact that $|K_\alpha| = 3n-3 + 1 \leq 3n$ and $|X_\alpha| \leq \frac{1}{\sigma}$ along with the expectations computed above.   
+
+    For the second double sum, we have:
+    \begin{align*}
+        \sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\mathbb{E}[|X_{\alpha}X_{\beta}|]\mathbb{E}[|X_{\gamma}|] &\leq \frac{1}{\sigma}  \sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\mathbb{E}[|X_{\beta}|] \mathbb{E}[|X_{\gamma}|] \\
+        &\leq \frac{1}{\sigma} \binom{n}{3} (3n)^2 \left(\frac{2}{\sigma}p^{3}(1-p^{3})\right)^2 \\
+        &=\binom{n}{3} \left(\frac{36n^2}{\sigma^3}p^{3}(1-p^{3})\right) \\
+        &< \frac{6n^5}{\sigma^3} p^3
+    \end{align*}
+    Summing those two gives the desired result.
+\end{proof}
+
+
+\subsubsection{Dense and Sparse Regimes}  
+
+Note in \Cref{thm:triangle_gnp_normal}, we requie the factor $\frac{n^5}{\sigma^3}$ to be small in order to obtain a useful bound. This is the case when $p$ does not depend on $n$, as $\sigma^2 \sim n^4$. However, if for example $p=1/n$, then $\sigma$ is of order $\mathcal{O}(1)$, so the bound can be meaningless.  Those two cases in fact correspond to the dense and sparse regimes of $G(n,p)$.  
+
+\begin{definition}
+    We say a function $f(n)$ satisfies:
+    \[
+        f(n) = \Theta(g(n))
+        \]
+
+    if there exists $c_1, c_2 > 0$ and $n_0$ such that $c_1 g(n) \leq f(n) \leq c_2 g(n)$ for all $n\geq n_0$.
+\end{definition}
+
+We can now define the dense and sparse regimes for Erd\"os-R\'enyi random graphs.
+
+\begin{definition}
+    Let $G=\mathcal{G}(n,p)$. We have the following:
+    \begin{itemize}
+        \item $G$ is \textbf{sparse} if $p=\Theta(c/n)$ for some $c=\Theta(1)$ or equivalently $\binom{n}{2}p=\Theta(1)$.
+        \item $G$ is \textbf{dense} if $p=\Theta(1)$ or equivalently $\binom{n}{2}p=\Theta(n^2)$.
+        \item $G$ is \textbf{moderately dense} if $p=\Theta(c\log n/n)$ for some $c=\Theta(1)$ or equivalently $\binom{n}{2}p=\Theta(n\log n)$.
+    \end{itemize}
+\end{definition}
+
+Therefore, as discussed above, the Poisson approximation is more useful in the sparse regime, while the normal approximation is more useful in the dense regime.  
 
 
 \newpage
