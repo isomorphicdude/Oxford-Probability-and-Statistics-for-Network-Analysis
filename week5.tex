@@ -20,7 +20,7 @@
 We begin with an example of a threshold behaviour in a random graph.  
 
 \begin{example}
-    In $G(n,p)$, if $p=\frac{c}{n}$ with $c<1$, then the largest connected component is of size $O(\log n)$, whereas if $c>1$, then the largest connected component is of linear size with probability $1$ as $n\to \infty$.      
+    In $\mathcal{G}(n,p)$, if $p=\frac{c}{n}$ with $c<1$, then the largest connected component is of size $O(\log n)$, whereas if $c>1$, then the largest connected component is of linear size with probability $1$ as $n\to \infty$.      
 \end{example}
 
 To show this, we use the approach in \citep{krivelevich2012phase} and use the Depth-First Search (DFS) algorithm on the random graph. 
@@ -75,7 +75,7 @@ The $1$ comes from the initial vertex $v$ in $U$ at the beginning of each epoch.
 We will first show that the size of any connected component cannot exceed some constant associated with the probability $p$ with high probability as $n\to \infty$.  
 
 \begin{theorem}\label{thm:small_connected_components}
-    Let $\varepsilon \in (0,1)$ be fixed and let $G\sim G(n,p)$ with $p=\frac{1-\varepsilon}{n}$, then any connected component $C$ of $G$, satisfies
+    Let $\varepsilon \in (0,1)$ be fixed and let $G\sim \mathcal{G}(n,p)$ with $p=\frac{1-\varepsilon}{n}$, then any connected component $C$ of $G$, satisfies
     \begin{equation*}
         \mathbb{P}(|C|\leq \frac{7}{\varepsilon^2}\log n)\to 1 \quad \text{as} \quad n\to \infty
     \end{equation*}
@@ -178,7 +178,7 @@ The proof of this lemma is given in problem sheet 0.
 We also state another result from \citep{krivelevich2012phase} that shows the existence of a linear size connected component with high probability as $n\to \infty$.  
 
 \begin{theorem}
-    Let $\varepsilon \in (0,\frac{1}{10})$ be fixed and let $G\sim G(n,p)$ with $p=\frac{1+\varepsilon}{n}$, let the largest connected component be $C_{\max}$. Then,
+    Let $\varepsilon \in (0,\frac{1}{10})$ be fixed and let $G\sim \mathcal{G}(n,p)$ with $p=\frac{1+\varepsilon}{n}$, let the largest connected component be $C_{\max}$. Then,
     \begin{equation*}
         \mathbb{P}(|C_{\max}|\geq \frac{1}{5}\varepsilon^2 n)\to 1 \quad \text{as} \quad n\to \infty
     \end{equation*}

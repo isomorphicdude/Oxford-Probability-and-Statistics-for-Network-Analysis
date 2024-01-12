@@ -15,7 +15,7 @@
 \section{Stein's Method for Graphs}
 
 \subsection{Motivation}
-Consider the problem of counting the number of triangles in the Erd\H{o}s-R\'{e}nyi random graph $G(n,p)$. We know that the expected number of triangles is $\binom{n}{3}p^3$. However, we would like to know the (approximate) distribution of the number of triangles. Central limit theorem is not applicable here, since the number of triangles is not a sum of independent random variables: 
+Consider the problem of counting the number of triangles in the Erd\H{o}s-R\'{e}nyi random graph $\mathcal{G}(n,p)$. We know that the expected number of triangles is $\binom{n}{3}p^3$. However, we would like to know the (approximate) distribution of the number of triangles. Central limit theorem is not applicable here, since the number of triangles is not a sum of independent random variables: 
 \begin{equation*}
     T=\sum_{i<j<k} A_{ij}A_{jk}A_{ki}
 \end{equation*}
@@ -286,7 +286,7 @@ When the random variables are not independent, the computation of $\mathbb{E}[Wg
     Combing those two bounds gives the desired result.
 \end{proof}  
 
-We are now ready to approximate the number of triangles in Erd\H{o}s-R\'{e}nyi random graph $G(n,p)$.  We use an index set $\Gamma_n$:
+We are now ready to approximate the number of triangles in Erd\H{o}s-R\'{e}nyi random graph $\mathcal{G}(n,p)$.  We use an index set $\Gamma_n$:
 
 \begin{equation*}
     \Gamma_{n}=\{\alpha=(u,v,w):1\leq u<v<w\leq n\}
@@ -607,7 +607,7 @@ Combing those and use \Cref{lem:stein_equation_normal_bound} gives the desired r
 
 \end{proof}
 
-\subsubsection{Triangles in $G(n,p)$}
+\subsubsection{Triangles in $\mathcal{G}(n,p)$}
 For the number of triangles in $G=\mathcal{G}(n,p)$, we consider the following set up.  
 
 Let index set be 
@@ -695,7 +695,7 @@ Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
 
 \subsubsection{Dense and Sparse Regimes}  
 
-Note in \Cref{thm:triangle_gnp_normal}, we requie the factor $\frac{n^5}{\sigma^3}$ to be small in order to obtain a useful bound. This is the case when $p$ does not depend on $n$, as $\sigma^2 \sim n^4$. However, if for example $p=1/n$, then $\sigma$ is of order $\mathcal{O}(1)$, so the bound can be meaningless.  Those two cases in fact correspond to the dense and sparse regimes of $G(n,p)$.  
+Note in \Cref{thm:triangle_gnp_normal}, we requie the factor $\frac{n^5}{\sigma^3}$ to be small in order to obtain a useful bound. This is the case when $p$ does not depend on $n$, as $\sigma^2 \sim n^4$. However, if for example $p=1/n$, then $\sigma$ is of order $\mathcal{O}(1)$, so the bound can be meaningless.  Those two cases in fact correspond to the dense and sparse regimes of $\mathcal{G}(n,p)$.  
 
 \begin{definition}
     We say a function $f(n)$ satisfies:
