@@ -18,11 +18,11 @@ In order to judge whether a network summary is ”unusual” or whether a motif 
 \subsection{Erd\H{o}s-R\'{e}nyi}
 The first configuration of Erd\H{o}s-R\'{e}nyi random graphs specifies edges with a probability $p$. Namely, for $V=\{1,2,\ldots,n\}$, the probability of an edge between $i$ and $j$ is $p$ for all $i,j\in V$.
 \begin{definition}
-    A random graph $\mathcal{G}(n,p)$ is a graph on $n$ vertices where the adjacency matrix satisfies
+    A random graph $\mathcal{G}(n,p)$ is an undirected, unweighted, simple graph on $n$ vertices where the adjacency matrix satisfies
     \begin{equation*}
         \mathbb{P}(A_{ij}=1)=p
     \end{equation*}
-    The edges are independent of each other.
+    The edges are formed independently of each other.
 \end{definition}
 
 In this case, the expected number of edges is $m=\binom{n}{2}p$ and the degree of a vertex $v$ follows a binomial distribution with parameters $n-1$ and $p$:
@@ -259,7 +259,7 @@ Exponential random graphs incorporate covariates into the probability of an edge
 where $\theta$ is a vector of parameters, $\mathbf{z}(\mathbf{A})$ is a vector of statistics of $\mathbf{A}$, and $Z(\theta)$ is the normalising constant. 
 
 
-\newpage
+% \newpage
 \bibliographystyle{apalike}
 \bibliography{bibliography2.bib}
 
