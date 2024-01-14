@@ -111,7 +111,7 @@ Now taking the supremum over $h \in \mathcal{H}$, we recover the form of an IPM.
 \subsection{Stein-Chen Method for Poisson Approximation}  
 Following the framework in the previous section, we can define the Stein operator (\Cref{def:stein_operator}) for Poisson approximation:
 \begin{equation}
-    \mathcal{T}g(z) = \lambda g(z) - zg(z)
+    \mathcal{T}g(z) = \lambda g(z+1) - zg(z)
 \end{equation}
 
 for $g: \mathbb{N}_0 \to \mathbb{R}$. This gives a characterization of the Poisson distribution with parameter $\lambda>0$:
@@ -158,7 +158,7 @@ We show this equation has a \textit{unique} solution.
     We first show the claimed solution satisfies the Stein's equation, which is easily verified by direct computation. To show uniqueness, let $z=0$ in \Cref{eq:poisson_stein_equation} and we get $\lambda g(1) = I(0\in A) - \mathbb{E}[I(0\in A)]$. So if $f$ is another solution to \Cref{eq:poisson_stein_equation}, then $f(1)=g(1)$. Now we can use induction to show $f(z)=g(z)$ for all $z\in \mathbb{N}_0$.
 \end{proof}
 
-To bound the total variation distance, we require additional bounds on $g$.  
+To bound the total variation distance, we require additional bounds on $g$.  (In fact, as we shall see in the proof below, only those bounds and properties of $g$ are used; the explicit form of $g$ is unimportant)
 
 \begin{lemma}\label{lem:poisson_stein_bound}
 For the solution $g$ to the Stein's equation \Cref{eq:poisson_stein_equation}, we have:
@@ -176,7 +176,7 @@ Here $\lambda^{-1}$ is referred to as the \textit{magic factor}.
 \end{lemma}
 
 \begin{proof}
-    The proof is omitted.
+    The proof is omitted in the lecture notes, which is not examinable. 
 \end{proof}
 
 Now we give the converse of \Cref{prop: direction1 poisson}.
@@ -200,20 +200,20 @@ To see this is actually useful, we consider a bound for Bernoulli random variabl
     Let $X_1, \ldots, X_n$ be independent Bernoulli random variables, where $X_i \sim \text{Ber}(p_i)$ and $Z = \sum_{i=1}^n X_i$. Set $\lambda = \sum_{i=1}^n p_i$. Then we can compute the Stein's equation $\mathbb{E}[\lambda g(Z+1) - Zg(Z)]$.  Now since $X_i$ is binary and $Z-X_i$ is independent of $X_i$, we have:  
     \begin{align*}
         \mathbb{E}[Zg(Z)] &= \mathbb{E}[\sum_{i=1}^n X_i g(Z)]\\
-        &= \sum_{i=1}^n \mathbb{E}[X_i g(Z + X_i - 1)]\\
-        &= \sum_{i=1}^n \mathbb{E}[X_i] \mathbb{E}[g(Z + X_i - 1)]\\
-        &= \sum_{i=1}^n p_i \mathbb{E}[g(Z + X_i - 1)]\\
+        &= \sum_{i=1}^n \mathbb{E}[X_i g(Z - X_i + 1)]\\
+        &= \sum_{i=1}^n \mathbb{E}[X_i] \mathbb{E}[g(Z - X_i + 1)]\\
+        &= \sum_{i=1}^n p_i \mathbb{E}[g(Z - X_i + 1)]\\
     \end{align*}
 
     where in the second step we use the fact that $X_i=0$ when $g$ is bounded yields zero expectation. Thus, 
     \begin{align*}
-        \mathbb{E}[\lambda g(Z+1) - Zg(Z)] &= \sum_{i=1}^n p_i \mathbb{E}[g(Z + 1)] - \sum_{i=1}^n p_i \mathbb{E}[g(Z + X_i - 1)]\\
-        &= \sum_{i=1}^n p_i \mathbb{E}[\mathbb{E}[g(Z+1) - g(Z + X_i - 1) \mid X_i]]\\
+        \mathbb{E}[\lambda g(Z+1) - Zg(Z)] &= \sum_{i=1}^n p_i \mathbb{E}[g(Z + 1)] - \sum_{i=1}^n p_i \mathbb{E}[g(Z - X_i + 1)]\\
+        &= \sum_{i=1}^n p_i \mathbb{E}[\mathbb{E}[g(Z+1) - g(Z - X_i + 1) \mid X_i]]\\
         &= \sum_{i=1}^n p_i^2 \mathbb{E}[g(Z+1) - g(Z) \mid X_i=1]\\
         & \leq \sum_{i=1}^n p_i^2 \mathbb{E}[|g(Z+1) - g(Z)| \mid X_i=1]
     \end{align*}
     where we used conditional expectation.   
-    Using using \Cref{lem:poisson_stein_bound} now gives 
+    Using \Cref{lem:poisson_stein_bound} now gives 
     \[|\mathbb{E}[\lambda g(Z+1) - Zg(Z)]| \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2\]
     So the total variation distance is bounded by
     \begin{equation*}
@@ -251,7 +251,7 @@ When the random variables are not independent, the computation of $\mathbb{E}[Wg
         &+ \mathbb{E}[X_\alpha (g(Z_\alpha + \eta_\alpha -X_\alpha +  1) - g(Z_\alpha + 1))] \\
     \end{align*}
 
-    Rearranging the last term leads to 
+Rearranging the terms leads to 
     \[\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z + 1)] + \underbrace{p_\alpha \mathbb{E}[g(Z_\alpha+1) - g(Z+1)]}_{R_{1,\alpha}} + \underbrace{\mathbb{E}[X_\alpha (g(Z_\alpha + \eta_\alpha -X_\alpha +  1) - g(Z_\alpha + 1))]}_{R_{2, \alpha}}\] 
 
     Hence the equation we need to bound is
@@ -278,7 +278,7 @@ When the random variables are not independent, the computation of $\mathbb{E}[Wg
         |R_1| \leq \min (1, \lambda^{-1}) \sum_{\alpha \in I} p_\alpha \mathbb{E}[ \eta_\alpha]
     \end{equation*}
 
-    For $R_2=\sum_\alpha R_{2,\alpha}$, we apply the method above to $g(Z_\alpha + \eta_\alpha - X_\alpha + 1) - g(Z_\alpha + 1)$, which gives the bound:
+    For $R_2=\sum_\alpha R_{2,\alpha}$, we apply the method above to $g(Z_\alpha + \eta_\alpha - X_\alpha + 1) - g(Z_\alpha + 1)$, conditioning on the value of $\eta_\alpha - X_\alpha$ , which gives the bound:
     \begin{equation*}
         |R_2| \leq \min (1, \lambda^{-1}) \sum_{\alpha \in I} p_\alpha \mathbb{E}[ X_\alpha (\eta_\alpha - X_\alpha)]
     \end{equation*}
@@ -302,7 +302,7 @@ which equals 1 if and only if $uvw$ is a triangle, each of the $X_\alpha$ is a B
 \begin{theorem}\label{thm:triangle_poisson_dependent}
     Let $Z = \sum_{\alpha \in \Gamma_n} X_\alpha$ and $\lambda = \binom{n}{3}p^3$.
     \begin{equation*}
-        d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \binom{n}{3}(3np^3 + 3np^2) \min (1, \lambda^{-1})
+        d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \binom{n}{3}p^3(3np^3 + 3np^2) \min (1, \lambda^{-1})
     \end{equation*}
 \end{theorem}
 
@@ -355,9 +355,9 @@ for all continuous and piecewise continuously differentiable functions $g: \math
     \end{unexaminable}
 \end{proof}
 
-We do not consider the total variation distance here, but instead use the \textbf{weak convergence} of measures, which is motivated by the following exmaple.  
+We do not consider the total variation distance here, but instead use the \textbf{weak convergence} of measures, which is motivated by the following example.  
 
-\begin{example}[(Total vairation might not be the best choice)]
+\begin{example}[(Total variation might not be the best choice)]
 
     Let $X\sim \mathrm{Binom}(n,p)$ and $Y\sim \mathcal{N}(0,1)$, then we know from the central limit theorem that
     \begin{equation*}
@@ -373,7 +373,7 @@ We now define the notion of weak convergence of probability measures.
    \begin{itemize}
     \item $P_n(A) \to P(A)$ for all $A \in \mathcal{B}(\mathbb{R})$ such that $P(\partial A)=0$.
     \item $\int f dP_n \to \int f dP$ for all bounded continuous functions $f$.
-    \item $\int f dP_n \to \int f dP$ for all bounded, infintely-often differentiable continuous functions $f$.
+    \item $\int f dP_n \to \int f dP$ for all bounded, infinitely-often differentiable continuous functions $f$.
    \end{itemize}
 \end{definition}
 
