@@ -20,9 +20,9 @@ Consider the problem of counting the number of triangles in the Erd\H{o}s-R\'{e}
     T=\sum_{i<j<k} A_{ij}A_{jk}A_{ki}
 \end{equation*}
 
-the random variable $X_{i,j,k}=A_{ij}A_{jk}A_{ki}$ is not independent of one another as they may share edges.  
+the random variable $X_{i,j,k}=A_{ij}A_{jk}A_{ki}$ is not independent of one another, as they may share edges.  
 
-Stein's Method allows us to approximate the distribution of $T$ by another known distribution and we also get an idea of convergence rate.  
+Stein's Method allows us to approximate the distribution of $T$ by another known distribution, and we also get an idea of convergence rate.  
 
 We introduce the general idea of Stein's Method and then consider the cases of a Poisson approximation and a normal approximation.
 
@@ -32,7 +32,7 @@ We introduce the general idea of Stein's Method and then consider the cases of a
     This section is not examinable. The content of this section is based on \citep{anastasiou2022steins}.
 \end{unexaminable}
 
-The main idea works as follows: if we have a random variable $Z$ following an unknown distribution $Q$, we can show it satisfies some equation $\mathbb{E}[(\mathcal{T}f (Z))]=0, \forall f$ if and only if it follows distribution $P$. In particular, it is approximately $P$-distributed if we can show that $\mathbb{E}[(\mathcal{T}f (Z))]\approx 0$ for all $f$.  
+The main idea works as follows: if we have a random variable $Z$ following an unknown distribution $Q$, we can show it satisfies some equation $\mathbb{E}[(\mathcal{T}f (Z))]=0, \forall f$ if and only if it follows the distribution $P$. In particular, it is approximately $P$-distributed if we can show that $\mathbb{E}[(\mathcal{T}f (Z))]\approx 0$ for all $f$.  
 
 More formally, we set up Stein's method for a target probability measure $P$ and any other measure $Q$. Let $\mathcal{G}(\mathcal{T})$ be a set of functions determined by a linear operator $\mathcal{T}$.  
 
@@ -46,7 +46,7 @@ More formally, we set up Stein's method for a target probability measure $P$ and
 
 The equation $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ is called the \textbf{Stein identity}.  
 
-With this set up, we can define the how close is $Z$ a $P$-distributed by introducing a measure for distance using the characterization above:
+With this set up, we can define how close is $Z$ a $P$-distributed by introducing a measure for distance using the characterization above:
 
 \begin{definition}
     The \textbf{Stein discrepancy} between $P$ and $Q$ is defined as\label{def:stein_discrepancy}
@@ -86,7 +86,7 @@ An important example is the total variation distance, which we will use in the n
     \end{equation*}
 \end{example}
 
-The proof for the second representation can be found \href{https://math.stackexchange.com/questions/3287889/show-that-the-total-variation-distance-of-probability-measures-mu-nu-is-equa}{here} and the third can be found \href{https://math.stackexchange.com/questions/1481101/definition-of-the-total-variation-distance-vp-q-frac12-int-p-qd-n}{here}.  
+The proof for the second representation can be found \href{https://math.stackexchange.com/questions/3287889/show-that-the-total-variation-distance-of-probability-measures-mu-nu-is-equa}{here}, and the third can be found \href{https://math.stackexchange.com/questions/1481101/definition-of-the-total-variation-distance-vp-q-frac12-int-p-qd-n}{here}.  
 
 In fact, the concept of Stein discrepancy and general IPMs are related by Stein's equation.
 
@@ -522,7 +522,7 @@ We will use the same notation as the lecture notes with $W=\sum_{i\in I} X_i$, w
 We now provide a bound for $W$ in the case of dependent random variables.
 
 \begin{theorem}\label{thm:stein_equation_normal_dependent}
-    Assume $W$ admits a dissociated decomposition as decribed above. Let $X_i, i\in I$ with $\mathbb{E}[X_i]=0$ and $\mathrm{Var}(W)=1$. Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$:
+    Assume $W$ admits a dissociated decomposition as described above. Let $X_i, i\in I$ with $\mathbb{E}[X_i]=0$ and $\mathrm{Var}(W)=1$. Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$:
 
     \begin{equation*}
         \left|\mathbb{E}[h(W)] - \mathbb{E}[h(X)]\right| \leq 4||h^{\prime}||\sum_{i\in I}\sum_{j,k\in K_{i}}\left(\mathbb{E}(|X_{i}X_{j}X_{k}|+\mathbb{E}(|X_{i}X_{j}|)\mathbb{E}(|X_{k}|)\right)
@@ -626,7 +626,7 @@ which equals 1 if and only if $uvw$ is a triangle. Also let $T$ be:
 T = \sum_{\alpha \in \Gamma_n} Y_\alpha
 \]
 
-Again if $|\{u,v,w\}\cap \{a,b,c\}|\leq 1$, then $Y_\alpha$ and $Y_\beta$ are independent. Let $K_\alpha$ contain $\alpha$ and all those tuples $\beta$ such that $|\alpha\cap \beta|\geq 2$. Recall from \Cref{thm:stein_equation_normal_dependent} that we need to have centered random variables with variance of sum being $1$. So, we standaridise to obtain $X_\alpha$:
+Again if $|\{u,v,w\}\cap \{a,b,c\}|\leq 1$, then $Y_\alpha$ and $Y_\beta$ are independent. Let $K_\alpha$ contain $\alpha$ and all those tuples $\beta$ such that $|\alpha\cap \beta|\geq 2$. Recall from \Cref{thm:stein_equation_normal_dependent} that we need to have centred random variables with variance of sum being $1$. So, we standardise to obtain $X_\alpha$:
 
 \[
     X_{\alpha}=\frac{Y_{\alpha}-p^{3}}{\sqrt{\mathrm{Var}(T)}}
@@ -643,7 +643,7 @@ to see this, note $\mathrm{Var}(T) = \sum_\alpha \mathrm{Var}(Y_\alpha) + \sum_{
     W_{\alpha}=\sum_{\beta\notin K_{\alpha}}X_{\beta}{\mathrm{~and~}}Z_{\alpha}=\sum_{\beta\in K_{\alpha}}X_{\beta}
 \]
 
-To obain a dissociated decomposition of $W$, we further deocompose $W_\alpha$ as follows:
+To obtain a dissociated decomposition of $W$, we further decompose $W_\alpha$ as follows:
 \[
     W_{\alpha}=\sum_{\gamma\in K_{\alpha}\cup K_{\beta}}X_{\gamma}+\sum_{\gamma\in K_{\beta}\setminus K_{\alpha}}X_{\gamma}
 \]
@@ -695,7 +695,7 @@ Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
 
 \subsubsection{Dense and Sparse Regimes}  
 
-Note in \Cref{thm:triangle_gnp_normal}, we requie the factor $\frac{n^5}{\sigma^3}$ to be small in order to obtain a useful bound. This is the case when $p$ does not depend on $n$, as $\sigma^2 \sim n^4$. However, if for example $p=1/n$, then $\sigma$ is of order $\mathcal{O}(1)$, so the bound can be meaningless.  Those two cases in fact correspond to the dense and sparse regimes of $\mathcal{G}(n,p)$.  
+Note that in \Cref{thm:triangle_gnp_normal}, we require the factor $\frac{n^5}{\sigma^3}$ to be small in order to obtain a useful bound. This is the case when $p$ does not depend on $n$, as $\sigma^2 \sim n^4$. However, if for example $p=1/n$, then $\sigma$ is of order $\mathcal{O}(1)$, so the bound can be meaningless.  Those two cases in fact correspond to the dense and sparse regimes of $\mathcal{G}(n,p)$.  
 
 \begin{definition}
     We say a function $f(n)$ satisfies:

@@ -68,7 +68,7 @@ and the variance of the estimator is:
 \begin{equation*}
     \hat{\mu} = \frac{1}{N}\sum_{i\in S} \frac{y_i}{\pi_i}
 \end{equation*}
-where $\pi_i$ is the probability of selecting unit $i$ into the sample. Note this has an alternative for of $\sum_{i\in U} Z_i\frac{y_i}{\pi_i}$, where $Z_i=\mathbf{1}(i\in S)$ is the indicator function, taking the expectation shows that this is an unbiased estimator of $\mu$.  The variance of the estimator is:
+where $\pi_i$ is the probability of selecting the unit $i$ into the sample. Note this has an alternative form of $\sum_{i\in U} Z_i\frac{y_i}{\pi_i}$, where $Z_i=\mathbf{1}(i\in S)$ is the indicator function, taking the expectation shows that this is an unbiased estimator of $\mu$.  The variance of the estimator is:
 \begin{equation*}
     \mathrm{Var}(\hat{\mu}) = \frac{1}{N^2}\sum_{i\in U}\sum_{j\in U}y_{i}y_{j}\left({\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}}-1\right).
 \end{equation*}
@@ -104,7 +104,7 @@ The variance can be deduced from above by multiplying $N^2$.
 
 \subsubsection{Horvitz-Thompson for Networks}
 
-We need to define the population to be the quantity of interest. Here for network ${\mathcal{G}}=(\mathcal{V},{\mathcal{E}})$, we let the population be all vertices and verterx pairs:
+We need to define the population to be the quantity of interest. Here for network ${\mathcal{G}}=(\mathcal{V},{\mathcal{E}})$, we let the population be all vertices and vertex pairs:
 \begin{equation*}
     U=\mathcal{V}\cup \{(u,v):u,v\in \mathcal{V}, u\neq v\}
 \end{equation*}
@@ -126,7 +126,7 @@ and the probability of choosing an edge is (recall from \Cref{ex:srs}):
     \pi_{i,j} = \frac{n(n-1)}{|\mathcal{V}|(|\mathcal{V}|-1)}
 \end{equation*}
 
-Note those probabilities assume the size of population is known.  
+Note those probabilities assume the size of the population is known.  
 
 
 \begin{example}[Estimating the number of edges]
@@ -136,7 +136,7 @@ Note those probabilities assume the size of population is known.
     \end{equation*}
 \end{example}
 
-\paragraph{Star Sampling (1-hop Snow Ball)} We first choose a random sample $S_0$ of $n$ vertices and we sample all edges incident to the vertices in $S_0$. Usually, the adjacent vertices are added (but they can also be excluded). Therefore, the two cases are:
+\paragraph{Star Sampling (1-hop Snow Ball)} We first choose a random sample $S_0$ of $n$ vertices, and we sample all edges incident to the vertices in $S_0$. Usually, the adjacent vertices are added (but they can also be excluded). Therefore, the two cases are:
 \begin{align*}
     S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\}\\
     S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\} \cup \{v: (u,v)\in \mathcal{E}, u\in S_0\}
@@ -150,7 +150,7 @@ Note those probabilities assume the size of population is known.
     \end{align*}
 \end{example}
 
-We also note that other quantities of interest can be estimated in a similar way \begin{example}[Triangles]
+We also note that other quantities of interest can be estimated similarly \begin{example}[Triangles]
     Defining $y_{i,j,k}=\mathbf{1}((i,j),(j,k),(k,i)\in \mathcal{E})$, the sample will need to have the triplets.
 \end{example}
 
@@ -171,7 +171,7 @@ An important note is that the network considered in the settings above is \textb
 Let $\alpha = \frac{m}{1+n}$, where $n$ is the number of simulations and $m$ is a rank to be determined. We let the test statistic be $T$. The Monte Carlo test is:
 \begin{enumerate}
     \item Observe the actual value of $T^*$ from the sample.
-    \item Simulate random sample $T_1, \ldots, T_n$ from the null distribution.
+    \item Simulate a random sample $T_1, \ldots, T_n$ from the null distribution.
     \item Order the set $\{T^*, T_1, \ldots, T_n\}$ in decreasing order (if reject for large $T$) or increasing order (if reject for small $T$).
     \item Reject null if $T^*$ has rank less than or equal to $m$.
 \end{enumerate}
@@ -186,13 +186,13 @@ The basis of this test is that under $H_0$, $T^*$ is equally likely to be any of
 
 \begin{remark}
     In $\mathcal{G}(n,p)$, the number of edges asymptotically determines
-the number of triangles when the number of edges is moderately large. Thus
+the number of triangles when the number of edges is moderately large. Thus,
 conditioning on the number of edges (or the vertex degrees, which determine
 the number of edges) gives degenerate results.
 \end{remark}
 
 \subsubsection{Scale Free Networks}
-Recall a network is scale-free if the degree distribution follows a power law:
+Recall that a network is scale-free if the degree distribution follows a power law:
 \begin{equation*}
     \mathbb{P}(d(V)=k)\sim C k^{-\gamma}
 \end{equation*}
@@ -282,7 +282,7 @@ where \( m \) is the number of edges, \((a_{uv}) \) is an entry in the adjacency
 is the degree of vertex \( v \).
 \end{definition}
 
-\paragraph{Girvan-Newman algorithm} The algorithm is based on the idea that edges with high betweenness are likely to be between communities (recall betweenness is the number of shortest paths passing through an edge).
+\paragraph{Girvan-Newman algorithm} The algorithm is based on the idea that edges with high betweenness are likely to be between communities (recall that betweenness is the number of shortest paths passing through an edge).
 
 The algorithm is as follows:
 \begin{enumerate}
