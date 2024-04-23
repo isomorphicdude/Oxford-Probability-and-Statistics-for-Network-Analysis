@@ -226,10 +226,15 @@ To see this is actually useful, we consider a bound for Bernoulli random variabl
 When the random variables are not independent, the computation of $\mathbb{E}[Wg(W)]$ is more complicated.  Here we let $A_\alpha$ denote the set elements that are dependent on $X_\alpha$.  
 
 \begin{theorem}\label{thm:poisson_stein_local}
-    Let $X_\alpha, \alpha \in I$ with each $X_\alpha \sim \text{Ber}(p_\alpha)$ and $Z = \sum_{\alpha \in I} X_\alpha$. Let $\lambda = \sum_{\alpha \in I} p_\alpha$. Suppose $\forall \alpha \in I$, there exists a set $A_\alpha \subseteq I$, s.t. $X_\alpha$ is independent of $\sum_{\beta \notin A_\alpha} X_\beta$. Define 
+    Let $X_\alpha, \alpha \in I$ with each $X_\alpha \sim \text{Ber}(p_\alpha)$ and $Z = \sum_{\alpha \in I} X_\alpha$. Let $\lambda = \sum_{\alpha \in I} p_\alpha$.   
+    
+    Suppose $\forall \alpha \in I$, there exists a set $A_\alpha \subseteq I$, s.t. $X_\alpha$ is independent of $\sum_{\beta \notin A_\alpha} X_\beta$.   
+    
+    Define 
     \begin{equation*}
         \eta_\alpha = \sum_{\beta \in A_\alpha} X_\beta
-    \end{equation*}
+    \end{equation*}  
+    
     Then the total variation distance is bounded by
     \begin{equation*}
         d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \sum_{\alpha\in I}[(p_{\alpha}\mathbb{E}(\eta_{\alpha})+\mathbb{E}(X_{\alpha}(\eta_{\alpha}-X_{\alpha}))]\operatorname*{min}\left(1,\lambda^{-1}\right)
@@ -463,7 +468,11 @@ We can now give the converse of \Cref{thm:stein_operator_normal} to characterize
 Now for independent $X_1, \ldots, X_n$ with zero mean and variance $1/n$, we can bound the weak convergence of their sum to the standard normal distribution.  
 
 \begin{theorem}
-    Let $Z = \sum_{i=1}^{n} X_i$ with $X_i$ being independent and $\mathbb{E}[X_i]=0$ and $\mathbb{E}[X_i^2]=1/n$. Then we have for any continuous and piecewise continuously differentiable $h$:
+    For independent $X_i$, $\mathbb{E}[X_i]=0$ and $\mathbb{E}[X_i^2]=1/n$, let
+    $$
+    Z = \sum_{i=1}^{n} X_i
+    $$ 
+    Then we have for any continuous and piecewise continuously differentiable $h$:
     \begin{equation*}
         \left|\mathbb{E}[h(Z)] - \mathbb{E}[h(X)]\right| \leq \|h'\|_\infty \left( \frac{2}{\sqrt{n}} + \sum_{i=1}^{n} \mathbb{E}[|X_i|^3]\right)
     \end{equation*}
