@@ -85,12 +85,25 @@ The \textbf{Watts-Strogatz model} is a random graph constructed with the followi
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{figures/strogatz.png}
-    \caption{Watts-Strogatz model (\href{https://www.kth.se}{source})} % should include the precise source
+    \begin{tikzpicture}
+        % Draw the circle of nodes
+        \foreach \x in {1,...,12}{
+          \node[circle, draw, fill=black, inner sep=2pt] (node\x) at (\x*30:2cm) {};
+        }
+        
+        % Set the style for the edges
+        \tikzset{edge/.style={line width=2pt, color=astral}}
+        
+        \draw[edge] (node1) -- (node11);
+        \draw[edge] (node1) -- (node12);
+        \draw[edge] (node1) -- (node2);
+        \draw[edge] (node1) -- (node3);
+      \end{tikzpicture}
+    \caption{We connect the vertex to its nearest neighbours on both directions. (\href{https://www.kth.se/social/files/5605669af2765468be471eda/lecture\%204\%20\%282015\%29.pdf}{a better illustration})}
     \label{fig:watts-strogatz}
 \end{figure}
 
-When $n>2k$, there are in total $nk$ edges in the network, which remains constant throughout the rewiring process.
+When $n>2k$, there are in total $nk$ edges in the network, which remain constant throughout the rewiring process.
 
 \begin{remark}
     Instead of a ring in with $n$ equal spaced vertices $\real^2$, we can also start with a torus in higher dimensions. For example, in $\real^3$, we fold a square lattices of $n^2$ vertices into a torus.
