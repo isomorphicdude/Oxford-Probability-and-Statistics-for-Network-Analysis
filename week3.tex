@@ -4,6 +4,8 @@
 \input{includes/theoremstyle.tex}
 \usepackage{tikz}
 \usepackage[colon, sort&compress]{natbib}
+% \pagestyle{fancy}
+
 \title{Week 3 \& 4 Stein's Method for Graphs}
 
 \date{\today}
@@ -15,14 +17,16 @@
 \section{Stein's Method for Graphs}
 
 \subsection{Motivation}
-Consider the problem of counting the number of triangles in the Erd\H{o}s-R\'{e}nyi random graph $\mathcal{G}(n,p)$. We know that the expected number of triangles is $\binom{n}{3}p^3$. However, we would like to know the (approximate) distribution of the number of triangles. Central limit theorem is not applicable here, since the number of triangles is not a sum of independent random variables: 
+% \begin{unexaminable}
+%     Ask \verb|ChatGPT| for better motivations.
+% \end{unexaminable}
+Consider the problem of counting the number of triangles in the Erd\H{o}s-R\'{e}nyi random graph $\mathcal{G}(n,p)$. We know that the expected number of triangles is $\binom{n}{3}p^3$. To obtain the (approximate) distribution of the number of triangles, the central limit theorem is not applicable here, as the number of triangles is not a sum of \textit{independent} random variables:  
+
 \begin{equation*}
     T=\sum_{i<j<k} A_{ij}A_{jk}A_{ki}
 \end{equation*}
 
-the random variable $X_{i,j,k}=A_{ij}A_{jk}A_{ki}$ is not independent of one another, as they may share edges.  
-
-Stein's Method allows us to approximate the distribution of $T$ by another known distribution, and we also get an idea of convergence rate.  
+Stein's Method allows us to approximate the distribution of $T$ by another known distribution and provides a way to bound the error.  
 
 We introduce the general idea of Stein's Method and then consider the cases of a Poisson approximation and a normal approximation.
 
@@ -32,26 +36,31 @@ We introduce the general idea of Stein's Method and then consider the cases of a
     This section is not examinable. The content of this section is based on \citep{anastasiou2022steins}.
 \end{unexaminable}
 
-The main idea works as follows: if we have a random variable $Z$ following an unknown distribution $Q$, we can show it satisfies some equation $\mathbb{E}[(\mathcal{T}f (Z))]=0, \forall f$ if and only if it follows the distribution $P$. In particular, it is approximately $P$-distributed if we can show that $\mathbb{E}[(\mathcal{T}f (Z))]\approx 0$ for all $f$.  
+Main ideas:   
+\begin{itemize}
+    \item Task is to determine how close a random variable $Z \sim Q$ is to a target distribution $P$.
+    \item Can show $\mathbb{E}[(\mathcal{T}f (Z))]=0, \forall f \iff Z\sim P$. (Think of $\mathcal{T}f$ as a test) 
+    \item  In particular, $Z$ is approximately $P$-distributed if $\mathbb{E}[(\mathcal{T}f (Z))]\approx 0$ for all $f$.  
+\end{itemize}
 
 More formally, we set up Stein's method for a target probability measure $P$ and any other measure $Q$. Let $\mathcal{G}(\mathcal{T})$ be a set of functions determined by a linear operator $\mathcal{T}$.  
 
 \begin{definition}\label{def:stein_operator}
     The \textbf{Stein operator} $\mathcal{T}$ is a linear operator such that
     \begin{center}
-        $P=Q$ if and only if $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ for all $g \in \mathcal{G}(\mathcal{T})$.
+        $P=Q$ if and only if $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g)(Z)]=0$ for all $g \in \mathcal{G}(\mathcal{T})$.
     \end{center}
-    The set of functions $\mathcal{G}(\mathcal{T})$ such that $\mathbb{E}_{Z \sim P}[(\mathcal{T}g(Z))]=0, \forall g \in \mathcal{G}(\mathcal{T})$ is called the \textbf{Stein class} of $\mathcal{T}$.
+    The set of functions $\mathcal{G}(\mathcal{T})$ such that $\mathbb{E}_{Z \sim P}[(\mathcal{T}g)(Z)]=0, \forall g \in \mathcal{G}(\mathcal{T})$ is called the \textbf{Stein class} of $\mathcal{T}$.
 \end{definition}
 
-The equation $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]=0$ is called the \textbf{Stein identity}.  
+The equation $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g)(Z)]=0$ is called the \textbf{Stein identity}.  
 
-With this set up, we can define how close is $Z$ a $P$-distributed by introducing a measure for distance using the characterization above:
+With this setup, we can define how close is $Z$ a $P$-distributed by introducing a measure for distance using the characterization above:
 
 \begin{definition}
     The \textbf{Stein discrepancy} between $P$ and $Q$ is defined as\label{def:stein_discrepancy}
     \begin{equation*}
-        \mathcal{D}(Q, \mathcal{T}, \mathcal{G})=\sup_{g \in \mathcal{G}(\mathcal{T})} \|\mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))]\|^*
+        \mathcal{D}(Q, \mathcal{T}, \mathcal{G})=\sup_{g \in \mathcal{G}(\mathcal{T})} \|\mathbb{E}_{Z\sim Q}[(\mathcal{T}g)(Z)]\|^*
     \end{equation*}
     for some norm $\|\cdot\|^*$.
 \end{definition}
@@ -71,7 +80,7 @@ Usually, this discrepancy is determined by various types of integral probability
 An important example is the total variation distance, which we will use in the next section.  
 
 \begin{example}
-    The \textbf{total variation distance} is an IPM with $\mathcal{H}=\{1_A: A \in \mathcal{F}\}$, where $\mathcal{F}$ is the $\sigma$-algebra of events, which admits test functions $h(x) = I(x\in A)$. The total variation distance is defined as  
+    The \textbf{total variation distance} is an IPM with $\mathcal{H}=\{1_A: A \in \mathcal{F}\}$, where $\mathcal{F}$ is the $\sigma$-algebra of events, which admits test functions $h(x) = \mathbf{1}(x\in A)$. The total variation distance is defined as  
     \begin{equation}
         d_{TV}(P, Q) = \sup_{A \in \mathcal{F}} |P(A) - Q(A)|
         \label{eq:total_variation_distance}
@@ -80,7 +89,7 @@ An important example is the total variation distance, which we will use in the n
     \begin{equation*}
         d_{TV}(P, Q) = \frac{1}{2} \sup_{f \in \mathcal{H}}\left|\int f dP - \int f dQ\right|
     \end{equation*}
-    A similar representation when the distributions admit Radon-Nikodym derivatives $\frac{dP}{d\mu}=p$ and $\frac{dQ}{d\mu}=q$ with respect to a $\sigma$-finite measure $\mu$:
+    A similar representation exists when the distributions admit Radon-Nikodym derivatives $\frac{dP}{d\mu}=p$ and $\frac{dQ}{d\mu}=q$ with respect to a $\sigma$-finite measure $\mu$:
     \begin{equation*}
         d_{TV}(P, Q) = \frac{1}{2} \int |p - q| d\mu
     \end{equation*}
@@ -95,70 +104,87 @@ In fact, the concept of Stein discrepancy and general IPMs are related by Stein'
     \begin{equation*}
         \mathcal{T}g (z) = h(z) - \mathbb{E}_{X\sim P}[h(X)]
     \end{equation*}
-    evaluated over $z$ on the support of $P$, where $g$ is a solution to the Stein equation.
+    evaluated over $z$ on the support of $P$, where $g=g(h)$ is a solution to the Stein equation.
 \end{definition}
 
 If the solution $g$ exists, then we can take the expectation over $Q$ to get:
 \begin{align*}
-    \mathbb{E}_{Z\sim Q}[(\mathcal{T}g(Z))] &= \mathbb{E}_{Z\sim Q}[h(Z) - \mathbb{E}_{X\sim P}[h(X)]]\\
-    &= \mathbb{E}_{Z\sim Q}[h(Z)] - \mathbb{E}_{X\sim P}[h(X)]\\
+    \mathbb{E}_{Z\sim Q}[(\mathcal{T}g)(Z)] &= \mathbb{E}_{Z\sim Q}[h(Z) - \mathbb{E}_{X\sim P}[h(X)]]\\
+    &= \mathbb{E}_{Z\sim Q}[h(Z)] - \mathbb{E}_{X\sim P}[h(X)]
 \end{align*}
 
-Now taking the supremum over $h \in \mathcal{H}$, we recover the form of an IPM. 
+Now taking the supremum over $h \in \mathcal{H}$, we recover the form of an IPM, that is,
+
+\begin{equation}\label{eq:stein_ipm_relation}
+    d_{\mathcal{H}}(P, Q) = \sup_{h \in \mathcal{H}} |\mathbb{E}_{X\sim P}[h(X)] - \mathbb{E}_{Z\sim Q}[h(Z)]| = \sup_{g \in \mathcal{G}(\mathcal{T})} |\mathbb{E}_{Z\sim Q}[(\mathcal{T}g)(Z)]|
+\end{equation}
+
+Bounding the last term is often easier, as it only requires taking expectations over $Q$.
+
+\begin{unexaminable}
+    For an interesting application in Machine Learning, see \citep{pmlr-v119-grathwohl20a}.
+\end{unexaminable}
 
 
 
 \subsection{Stein-Chen Method for Poisson Approximation}  
-Following the framework in the previous section, we can define the Stein operator (\Cref{def:stein_operator}) for Poisson approximation:
+Following the framework in the previous section, we can define the Stein operator (\Cref{def:stein_operator}) for Poisson approximation\footnote{We use the same notations as in the lecture notes, denoting the random variable as $W$ instead of $Z$.}:
 \begin{equation}
-    \mathcal{T}g(z) = \lambda g(z+1) - zg(z)
+    \mathcal{T}g(w) = \lambda g(w+1) - wg(w)
 \end{equation}
 
-for $g: \mathbb{N}_0 \to \mathbb{R}$. This gives a characterization of the Poisson distribution with parameter $\lambda>0$:
+for $g: \mathbb{N}_0 \to \mathbb{R}$. This gives a characterisation of the Poisson distribution with parameter $\lambda>0$:
 
 \begin{proposition}
     \label{prop: direction1 poisson}
-    If $Z\sim \text{Po}(\lambda)$, then $\mathbb{E}[(\mathcal{T}g(Z))]=0$ for all $g$ bounded.
+    If $W\sim \text{Po}(\lambda)$, then $\mathbb{E}[(\mathcal{T}g)(W)]=0$ for all $g$ bounded.
 \end{proposition}
 
 \begin{proof}
-This is a direct computation, noting the $Z=0$ gives zero expectation when $g$ is bounded:  
+This is a direct computation, noting the $W=0$ gives zero expectation when $g$ is bounded:  
     \begin{align*}
-        \lambda \mathbb{E}[g(Z+1)] &= \lambda \sum_{k=0}^\infty g(k+1) \frac{\lambda^k}{k!} e^{-\lambda}\\
-        &= \lambda \sum_{k=1}^\infty g(k) \frac{\lambda^{k-1}}{(k-1)!} e^{-\lambda}\\
-        &= \sum_{k=1}^\infty g(k) \frac{\lambda^k}{(k-1)!} e^{-\lambda}\\
-        &= \sum_{k=1}^\infty g(k) \frac{\lambda^k}{k!} e^{-\lambda} \cdot k\\
-        &= \mathbb{E}[Zg(Z)]\\
+        \lambda \mathbb{E}[g(W+1)] &= \lambda \sum_{k=0}^\infty g(k+1) \frac{\lambda^k}{k!} e^{-\lambda}\\
+        &= \lambda \sum_{k=1}^\infty g(k) \frac{\lambda^{k-1}}{(k-1)!} e^{-\lambda} \quad \text{(move out $\lambda$)}\\
+        &= \sum_{k=1}^\infty g(k) \frac{\lambda^k}{(k-1)!} e^{-\lambda} \quad \text{(shift index)}
+        \\
+        &= \sum_{k=1}^\infty g(k) \frac{\lambda^k}{k!} e^{-\lambda} \cdot k \quad \text{(divide and multiply by $k$)}\\
+        &= \mathbb{E}[Wg(W)]
     \end{align*}
+So we have shown $\lambda\mathbb{E}[g(W+1)] = \mathbb{E}[Wg(W)]$ for all bounded $g$, which implies $\mathbb{E}[(\mathcal{T}g)(W)]=0$.  
 \end{proof}
 
 
-The IPM we will use here is the total variation distance (\Cref{eq:total_variation_distance}), which leads to the Stein's equation (\Cref{def:stein_equation}):
+The IPM we will use here is the total variation distance (\ref{eq:total_variation_distance}), which leads to Stein's equation (\Cref{def:stein_equation}):
 
 \begin{equation}
-    \mathcal{T}g(z) = I(z \in A) - \mathbb{E}[I(X \in A)]
+    \mathcal{T}g(w) = \mathbf{1}(w \in A) - \mathbb{E}[\mathbf{1}(X \in A)]
     \label{eq:poisson_stein_equation}
 \end{equation}
 
-We show this equation has a \textit{unique} solution.
+We now claim this equation has a \textit{unique} solution.
 
 \begin{lemma}\label{lem:poisson_stein_equation}
-    Given the Stein's equation above, we have a unique solution
+    Given \Cref{eq:poisson_stein_equation}, we have a unique solution
     \begin{equation}
-        g(z+1) = \frac{z!}{\lambda^{z+1}} e^\lambda \sum_{k=0}^z \frac{\lambda^k}{k!} (I(k\in A) - \mathbb{E}[I(k\in A)])
+        g(w+1) = \frac{w!}{\lambda^{w+1}} e^\lambda \sum_{k=0}^w \frac{\lambda^k}{k!} (\mathbf{1}(k\in A) - \mathbb{E}[\mathbf{1}(k\in A)])
     \end{equation}
 
     this solution can also be written as 
     \begin{equation}
-        g(z+1) = -\frac{z!}{\lambda^{z+1}} e^\lambda \sum_{k=z+1}^\infty \frac{\lambda^k}{k!} (I(k\in A) - \mathbb{E}[I(k\in A)])
+        g(w+1) = -\frac{w!}{\lambda^{w+1}} e^\lambda \sum_{k=w+1}^\infty \frac{\lambda^k}{k!} (\mathbf{1}(k\in A) - \mathbb{E}[\mathbf{1}(k\in A)])
     \end{equation}
 \end{lemma}
 
 \begin{proof}
-    We first show the claimed solution satisfies the Stein's equation, which is easily verified by direct computation. To show uniqueness, let $z=0$ in \Cref{eq:poisson_stein_equation} and we get $\lambda g(1) = I(0\in A) - \mathbb{E}[I(0\in A)]$. So if $f$ is another solution to \Cref{eq:poisson_stein_equation}, then $f(1)=g(1)$. Now we can use induction to show $f(z)=g(z)$ for all $z\in \mathbb{N}_0$.
+    We first show the claimed solution satisfies Stein's equation, which is easily verified by direct computation.  
+    
+    To show uniqueness, let $w=0$ in \Cref{eq:poisson_stein_equation} and we get $\lambda g(1) = \mathbf{1}(0\in A) - \mathbb{E}[\mathbf{1}(0\in A)]$. So if $f$ is another solution to \Cref{eq:poisson_stein_equation}, then $f(1)=g(1)$. Now we can use induction to show $f(w)=g(w)$ for all $w\in \mathbb{N}_0$.
 \end{proof}
 
-To bound the total variation distance, we require additional bounds on $g$.  (In fact, as we shall see in the proof below, only those bounds and properties of $g$ are used; the explicit form of $g$ is unimportant)
+To bound the total variation distance, we require additional bounds on $g$.  
+\begin{remark}
+    In fact, as we shall see in the proof below, only those bounds and properties of $g$ are used; the explicit form of $g$ is unimportant
+\end{remark}
 
 \begin{lemma}\label{lem:poisson_stein_bound}
 For the solution $g$ to the Stein's equation \Cref{eq:poisson_stein_equation}, we have:
@@ -182,108 +208,135 @@ Here $\lambda^{-1}$ is referred to as the \textit{magic factor}.
 Now we give the converse of \Cref{prop: direction1 poisson}.
 
 \begin{proposition}\label{prop: direction2 poisson}
-    If $\mathbb{E}[(\mathcal{T}g(Z))]=0$ for all $g$ bounded, then $Z\sim \text{Po}(\lambda)$.
+    If $\mathbb{E}[(\mathcal{T}g)(W)]=0$ for all $g$ bounded, then $W\sim \text{Po}(\lambda)$.
 \end{proposition}
 
 \begin{proof}
     Since $g$ is an arbitrary bounded function, we take it as the solution obtained in \Cref{lem:poisson_stein_equation}, which is bounded by the previous lemma. Then taking the expectation of \Cref{eq:poisson_stein_equation} finishes the proof.
 \end{proof}
 
-Now we can bound the total variation distance between $Z$ and $\text{Po}(\lambda)$:
-\begin{equation*}
-    d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) = \sup_{g} |\mathbb{E}[\lambda g(Z+1) - Zg(Z)]|
-\end{equation*}
+Now we can bound the total variation distance between $W$ and $\text{Po}(\lambda)$:
+\begin{equation}\label{eq:poisson_stein_total_variation}
+    d_{TV}(\mathcal{L}(W), \text{Po}(\lambda)) = \sup_{g} |\mathbb{E}[\lambda g(W+1) - Wg(W)]|
+\end{equation}
 
 To see this is actually useful, we consider a bound for Bernoulli random variables. 
 
-\begin{example}\label{ex:bernoulli_poisson}
-    Let $X_1, \ldots, X_n$ be independent Bernoulli random variables, where $X_i \sim \text{Ber}(p_i)$ and $Z = \sum_{i=1}^n X_i$. Set $\lambda = \sum_{i=1}^n p_i$. Then we can compute the Stein's equation $\mathbb{E}[\lambda g(Z+1) - Zg(Z)]$.  Now since $X_i$ is binary and $Z-X_i$ is independent of $X_i$, we have:  
+\myparagraph{Example: Sum of i.i.d. Bernoulli random variables}  
+
+    Let $X_1, \ldots, X_n$ be independent Bernoulli random variables, where $X_i \sim \text{Ber}(p_i)$ and $W = \sum_{i=1}^n X_i$. Setting $\lambda = \sum_{i=1}^n p_i$, the Stein's equation is given by $\mathbb{E}[\lambda g(W+1) - Wg(W)]$.    
+
+    We first compute $\mathbb{E}[Wg(W)]$:
     \begin{align*}
-        \mathbb{E}[Zg(Z)] &= \mathbb{E}[\sum_{i=1}^n X_i g(Z)]\\
-        &= \sum_{i=1}^n \mathbb{E}[X_i g(Z - X_i + 1)]\\
-        &= \sum_{i=1}^n \mathbb{E}[X_i] \mathbb{E}[g(Z - X_i + 1)]\\
-        &= \sum_{i=1}^n p_i \mathbb{E}[g(Z - X_i + 1)]\\
+        \mathbb{E}[Wg(W)] &= \mathbb{E}[\sum_{i=1}^n X_i g(W)]\\
+        &= \sum_{i=1}^n \mathbb{E}[X_i g(W - X_i + 1)] \quad \text{(since $X_i$ is binary)}
+        \\
+        &= \sum_{i=1}^n \mathbb{E}[X_i] \mathbb{E}[g(W - X_i + 1)] \quad \text{(by independence)}\\
+        &= \sum_{i=1}^n p_i \mathbb{E}[g(W - X_i + 1)]
     \end{align*}
 
-    where in the second step we use the fact that $X_i=0$ when $g$ is bounded yields zero expectation. Thus, 
+    where in the second step we use the fact that $X_i=0$ when $g$ is bounded yields wero expectation. Thus, using the results above with $\mathbb{E}[Wg(W)] =  \sum_{i=1}^n p_i \mathbb{E}[g(W - X_i + 1)]$, we have:  
     \begin{align*}
-        \mathbb{E}[\lambda g(Z+1) - Zg(Z)] &= \sum_{i=1}^n p_i \mathbb{E}[g(Z + 1)] - \sum_{i=1}^n p_i \mathbb{E}[g(Z - X_i + 1)]\\
-        &= \sum_{i=1}^n p_i \mathbb{E}[\mathbb{E}[g(Z+1) - g(Z - X_i + 1) \mid X_i]]\\
-        &= \sum_{i=1}^n p_i^2 \mathbb{E}[g(Z+1) - g(Z) \mid X_i=1]\\
-        & \leq \sum_{i=1}^n p_i^2 \mathbb{E}[|g(Z+1) - g(Z)| \mid X_i=1]
+        \mathbb{E}[\lambda g(W+1) - Wg(W)] &= \sum_{i=1}^n p_i \mathbb{E}[g(W + 1)] - \sum_{i=1}^n p_i \mathbb{E}[g(W - X_i + 1)]\\
+        &= \sum_{i=1}^n p_i \mathbb{E}[\mathbb{E}[g(W+1) - g(W - X_i + 1) \mid X_i]] \ \text{(using $\mathbb{E}[\mathbb{E}[Y|X_i]]=\mathbb{E}[Y]$)}\\
+        &\stackrel{\textbf{A}}{=} \sum_{i=1}^n p_i^2 \mathbb{E}[g(W+1) - g(W) \mid X_i=1] \\
+        & \leq \sum_{i=1}^n p_i^2 \mathbb{E}[|g(W+1) - g(W)| \mid X_i=1] \ \text{(using $\mathbb{E}[Y|X_i]\leq\mathbb{E}[|Y||X_i]$)}
     \end{align*}
-    where we used conditional expectation.   
-    Using \Cref{lem:poisson_stein_bound} now gives 
-    \[|\mathbb{E}[\lambda g(Z+1) - Zg(Z)]| \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2\]
-    So the total variation distance is bounded by
+    where  in step $\textbf{A}$ we used the fact that 
+    \[
+    \mathbb{E}[\mathbb{E}[Y|X_i]]=p_i \mathbb{E}[Y|X_i=1] + (1-p_i) \mathbb{E}[Y|X_i=0]
+    \]
+    Applying \Cref{lem:poisson_stein_bound} now gives\footnote{Here the conditional expectation is not a random variable with $X_i$'s value specified. See \citep{durrett2010probability}.}
+    \begin{align*}
+        |\mathbb{E}[\lambda g(W+1) - Wg(W)]| &\leq \left|\sum_{i=1}^n p_i^2 \mathbb{E}[|g(W+1) - g(W)| \mid X_i=1]\right|\\
+        &\leq \left|\sum_{i=1}^n p_i^2 \mathbb{E}[\min (1, \lambda^{-1})\mid X_i=1]\right|\\
+        &\leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2
+    \end{align*}
+    Using \Cref{eq:poisson_stein_total_variation}, the total variation distance is bounded by
     \begin{equation*}
-        d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2
+        d_{TV}(\mathcal{L}(W), \text{Po}(\lambda)) \leq \min (1, \lambda^{-1}) \sum_{i=1}^n p_i^2
     \end{equation*}
-    Note this bound is non-asympotic and holds for any $n$.
-\end{example}
+    Note this bound is non-asymptotic and holds for any $n$.
 
 \subsubsection{Local dependence}  
 When the random variables are not independent, the computation of $\mathbb{E}[Wg(W)]$ is more complicated.  Here we let $A_\alpha$ denote the set elements that are dependent on $X_\alpha$.  
 
 \begin{theorem}\label{thm:poisson_stein_local}
-    Let $X_\alpha, \alpha \in I$ with each $X_\alpha \sim \text{Ber}(p_\alpha)$ and $Z = \sum_{\alpha \in I} X_\alpha$. Let $\lambda = \sum_{\alpha \in I} p_\alpha$.   
-    
-    Suppose $\forall \alpha \in I$, there exists a set $A_\alpha \subseteq I$, s.t. $X_\alpha$ is independent of $\sum_{\beta \notin A_\alpha} X_\beta$.   
-    
-    Define 
+    Let $X_\alpha, \alpha \in I$ with each $X_\alpha \sim \text{Ber}(p_\alpha)$ and $W = \sum_{\alpha \in I} X_\alpha$.  
+    Suppose $\forall \alpha \in I$, there exists a set $A_\alpha \subseteq I$, such that
+    \begin{center}
+        $X_\alpha$ is independent of $\sum_{\beta \notin A_\alpha} X_\beta$. 
+    \end{center}
+    Define $W_\alpha = W - \eta_\alpha$, where
     \begin{equation*}
         \eta_\alpha = \sum_{\beta \in A_\alpha} X_\beta
     \end{equation*}  
     
     Then the total variation distance is bounded by
     \begin{equation*}
-        d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \sum_{\alpha\in I}[(p_{\alpha}\mathbb{E}(\eta_{\alpha})+\mathbb{E}(X_{\alpha}(\eta_{\alpha}-X_{\alpha}))]\operatorname*{min}\left(1,\lambda^{-1}\right)
+        d_{TV}(\mathcal{L}(W), \text{Po}(\lambda)) \leq \sum_{\alpha\in I}[(p_{\alpha}\mathbb{E}(\eta_{\alpha})+\mathbb{E}(X_{\alpha}(\eta_{\alpha}-X_{\alpha}))]\operatorname*{min}\left(1,\lambda^{-1}\right)
     \end{equation*}
+
+    where $\lambda = \sum_{\alpha \in I} p_\alpha$.   
 \end{theorem}
 
 \begin{proof}
 
-    As before, we aim to bound the total variation distance by bounding $\mathbb{E}|\lambda g(Z+1) - Zg(Z)|$, where $g$ is the solution to the Stein's equation.  
-
-    Let $Z_\alpha = Z - \eta_\alpha$, we compute the term $\mathbb{E}[Zg(Z)]$ as follows:  
+    As before, we aim to bound the total variation distance by bounding $\mathbb{E}|\lambda g(W+1) - Wg(W)|$, where $g$ is the solution to Stein's equation.  
+    We compute the term $\mathbb{E}[Wg(W)]$ as follows:  
     \begin{align*}
-        \mathbb{E}[Zg(Z)] &= \mathbb{E}[\sum_{\alpha \in I} X_\alpha g(Z)]\\
-        &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(Z - X_\alpha + 1)]\\
-        &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(Z_\alpha + \eta_\alpha -X_\alpha +  1)]\\
-        &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(Z_\alpha + 1)] + \mathbb{E}[X_\alpha (g(Z_\alpha + \eta_\alpha -X_\alpha +  1) - g(Z_\alpha + 1))]\\
-        &= \sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z_\alpha + 1)] \\
-        &+ p_\alpha \mathbb{E}[g(Z+1)] - p_\alpha \mathbb{E}[g(Z+1)] \\
-        &+ \mathbb{E}[X_\alpha (g(Z_\alpha + \eta_\alpha -X_\alpha +  1) - g(Z_\alpha + 1))] \\
+        \mathbb{E}[Wg(W)] &= \mathbb{E}[\sum_{\alpha \in I} X_\alpha g(W)]\\
+        &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(W - X_\alpha + 1)] \quad \text{($X_\alpha$ is binary)}
+        \\
+        &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(W_\alpha + \eta_\alpha -X_\alpha +  1)]\quad \text{($W = W_\alpha + \eta_\alpha$)}
+        \\
+        &= \sum_{\alpha \in I} \mathbb{E}[\textcolor{red}{X_\alpha g(W_\alpha + 1)}] + \mathbb{E}[X_\alpha g(W_\alpha + \eta_\alpha -X_\alpha +  1) - \textcolor{red}{X_\alpha g(W_\alpha + 1)}]\\
+        &= \sum_{\alpha \in I} p_\alpha \mathbb{E}[g(W_\alpha + 1)] \\
+        &+ \color{blue}{p_\alpha \mathbb{E}[g(W+1)] - p_\alpha \mathbb{E}[g(W+1)]} \\
+        &+ \mathbb{E}[X_\alpha (g(W_\alpha + \eta_\alpha -X_\alpha +  1) - g(W_\alpha + 1))]
     \end{align*}
+where in the fourth step, we added and subtracted $\mathbb{E}[X_\alpha g(W_\alpha+1)]$ and in the last step we added and subtracted $p_\alpha \mathbb{E}[g(W+1)]$.
 
 Rearranging the terms leads to 
-    \[\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z + 1)] + \underbrace{p_\alpha \mathbb{E}[g(Z_\alpha+1) - g(Z+1)]}_{R_{1,\alpha}} + \underbrace{\mathbb{E}[X_\alpha (g(Z_\alpha + \eta_\alpha -X_\alpha +  1) - g(Z_\alpha + 1))]}_{R_{2, \alpha}}\] 
+    \[\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(W + 1)] + \underbrace{p_\alpha \mathbb{E}[g(W_\alpha+1) - g(W+1)]}_{R_{1,\alpha}} + \underbrace{\mathbb{E}[X_\alpha (g(W_\alpha + \eta_\alpha -X_\alpha +  1) - g(W_\alpha + 1))]}_{R_{2, \alpha}}\] 
 
-    Hence the equation we need to bound is
+    Hence, let $R_1 = \sum_{\alpha \in I} R_{1,\alpha}$ and $R_2 = \sum_{\alpha \in I} R_{2,\alpha}$,
+    the equation we need to bound is
     \begin{equation*}
-        \mathbb{E}[\lambda g(Z+1) - Zg(Z)] =  R_1 + R_2
+        \mathbb{E}[\lambda g(W+1) - Wg(W)] =  R_1 + R_2
     \end{equation*}
 
     For $R_1=\sum_\alpha R_{1,\alpha}$, we have
     \begin{align*}
-        |R_1| &= \left|\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z_\alpha+1) - g(Z+1)]\right| \\
-        &= \left|\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(Z_\alpha + \eta_\alpha +1) - g(Z_\alpha+1)]\right|\\
-        &\leq \sum_{\alpha \in I} p_\alpha |\mathbb{E}[g(Z_\alpha + \eta_\alpha +1) - g(Z_\alpha+1)]|\\
+        |R_1| &= \left|\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(W_\alpha+1) - g(W+1)]\right| \\
+        &= \left|\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(W+1) - g(W_\alpha+1)]\right| \\
+        &= \left|\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(W_\alpha + \eta_\alpha +1) - g(W_\alpha+1)]\right|\\
+        &\leq \sum_{\alpha \in I} p_\alpha |\mathbb{E}[g(W_\alpha + \eta_\alpha +1) - g(W_\alpha+1)]|
     \end{align*}
-    Now we apply conditional expectation and telescoping sum to the inner term:
+    Now we apply conditional expectation and telescoping sum to the inner term\footnote{Again, for the sake of clarity, we use conditional expectations of the form $\mathbb{E}[X|Y=m]$.},
     \begin{align*}
-        |\mathbb{E}[g(Z_\alpha + \eta_\alpha +1) - g(Z_\alpha+1)]| &= \left|\mathbb{E}\left[\mathbb{E}[\sum_{k=0}^{m-1} g(Z_\alpha + 1 + k+1) - g(Z_\alpha + 1 + k)\mid \eta_\alpha = m]\right]\right|\\
-        &\leq \mathbb{E}\left[\mathbb{E}[\sum_{k=0}^{m-1} |g(Z_\alpha + 1 + k+1) - g(Z_\alpha + 1 + k)|\mid \eta_\alpha = m]\right]\\
+        |\mathbb{E}[g(W_\alpha + \eta_\alpha +1) - g(W_\alpha+1)]| &= 
+        \left|\mathbb{E}\left[\mathbb{E}[g(W_\alpha + \eta_\alpha +1) - g(W_\alpha+1)\mid \eta_\alpha = m]\right]\right|\\
+        &= \left|\mathbb{E}\left[\mathbb{E}[\sum_{k=0}^{m-1} g(W_\alpha + 1 + k+1) - g(W_\alpha + 1 + k)\mid \eta_\alpha = m]\right]\right|\\
+        &\leq \mathbb{E}\left[\mathbb{E}[\sum_{k=0}^{m-1} |g(W_\alpha + 1 + k+1) - g(W_\alpha + 1 + k)|\mid \eta_\alpha = m]\right]\\
         &\leq \mathbb{E}\left[\mathbb{E}[\sum_{k=0}^{m-1} \min (1, \lambda^{-1})\mid \eta_\alpha = m]\right]\\
-        &= \min (1, \lambda^{-1}) \mathbb{E}[ \eta_\alpha]\\
+        &= \min (1, \lambda^{-1}) \mathbb{E}[ \eta_\alpha]
     \end{align*}
 
-    which gives the bound for $R_1$ as:
+    where we used that $\sum_{k=0}^{m-1} g(W_\alpha + 1 + k+1) - g(W_\alpha + 1 + k) = g(W_\alpha +m+1)- g(W_\alpha+1)$ for telescoping sum.
+
+    This gives the bound for $R_1$ as:
     \begin{equation*}
         |R_1| \leq \min (1, \lambda^{-1}) \sum_{\alpha \in I} p_\alpha \mathbb{E}[ \eta_\alpha]
     \end{equation*}
 
-    For $R_2=\sum_\alpha R_{2,\alpha}$, we apply the method above to $g(Z_\alpha + \eta_\alpha - X_\alpha + 1) - g(Z_\alpha + 1)$, conditioning on the value of $\eta_\alpha - X_\alpha$ , which gives the bound:
+    For $R_2=\sum_\alpha R_{2,\alpha}$, we apply the method above to $g(W_\alpha + \eta_\alpha - X_\alpha + 1) - g(W_\alpha + 1)$, conditioning on the value of $\eta_\alpha - X_\alpha$. Namely, we take out the $X_\alpha$ by
+    \begin{align*}
+        &\mathbb{E}[X_\alpha (g(W_\alpha + \eta_\alpha -X_\alpha +  1) - g(W_\alpha + 1))] \\
+        &= \mathbb{E}[\mathbb{E}[X_\alpha (g(W_\alpha + \eta_\alpha -X_\alpha +  1) - g(W_\alpha + 1)) \mid \eta_\alpha - X_\alpha = m]] \\
+        &\leq \mathbb{E}[\mathbb{E}[X_\alpha \left(\sum_{k=0}^{m-1} |g(W_\alpha + 1 + k+1) - g(W_\alpha + 1 + k)|\right) \mid \eta_\alpha - X_\alpha = m]]
+    \end{align*}
+    This gives the bound:
     \begin{equation*}
         |R_2| \leq \min (1, \lambda^{-1}) \sum_{\alpha \in I} p_\alpha \mathbb{E}[ X_\alpha (\eta_\alpha - X_\alpha)]
     \end{equation*}
@@ -291,7 +344,13 @@ Rearranging the terms leads to
     Combing those two bounds gives the desired result.
 \end{proof}  
 
-We are now ready to approximate the number of triangles in Erd\H{o}s-R\'{e}nyi random graph $\mathcal{G}(n,p)$.  We use an index set $\Gamma_n$:
+We are now ready to approximate the number of triangles in Erd\H{o}s-R\'{e}nyi random graph $\mathcal{G}(n,p)$.   
+
+\medskip
+
+\myparagraph{Example: Number of triangles in Erd\H{o}s-R\'{e}nyi random graph}
+
+We use an index set $\Gamma_n$:
 
 \begin{equation*}
     \Gamma_{n}=\{\alpha=(u,v,w):1\leq u<v<w\leq n\}
@@ -305,9 +364,9 @@ $$
 which equals 1 if and only if $uvw$ is a triangle, each of the $X_\alpha$ is a Bernoulli random variable with parameter $p^3$. 
 
 \begin{theorem}\label{thm:triangle_poisson_dependent}
-    Let $Z = \sum_{\alpha \in \Gamma_n} X_\alpha$ and $\lambda = \binom{n}{3}p^3$.
+    Let $W = \sum_{\alpha \in \Gamma_n} X_\alpha$ and $\lambda = \binom{n}{3}p^3$.
     \begin{equation*}
-        d_{TV}(\mathcal{L}(Z), \text{Po}(\lambda)) \leq \binom{n}{3}p^3(3np^3 + 3np^2) \min (1, \lambda^{-1})
+        d_{TV}(\mathcal{L}(W), \text{Po}(\lambda)) \leq \binom{n}{3}p^3(3np^3 + 3np^2) \min (1, \lambda^{-1})
     \end{equation*}
 \end{theorem}
 
@@ -316,7 +375,7 @@ which equals 1 if and only if $uvw$ is a triangle, each of the $X_\alpha$ is a B
     \begin{equation*}
         A_{\alpha} = \{(a,b,c) \mid |(u,v,w)\cap (a,b,c)|\geq 2\}
     \end{equation*}
-    It is easy to see $|A_\alpha| = 3(n-3) + 1 < 3n$, thus $\mathbb{E}[\eta_\alpha]\leq 3np^3$. Moreover, we have  
+    It is easy to see $|A_\alpha| = 3(n-3) + 1 < 3n$, since there are  $3(n-3)$ ways to choose triplets with  $|(u,v,w)\cap (a,b,c)| = 2$ exactly\footnote{There are 3 ways to choose the vertex to be different from the original $\alpha$; since we cannot choose the same vertices, there are $n-3$ choices.}, thus $\mathbb{E}[\eta_\alpha]\leq 3np^3$. Moreover, we have  
     \begin{equation*}
         \mathbb{E}[X_\alpha(\eta_\alpha - X_\alpha)] = \mathbb{E}[X_\alpha \sum_{\beta \in A_\alpha, \beta \neq \alpha} X_\beta] = \sum_{\beta \in A_\alpha, \beta \neq \alpha} p^5 \leq 3np^5
     \end{equation*}
@@ -331,34 +390,35 @@ Similarly, we set up the Stein operator (\Cref{def:stein_operator}) for normal a
     \mathcal{T}g(z) = g'(z) - zg(z)
 \end{equation}
 
-for all continuous and piecewise continuously differentiable functions $g: \mathbb{R} \to \mathbb{R}$ with $\mathbb{E}[|g'(Z)|]<\infty$. This gives a characterization of the normal distribution with mean $\mu$ and variance $\sigma^2$:  
+for all continuous and piecewise continuously differentiable functions $g: \mathbb{R} \to \mathbb{R}$ with $\mathbb{E}[|g'(W)|]<\infty$. This gives a characterization of the normal distribution with mean $\mu$ and variance $\sigma^2$:  
 
 \begin{theorem}[\citep{stein1972bound}]\label{thm:stein_operator_normal}
-    If $Z\sim \mathcal{N}(0, 1)$, then 
+    If $W\sim \mathcal{N}(0, 1)$, then 
     \begin{equation*}
-        \mathbb{E}[(\mathcal{T}g(Z))]:=\mathbb{E}[Zg(Z) - g'(Z)] = 0
+        \mathbb{E}[(\mathcal{T}g)(W)]:=\mathbb{E}[Wg(W) - g'(W)] = 0
     \end{equation*}
 \end{theorem}
 
 \begin{proof}
-    We can compute $\mathbb{E}[g'(Z)]$ using integration by parts:
+    We can compute $\mathbb{E}[g'(W)]$ using integration by parts:
     \begin{align*}
-        \mathbb{E}[g'(Z)] &= \int_{-\infty}^\infty g'(z) \frac{1}{\sqrt{2\pi}} e^{-z^2/2} dz\\
-        &= {\frac{1}{\sqrt{2\pi}}}\int_{-\infty}^{0}g^{\prime}(z)\left(\int_{-\infty}^{z}-x e^{-x^{2}/2}d x\right)\,d z \\
-        &+ {\frac{1}{\sqrt{2\pi}}}\int_{0}^{\infty}g^{\prime}(z)\left(\int_{z}^{\infty}x e^{-x^{2}/2}d x\right)\,d z
+        \mathbb{E}[g'(W)] &= \int_{-\infty}^\infty g'(w) \frac{1}{\sqrt{2\pi}} e^{-w^2/2} dw\\
+        &= {\frac{1}{\sqrt{2\pi}}}\int_{-\infty}^{0}g^{\prime}(w)\left(\int_{-\infty}^{w}-x e^{-x^{2}/2}d x\right)\,d w \\
+        &+ {\frac{1}{\sqrt{2\pi}}}\int_{0}^{\infty}g^{\prime}(w)\left(\int_{w}^{\infty}x e^{-x^{2}/2}d x\right)\,d w
     \end{align*}
 
     Now we exchange the order of integration by Fubini's theorem:
     \begin{align*}
-        \mathbb{E}[g'(Z)] &= \int_{x=-\infty}^0 \left(\int_{z=x}^0 g'(z) dz\right) (-x) e^{-x^2/2} dx + \int_{x=0}^\infty \left(\int_{z=0}^x g'(z) dz\right) xe^{-x^2/2} dx\\
+        \mathbb{E}[g'(W)] &= \int_{x=-\infty}^0 \left(\int_{w=x}^0 g'(w) dw\right) (-x) e^{-x^2/2} dx + \int_{x=0}^\infty \left(\int_{w=0}^x g'(w) dw\right) xe^{-x^2/2} dx\\
         &={\frac{1}{\sqrt{2\pi}}}\int_{-\infty}^{\infty}[g(x)-g(0)]x e^{-x^{2}/2}d x \\
-        &=\mathbb{E}[Z g(Z)]
+        &=\mathbb{E}[W g(W)]
     \end{align*}
     as $X$ has mean zero.
-    \begin{unexaminable}
-        The condition for Fubini is easily checked, as $\int_0^\infty |g'(z)| f_Z(z) dz \leq \mathbb{E}[|g'(z)|] < \infty$.
-    \end{unexaminable}
 \end{proof}
+
+\begin{unexaminable}
+    The condition for Fubini is easily checked, as $\int_0^\infty |g'(w)| f_W(w) dw \leq \mathbb{E}[|g'(w)|] < \infty$.
+\end{unexaminable}
 
 We do not consider the total variation distance here, but instead use the \textbf{weak convergence} of measures, which is motivated by the following example.  
 
@@ -368,7 +428,7 @@ We do not consider the total variation distance here, but instead use the \textb
     \begin{equation*}
         \frac{X-np}{\sqrt{np(1-p)}} \xrightarrow{d} Y
     \end{equation*}
-    where $\xrightarrow{d}$ denotes weak convergence. However, if we have set $A_n :=\{0, 1, \ldots, n\}$, then $\mathbb{P}(X\in A_n) = 1$ and $\mathbb{P}(Y\in A_n) = 0$, for all $n\in \mathbb{N}$.
+    where $\xrightarrow{d}$ denotes weak convergence. However, if we have set $A_n :=\{0, 1, \ldots, n\}$, then $\mathbb{P}(X\in A_n) = 1$ and $\mathbb{P}(Y\in A_n) = 0$, for all $n\in \mathbb{N}$. Thus, no matter how large $n$ is, the total variation distance is always 1, which does not reflect the convergence in distribution.  
 \end{example}
 
 We now define the notion of weak convergence of probability measures.  
@@ -391,39 +451,39 @@ where $h$ is a bounded measurable function.
 
 
 \begin{lemma}\label{lem:stein_equation_normal}
-    Given the Stein's equation above, we have a unique bounded solution $g_h$, if:
+    Given \Cref{eq:stein_equation_normal}, we have a unique bounded solution $g_h$, if:
     \begin{itemize}
         \item $h:\mathbb{R} \to \mathbb{R}$ is bounded and measurable.
-        \item $\mathbb{E}[|h(Z)|] < \infty$.
+        \item $\mathbb{E}[|h(W)|] < \infty$.
         \item $h$ is continuous and piecewise continuously differentiable with $\|h'\|_\infty < \infty$.
     \end{itemize}
 
         Then the solution can be written as
         \begin{equation*}
-            g_h(z) = e^{z^2/2} \int_{-\infty}^z (h(w) - \mathbb{E}[h(X)]) e^{-w^2/2} dw
+            g_h(w) = e^{w^2/2} \int_{-\infty}^w (h(w) - \mathbb{E}[h(X)]) e^{-w^2/2} dw
         \end{equation*}
         which can also be written as
         \begin{equation*}
-            g_h(z) = -e^{z^2/2} \int_{z}^\infty (h(w) - \mathbb{E}[h(X)]) e^{-w^2/2} dw
+            g_h(w) = -e^{w^2/2} \int_{w}^\infty (h(w) - \mathbb{E}[h(X)]) e^{-w^2/2} dw
         \end{equation*}
     \end{lemma}
 
     \begin{proof}
-        Multiplying both sides of \Cref{eq:stein_equation_normal} by $e^{-z^2/2}$, we note:
+        Multiplying both sides of \Cref{eq:stein_equation_normal} by $e^{-w^2/2}$, we note:
         \begin{align*}
-            e^{-z^2/2} g'(z) - e^{-z^2/2}zg(z) &= e^{-z^2/2} (h(z) - \mathbb{E}[h(X)]) 
+            e^{-w^2/2} g'(w) - e^{-w^2/2}wg(w) &= e^{-w^2/2} (h(w) - \mathbb{E}[h(X)]) 
         \end{align*}
-        The LHS is simply the derivative of $e^{-z^2/2}g(z)$, so we can integrate both sides to get:
+        The LHS is simply the derivative of $e^{-w^2/2}g(w)$, so we can integrate both sides to get:
         \begin{align*}
-            e^{-z^2/2}g(z) &= \int_{-\infty}^z e^{-w^2/2} (h(w) - \mathbb{E}[h(X)]) dw +C\\
-            g(z) &= e^{z^2/2} \int_{-\infty}^z e^{-w^2/2} (h(w) - \mathbb{E}[h(X)]) dw + Ce^{z^2/2}\\
+            e^{-w^2/2}g(w) &= \int_{-\infty}^w e^{-w^2/2} (h(w) - \mathbb{E}[h(X)]) dw +C\\
+            g(w) &= e^{w^2/2} \int_{-\infty}^w e^{-w^2/2} (h(w) - \mathbb{E}[h(X)]) dw + Ce^{w^2/2}
         \end{align*}
-        Note the solution $g$ is bounded if and only if $C=0$ as otherwise $g\to infty$ as $z\to \infty$.  
+        Note the solution $g$ is bounded if and only if $C=0$ as otherwise $g\to \infty$ as $w\to \infty$.  
         To obtain the second form, we note that 
         \begin{equation*}
             \int_{-\infty}^{+\infty} (h(w) - \mathbb{E}[h(X)]) e^{-w^2/2} dw = 0
         \end{equation*}
-        as $e^{-w^2/2}$ is the density of $\mathcal{N}(0,1)$, so the second form follows from symmetry.
+        as $e^{-w^2/2}$ is the density of the zero mean distribution $\mathcal{N}(0,1)$, so the second form follows from symmetry.
     \end{proof}
 
 The bounds on the solution is given by the following lemma.  
@@ -444,25 +504,25 @@ The bounds on the solution is given by the following lemma.
     \end{align*}
 \end{lemma}
 \begin{proof}
-    The proof is omitted.
+    The proof is not examinable.
 \end{proof}
 
 We can now give the converse of \Cref{thm:stein_operator_normal} to characterize the normal distribution.  
 
 \begin{theorem}[\citep{stein1986}]
-    If $\mathbb{E}[(\mathcal{T}g(Z))]=\mathbb{E}[Zg(Z) - g'(Z)] = 0$ for all bounded $g$, then $Z\sim \mathcal{N}(0,1)$.
+    If $\mathbb{E}[(\mathcal{T}g)(W)]=\mathbb{E}[Wg(W) - g'(W)] = 0$ for all bounded $g$, then $W\sim \mathcal{N}(0,1)$.
 \end{theorem}
 
 \begin{proof}
     The idea is to take a particular $h$ and use weak convergence. Let $h$ be defined as 
     \begin{equation*}
-        h_w(z) = \mathbf{1}_{(-\infty, w]}(z)
+        h_z(w) = \mathbf{1}_{(-\infty, z]}(w)
     \end{equation*}
-    where $w\in \mathbb{R}$. Then it is clearly continuous (a.s.) and piecewise continuously differentiable. Moreover, since the solution $g_h$ is in particular bounded by the previous lemma, we have:  
+    where $z\in \mathbb{R}$. Then it is continuous (a.s.) and piecewise continuously differentiable. Moreover, since the solution $g_h$ is in particular bounded by the previous lemma, we have:  
     \begin{equation*}
-        0 = \mathbb{E}[Zg_h(Z)-g_h'(Z)] = \mathbb{E}[h(Z)] - \mathbb{E}[h(X)]=\mathbb{P}(Z\leq w) - \Phi(X\leq w)
+        0 = \mathbb{E}_W[Wg_h(W)-g_h'(W)] = \mathbb{E}_W[h(W)] - \mathbb{E}_X[h(X)]=\mathbb{P}(W\leq w) - \Phi(z)
     \end{equation*}
-    which implies $Z\sim \mathcal{N}(0,1)$ as $w$ is arbitrary.
+    which implies $W\sim \mathcal{N}(0,1)$ as $w$ is arbitrary.
 \end{proof}
 
 Now for independent $X_1, \ldots, X_n$ with zero mean and variance $1/n$, we can bound the weak convergence of their sum to the standard normal distribution.  
@@ -470,56 +530,70 @@ Now for independent $X_1, \ldots, X_n$ with zero mean and variance $1/n$, we can
 \begin{theorem}
     For independent $X_i$, $\mathbb{E}[X_i]=0$ and $\mathbb{E}[X_i^2]=1/n$, let
     $$
-    Z = \sum_{i=1}^{n} X_i
+    W = \sum_{i=1}^{n} X_i
     $$ 
     Then we have for any continuous and piecewise continuously differentiable $h$:
     \begin{equation*}
-        \left|\mathbb{E}[h(Z)] - \mathbb{E}[h(X)]\right| \leq \|h'\|_\infty \left( \frac{2}{\sqrt{n}} + \sum_{i=1}^{n} \mathbb{E}[|X_i|^3]\right)
+        \left|\mathbb{E}[h(W)] - \mathbb{E}[h(X)]\right| \leq \|h'\|_\infty \left( \frac{2}{\sqrt{n}} + \sum_{i=1}^{n} \mathbb{E}[|X_i|^3]\right)
     \end{equation*}
     where $X\sim \mathcal{N}(0,1)$.
 \end{theorem}
 
 \begin{proof}
-    We would like to bound $\mathbb{E}[g'(Z)-Zg(Z)]$. Let $Z_i = Z - X_i$, so $Z_i$ is independent of $X_i$. Then we have:
+    We would like to bound $\mathbb{E}[g'(W)-Wg(W)]$. Let $W_i = W - X_i$, so $W_i$ is independent of $X_i$. Then we have:
     \begin{align*}
-        \mathbb{E}[Zg(Z)] &= \mathbb{E}[\sum_{i=1}^{n} X_i g(Z)]\\
-        &= \sum_{i=1}^{n} \mathbb{E}[X_i g(Z_i + X_i)]\\
-        &= \sum_{i=1}^{n} \mathbb{E}[X_i (g(Z_i) + X_i g'(Z_i) + \frac{X_i^2}{2} g''(Z_i +\theta X_i))]\\
-        &= \sum_{i=1}^{n} \mathbb{E}[X_i] \mathbb{E}[g(Z_i)] + \mathbb{E}[X_i^2] \mathbb{E}[g'(Z_i)] + \frac{1}{2} \mathbb{E}[X_i^3] \mathbb{E}[g''(Z_i +\theta X_i)]\\
-        &= \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(Z_i)] + R
+        \mathbb{E}[Wg(W)] &= \mathbb{E}[\sum_{i=1}^{n} X_i g(W)]\\
+        &= \sum_{i=1}^{n} \mathbb{E}[X_i g(W_i + X_i)]\\
+        &= \sum_{i=1}^{n} \mathbb{E}[X_i (g(W_i) + X_i g'(W_i) + \frac{X_i^2}{2} g''(W_i +\theta X_i))] \ \text{(Taylor expansion at $W_i$)}
+        \\
+        &= \sum_{i=1}^{n} \mathbb{E}[X_i] \mathbb{E}[g(W_i)] + \mathbb{E}[X_i^2] \mathbb{E}[g'(W_i)] + \frac{1}{2} \mathbb{E}[X_i^3] \mathbb{E}[g''(W_i +\theta X_i)]\\
+        &= \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(W_i)] + R \quad \text{($X_i$ has zero mean and unit variance)}
     \end{align*}
 
-    where $R$ is the remainder term. Now we bound $R$ as follows:
-    \begin{align*}
-        |R| &\leq \frac{1}{2} \sum_{i=1}^{n} \mathbb{E}[|X_i|^3] \|g''\|_\infty\\
-        &\leq \sum_{i=1}^{n} \mathbb{E}[|X_i|^3] \|h'\|_\infty\\
-    \end{align*}
+    where $R = \sum_{i=1}^{n}\frac{1}{2} \mathbb{E}[X_i^3] \mathbb{E}[g''(W_i +\theta X_i)]$ is the remainder term. 
 
     Therefore, we have:
     \begin{equation*}
-        \mathbb{E}[g'(Z)-Zg(Z)] = \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(Z) -g'(Z_i)] - R
+        \mathbb{E}[g'(W)-Wg(W)] = \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(W) -g'(W_i)] - R
     \end{equation*}
+
+    We proceed to bound the two terms.  
+    
+    For the remainder term $R$, we have:
+    \begin{align*}
+        |R| &\leq \frac{1}{2} \sum_{i=1}^{n} \mathbb{E}[|X_i|^3] \|g''\|_\infty\\
+        &\leq \sum_{i=1}^{n} \mathbb{E}[|X_i|^3] \|h'\|_\infty
+    \end{align*}
+    
 
     Again by Taylor expansion or the mean value theorem, we have:
     \begin{align*}
-        \left|\frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(Z) -g'(Z_i)]\right| &\leq \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[|Z-Z_i| \|g''\|_\infty]\\ 
+        \left|\frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[g'(W) -g'(W_i)]\right| &\leq \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[|W-W_i| \|g''\|_\infty]\\ 
         &\leq \frac{1}{n} \sum_{i=1}^{n} \mathbb{E}[|X_i| \|g''\|_\infty] \\
         &\leq \frac{2}{\sqrt{n}} \|h''\|_\infty
     \end{align*}
-    where we have used \Cref{lem:stein_equation_normal_bound} and Cauchy-Schwarz inequality in the last step (namely, $\mathbb{E}[|X_i| \cdot 1]^2 \leq \mathbb{E}[|X_i|^2] \cdot 1=1/n \implies \mathbb{E}[|X_i|]\leq 1/\sqrt{n}$). Combining the two bounds using triangle inequality gives the desired result.
+    where we have used \Cref{lem:stein_equation_normal_bound} and Cauchy-Schwarz inequality in the last step. Namely, 
+    \[
+        \mathbb{E}[|X_i| \cdot 1]^2 \leq \mathbb{E}[|X_i|^2] \cdot 1=1/n \implies \mathbb{E}[|X_i|]\leq 1/\sqrt{n}
+    \] 
+    Combining the two bounds using triangle inequality gives the desired result.
 \end{proof}
 
+\begin{remark}
+    Note here we do not need to specify the distributions of $X_i$ as long as they have zero mean and variance $1/n$, whereas the Poisson approximation in the previous section assumes $X_i$ are Bernoulli random variables.  
+\end{remark}
 
 \subsubsection{Dissociated Decompositions}
-We will use the same notation as the lecture notes with $W=\sum_{i\in I} X_i$, where $I$ is a finite index set and $X_i$ are random variables.
+Again the approximation extends to locally dependent random variables.
 
 \begin{definition}\label{def:dissociated_decomposition}
-    A \textbf{dissociated decomposition} of $W$ for index $i$ is 
+    A \textbf{dissociated decomposition} of $W = \sum_{i\in I} X_i$ for index $i$ is 
     \begin{align*}
         W &= W_i + Z_i \\
-        W &= W_{ik} + V_{ik} + Z_i
+        W_i &= W_{ik} + V_{ik} \quad \text{for $k\in K_i$} 
+        % W &= W_{ik} + V_{ik} + Z_i \quad \text{for $k\in K_i$}
     \end{align*}
-    where we assume there exists $K_i\subseteq I$ for each $i\in I$ with the following:
+    where for each $i\in I$, the corresponding $K_i\subseteq I$ satisfies:  
     \begin{itemize}
         \item $W_i$ is independent of $X_i$.
         \item $Z_i=\sum_{k\in K_i} X_k$ is a sum dependent on $X_i$.
@@ -528,96 +602,145 @@ We will use the same notation as the lecture notes with $W=\sum_{i\in I} X_i$, w
     \end{itemize}
 \end{definition}
 
-We now provide a bound for $W$ in the case of dependent random variables.
+From now on, we will assume the random variable $W = \sum_i X_i$ admits a dissociated decomposition as described above.
 
 \begin{theorem}\label{thm:stein_equation_normal_dependent}
-    Assume $W$ admits a dissociated decomposition as described above. Let $X_i, i\in I$ with $\mathbb{E}[X_i]=0$ and $\mathrm{Var}(W)=1$. Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$:
+     Let $X_i$ be random variables indexed by $i\in I$, s.t. 
+     \begin{align*}
+        \mathbb{E}[X_i]&=0\\
+        \mathrm{Var}(W) &= 1 
+     \end{align*}
+     where $W = \sum_{i\in I} X_i$ admits a dissociated decomposition and satisfies:
+     \begin{equation}\label{eq:equivalence_class_of_decomposition}
+        k \in K_i \iff i \in K_k \quad \text{for all $i,k\in I$}     
+     \end{equation}
+     Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$:
 
     \begin{equation*}
-        \left|\mathbb{E}[h(W)] - \mathbb{E}[h(X)]\right| \leq 4||h^{\prime}||\sum_{i\in I}\sum_{j,k\in K_{i}}\left(\mathbb{E}(|X_{i}X_{j}X_{k}|+\mathbb{E}(|X_{i}X_{j}|)\mathbb{E}(|X_{k}|)\right)
+        \left|\mathbb{E}[h(W)] - \mathbb{E}[h(X)]\right| \leq 4||h^{\prime}||_\infty \sum_{i\in I}\sum_{j,k\in K_{i}}\left(\mathbb{E}(|X_{i}X_{j}X_{k}|+\mathbb{E}(|X_{i}X_{j}|)\mathbb{E}(|X_{k}|)\right)
     \end{equation*}
-    where the $X$ without subscript is $\mathcal{N}(0,1)$.  
+    where the $X$ without subscript is $X \sim \mathcal{N}(0,1)$.  
 \end{theorem}
 
+\begin{remark}
+    Here we have relaxed the condition to allow individual $X_i$ to have different variances, but the total variance is still 1.
+\end{remark}
+
 \begin{proof}
-    Recall $W = W_i + Z_i$ and $Z_i = \sum_{k\in K_i} X_k$ with $W_i$ independent of $X_i$. Then we can write:
+    Recall $W = W_i + Z_i$ and $Z_i = \sum_{k\in K_i} X_k$. Then we can write:
     \begin{align*}
         1 &= \mathbb{E}[W^2] = \sum_{i\in I} \mathbb{E}[X_i W] \\
+        &= \sum_{i\in I} \mathbb{E}[X_i W] - \mathbb{E}[X_i W_i] \quad \text{($W_i$ is independent of $X_i$)}
+         \\
         &= \sum_{i\in I} \mathbb{E}[X_i Z_i] \\
         &= \sum_{i\in I}\sum_{k\in K_i} \mathbb{E}[X_i X_k]
     \end{align*}
     Now since the goal is to bound $|\mathbb{E}[Wg(W)-g'(W)]|$, we can use the same technique as before:
     \begin{align*}
-        \mathbb{E}[Wg(W)-g'(W)] &= \underbrace{\left\{\mathbb{E}[W g(W)]-\sum_{i\in I}\mathbb{E}[X_{i}Z_{i}g^{\prime}(W_{i})]\right\}}_{R_1} \\
-        &+\underbrace{\sum_{i\in I}\left\{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]-\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k}]{\mathbb{E}}[g^{\prime}(W_{i k})]\right\}}_{R_2}\\
-        &+\underbrace{\sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[X_{i}X_{k}]\left\{\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]-\operatorname{\mathbb{E}}[g^{\prime}(W)]\right\}}_{R_3}
+        \mathbb{E}[Wg(W)-g'(W)] &= \underbrace{\left\{\mathbb{E}[W g(W)]-\sum_{i\in I}\textcolor{red}{\mathbb{E}[X_{i}Z_{i}g^{\prime}(W_{i})]}\right\}}_{R_1} \\
+        &+\underbrace{\sum_{i\in I}\left\{\textcolor{red}{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]}-\sum_{k\in K_{i}}\textcolor{blue}{{\mathbb{E}}[X_{i}X_{k}]{\mathbb{E}}[g^{\prime}(W_{i k})]}\right\}}_{R_2}\\
+        &+\underbrace{\sum_{i\in I}\sum_{k\in K_{i}}\textcolor{blue}{\mathbb{E}[X_{i}X_{k}]\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]}-\mathbb{E}[X_{i}X_{k}]\operatorname{\mathbb{E}}[g^{\prime}(W)]}_{R_3}
     \end{align*}
-    where in the last sum we used $1=\sum_{i\in I}\sum_{k\in K_i} \mathbb{E}[X_i X_k]$. Now we bound each term separately.
+    where in the last sum we used $1=\sum_{i\in I}\sum_{k\in K_i} \mathbb{E}[X_i X_k]$ as computed above and the addition and subtraction of the colored terms; the choice of those terms is motivated by the proof below, where we use Taylor expansion.
 
-
-\paragraph{Bounding $R_1$} For $R_1$, we have by Taylor expansion:
+\paragraph{Bounding $R_1$} For $R_1$, we have by Taylor expansion at $W_i$:
 \begin{align*}
-    Wg(W) &= \sum_{i\in I} X_i g(W_i + Z_i)\\
-    &= \sum_{i\in I} X_i g(W_i) + X_i Z_i g'(W_i) + \frac{X_i Z_i^2}{2} g''(W_i + \theta_i Z_i)\\
+    Wg(W) &= \sum_{i\in I} X_i g(W)\\
+    &= \sum_{i\in I} X_i g(W_i + Z_i)\\
+    &= \sum_{i\in I} X_i g(W_i) + \textcolor{red}{X_i Z_i g'(W_i)} + \frac{X_i Z_i^2}{2} g''(W_i + \theta_i Z_i)
 \end{align*}
-for some $\theta_i \in (0,1)$. Taking expectation and using \Cref{def:dissociated_decomposition} make the first term zero, and we have:
+for some $\theta_i \in (0,1)$. Taking expectation and using \Cref{def:dissociated_decomposition} make the first term zero, thus the only first-order term is $\textcolor{red}{\mathbb{E}[X_i Z_i g'(W_i)]}$. Now we have:
 \begin{align*}
-    \left|\mathbb{E}[W g(W)]-\sum_{i\in I}\mathbb{E}[X_{i}Z_{i}g^{\prime}(W_{i})]\right| &= \left|\sum_{i\in I}\mathbb{E}\left[\frac{X_{i}Z_{i}^{2}}{2}g^{\prime \prime}\left(W_{i}+\theta_{i} Z_{i}\right)\right]\right|\\
+    \left|\underbrace{\mathbb{E}[W g(W)]-\sum_{i\in I}\textcolor{red}{\mathbb{E}[X_{i}Z_{i}g^{\prime}(W_{i})]}}_{R_1} \right| &= \left|\sum_{i\in I}\mathbb{E}\left[\frac{X_{i}Z_{i}^{2}}{2}g^{\prime \prime}\left(W_{i}+\theta_{i} Z_{i}\right)\right]\right|\\
     &\leq \left|\sum_{i\in I}\mathbb{E}\left[\frac{X_{i}Z_{i}^{2}}{2}\|g^{\prime \prime}\|_{\infty}\right]\right|\\
-    &=\frac{1}{2} \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\mathbb{E}\left[X_{i} Z_{i}^{2}\right]\\
+    &\leq\frac{1}{2} \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\mathbb{E}\left[|X_{i}| Z_{i}^{2}\right]
+\end{align*}  
+
+Using $Z_i = \sum_{k\in K_i} X_k$, we can re-write this as:
+\begin{align*}
+    \frac{1}{2} \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\sum_{j,k\in K_{i}}\mathbb{E}[|X_{i}|X_{j}X_{k}]
 \end{align*}
 
-which we can re-write as $\frac{1}{2} \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\sum_{j,k\in K_{i}}\mathbb{E}[|X_{i}|X_{j}X_{k}]$. Thus, we have:
-\begin{equation*}
+
+Thus, we have:
+\begin{equation}\label{eq:bound_R1}
     |R_1| \leq \frac{1}{2} \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\sum_{j,k\in K_{i}}\mathbb{E}[|X_{i}X_{j}X_{k}|]
-\end{equation*}  
+\end{equation}  
 
 
 \paragraph{Bounding $R_2$} For $R_2$, recall that $W_{ik}$ is independent of $X_i$ and $X_k$, so we have:
 
 \begin{align*}
-    \sum_{i\in I}\left\{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]-\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k}]{\mathbb{E}}[g^{\prime}(W_{i k})]\right\} &= \sum_{i\in I}\left\{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]-\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} g^{\prime}(W_{i k})]\right\}\\
+    \underbrace{\sum_{i\in I}\left\{\textcolor{red}{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]}-\sum_{k\in K_{i}}\textcolor{blue}{{\mathbb{E}}[X_{i}X_{k}]{\mathbb{E}}[g^{\prime}(W_{i k})]}\right\}}_{R_2} &= \sum_{i\in I}\left\{\textcolor{red}{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]}-\sum_{k\in K_{i}}{\textcolor{blue}{\mathbb{E}[X_{i}X_{k}g^{\prime}(W_{i k})]}}\right\}
+\end{align*}
+Using Taylor expansion again at $W_{ik}$ and recall $W_i= W_{ik} + V_{ik}$,  we have:
+\begin{align*}
+    \textcolor{red}{X_i Z_i g'(W_i)} &= X_i g'(W_i) \sum_{k\in K_i} X_k\\
+    &= X_i (g'(W_{ik}) + V_{ik} g''(W_{ik} + \theta_{ik} V_{ik}) )\sum_{k\in K_i} X_k  \\
+    &= \sum_{k\in K_i} {\textcolor{blue}{X_{i}X_{k}g^{\prime}(W_{i k})}} + X_i X_k V_{ik} g''(W_{ik} + \theta_{ik} V_{ik}) 
 \end{align*}
 
-Using Taylor expansion again, we have:
+for some $\theta_{ik} \in (0,1)$. So again we will cancel the term ${\textcolor{blue}{X_{i}X_{k}g^{\prime}(W_{i k})}}$ in Taylor expansion.
+
+Taking expectation and subtraction yields:
 \begin{equation*}
-    X_i Z_i g'(W_i) = \sum_{k\in K_i} X_i X_k \left( g'(W_{ik}) + V_{ik} g''(W_{ik} + \theta_{ik} V_{ik})\right)
+    \sum_{i\in I}\left\{\textcolor{red}{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]}-\sum_{k\in K_{i}}{\textcolor{blue}{\mathbb{E}[X_{i}X_{k}g^{\prime}(W_{i k})]}}\right\} = \sum_{i\in I}\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} V_{ik} g^{\prime \prime}(W_{i k}+\theta_{i k} V_{i k})]
 \end{equation*}
 
-for some $\theta_{ik} \in (0,1)$. Taking expectation and subtraction yields:
-\begin{equation*}
-    \sum_{i\in I}\left\{{\mathbb{E}}[X_{i}Z_{i}g^{\prime}(W_{i})]-\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} g^{\prime}(W_{i k})]\right\} = \sum_{i\in I}\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} V_{ik} g^{\prime \prime}(W_{i k}+\theta_{i k} V_{i k})]
-\end{equation*}
-
-Using the definition of $V_{ik}$ and triangle inequality:
+Using the definition of $V_{ik} = W_i - W_{ik}=\sum_{j \in K_k\setminus K_i} X_j$ and triangle inequality:
 \begin{align*}
     \left|\sum_{i\in I}\sum_{k\in K_{i}}{\mathbb{E}}[X_{i}X_{k} V_{ik} g^{\prime \prime}(W_{i k}+\theta_{i k} V_{i k})]\right| &\leq \sum_{i\in I}\sum_{k\in K_{i}}{\mathbb{E}}[|X_{i}X_{k}| |V_{ik}| \|g^{\prime \prime}\|_{\infty}]\\
     &\leq \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\sum_{k\in K_{i}}\sum_{j\in K_k\setminus K_i}{\mathbb{E}}[|X_{i}X_{k}X_{j}|]\\
     &= \|g^{\prime \prime}\|_{\infty} \sum_{k\in I}\sum_{i\in K_{k}}\sum_{j\in K_k\setminus K_i}{\mathbb{E}}[|X_{i}X_{k}X_{j}|]\\
-    &\leq \|g^{\prime \prime}\|_{\infty} \sum_{k\in I}\sum_{i\in K_{k}}\sum_{j\in K_k}{\mathbb{E}}[|X_{i}X_{k}X_{j}|]\\
+    &\leq \|g^{\prime \prime}\|_{\infty} \sum_{k\in I}\sum_{i\in K_{k}}\sum_{j\in K_k}{\mathbb{E}}[|X_{i}X_{k}X_{j}|]
 \end{align*}
 
-where in the penultimate step we used the fact that $k \in K_i \iff i \in K_k$. 
-\paragraph{Bounding $R_3$} For $R_3$, we expand $g'(W_{ik})$ using Taylor expansion for some $\rho_{ik} \in (0,1)$:
+where in the penultimate step we swapped the indices $i$ and $k$ using the fact that $k \in K_i \iff i \in K_k$, so that $K_k\setminus K_i = K_i\setminus K_k$; the last step follows from the non-negativity of the absolute value.  
+
+(Note that if we do not swap the indices, then the second sum is restricted to $K_i$). Using symmetry, we can re-write the final bound as:  
+
+\begin{equation}\label{eq:R2_bound}
+    |R_2| \leq \|g^{\prime \prime}\|_{\infty} \sum_{i\in I}\sum_{j, k\in K_{i}}{\mathbb{E}}[|X_{i}X_{k}X_{j}|]
+\end{equation}
+
+\paragraph{Bounding $R_3$} For $R_3$, we expand $g'(W_{ik})$ using Taylor expansion at $W$ for some $\rho_{ik} \in (0,1)$:
 
 \begin{align*}
     \left\|\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]-\operatorname{\mathbb{E}}[g^{\prime}(W)]\right\| &=\left|\operatorname{\mathbb{E}}[g^{\prime}(W) - (Z_i+V_{ik}) g''(W_{ik} - \rho_{ik} (Z_i+V_{ik}))] - \operatorname{\mathbb{E}}[g^{\prime}(W)]\right|\\
-    &\leq \|g''\|_\infty \mathbb{E}[|Z_i+V_{ik}|]\\
+    &\leq \|g''\|_\infty \mathbb{E}[|Z_i+V_{ik}|]
 \end{align*}
 
-Now this gives:
+(recall that $W = W_{ik} + V_{ik} + Z_i$). Now $R_3$ can be bounded as follows:
 \begin{align*}
-    \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[X_{i}X_{k}]\left\{\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]-\operatorname{\mathbb{E}}[g^{\prime}(W)]\right\} &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|Z_i+V_{ik}|]\\
+    \underbrace{\sum_{i\in I}\sum_{k\in K_{i}}\textcolor{blue}{\mathbb{E}[X_{i}X_{k}]\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]}-\mathbb{E}[X_{i}X_{k}]\operatorname{\mathbb{E}}[g^{\prime}(W)]}_{R_3} &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|Z_i+V_{ik}|]\\
     &=\|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|\sum_{j\in K_i} X_j + \sum_{j\in K_k\setminus K_i} X_j|]\\
     &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k,j\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|X_j|]\\
 \end{align*}
 
-Combing those and use \Cref{lem:stein_equation_normal_bound} gives the desired result.  
+Therefore, 
+\begin{equation}\label{eq:R3_bound}
+    |R_3| \leq \|g''\|_\infty \sum_{i\in I}\sum_{j,k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|X_j|]
+\end{equation}
+
+Combining \Cref{eq:bound_R1,eq:R2_bound,eq:R3_bound} and using \Cref{lem:stein_equation_normal_bound} gives the desired result.  
 
 \end{proof}
 
+\begin{remark}
+    To understand and memorize what needs to be added and subtracted, we can think about the Taylor expansions:
+    \begin{itemize}
+        \item For $R_1$, we expand the $g$ in $Wg(W)$ around $W_i$: 
+        \[Wg(W) = \sum_i X_i g(W_i) + \textcolor{red}{X_i Z_i g'(W_i)} + \ldots \]
+        \item Using Taylor again for $g(W_i)$ at $W_{ik}$, we have:
+        \[
+        \textcolor{red}{X_i Z_i g'(W_i)} = \sum_{k\in K_i} \textcolor{blue}{X_i X_k g'(W_{ik})} + \ldots
+            \]
+    \end{itemize}
+    So suffice to add and subtract those coloured terms.  
+\end{remark}
+
 \subsubsection{Triangles in $\mathcal{G}(n,p)$}
-For the number of triangles in $G=\mathcal{G}(n,p)$, we consider the following set up.  
+For the number of triangles in an Erd\H{o}s-R\'{e}nyi graph $G=\mathcal{G}(n,p)$, we consider the following setup.  
 
 Let index set be 
 \[
@@ -635,18 +758,25 @@ which equals 1 if and only if $uvw$ is a triangle. Also let $T$ be:
 T = \sum_{\alpha \in \Gamma_n} Y_\alpha
 \]
 
-Again if $|\{u,v,w\}\cap \{a,b,c\}|\leq 1$, then $Y_\alpha$ and $Y_\beta$ are independent. Let $K_\alpha$ contain $\alpha$ and all those tuples $\beta$ such that $|\alpha\cap \beta|\geq 2$. Recall from \Cref{thm:stein_equation_normal_dependent} that we need to have centred random variables with variance of sum being $1$. So, we standardise to obtain $X_\alpha$:
+Again if $|\{u,v,w\}\cap \{a,b,c\}|\leq 1$, then $Y_\alpha$ and $Y_\beta$ are independent. Let $K_\alpha$ contain $\alpha$ and all those tuples $\beta$ such that $|\alpha\cap \beta|\geq 2$:
 
-\[
+\begin{equation*}
+    K_{\alpha} = \{\beta = (a,b,c) \mid |(u,v,w)\cap (a,b,c)|\geq 2\}
+\end{equation*}
+
+Recall from \Cref{thm:stein_equation_normal_dependent} that we need to have centred random variables with variance of sum being $1$. So, we standardise to obtain $X_\alpha$:
+
+\begin{equation}\label{eq:standardise_triangle}    
     X_{\alpha}=\frac{Y_{\alpha}-p^{3}}{\sqrt{\mathrm{Var}(T)}}
-\]
+\end{equation}
+
 
 A straightforward calculation shows:
 \[
     \sigma^{2}=\operatorname{Var}(T)={\binom{n}{3}}p^{3}[1-p^{3}+3(n-3)p^{2}(1-p)]
 \]
 
-to see this, note $\mathrm{Var}(T) = \sum_\alpha \mathrm{Var}(Y_\alpha) + \sum_{\alpha\neq \beta} \mathrm{Cov}(Y_\alpha, Y_\beta)$, where $\mathrm{Var}(Y_\alpha) = p^3(1-p^3)$ and $\mathrm{Cov}(Y_\alpha, Y_\beta) = p^5(1-p)$ if $\alpha$ and $\beta$ share exactly two vertices, and 0 otherwise (see proof of \Cref{thm:triangle_poisson_dependent}). Now we can write as before $W = \sum_{\alpha \in \Gamma_n} X_\alpha$ with:
+to see this, note $\mathrm{Var}(T) = \sum_\alpha \mathrm{Var}(Y_\alpha) + \sum_{\alpha\neq \beta} \mathrm{Cov}(Y_\alpha, Y_\beta)$, where $\mathrm{Var}(Y_\alpha) = p^3(1-p^3)$ and $\mathrm{Cov}(Y_\alpha, Y_\beta) = p^5(1-p)$ if $\alpha$ and $\beta$ share exactly two vertices, and 0 otherwise (for the factors $3(n-3)$, see proof of \Cref{thm:triangle_poisson_dependent}). Now we can write as before $W = \sum_{\alpha \in \Gamma_n} X_\alpha$ with:
 
 \[
     W_{\alpha}=\sum_{\beta\notin K_{\alpha}}X_{\beta}{\mathrm{~and~}}Z_{\alpha}=\sum_{\beta\in K_{\alpha}}X_{\beta}
@@ -660,7 +790,9 @@ To obtain a dissociated decomposition of $W$, we further decompose $W_\alpha$ as
 Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
 
 \begin{theorem}\label{thm:triangle_gnp_normal}
-    Let $W$ be the standardised number of triangles in $\mathcal{G}(n,p)$ with $n\geq 3$ and $p\in (0,1)$. Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$: 
+    In $\mathcal{G}(n,p)$ with $n\geq 3$ and $p\in (0,1)$. Let $W = \sum_{\alpha \in \Gamma_n} X_\alpha$  with $X_\alpha$ as in \Cref{eq:standardise_triangle} be the standardised number of triangles.  
+    
+    Then for any continuous and piecewise continuously differentiable $h$ with $\mathbb{E}[|h(X)|]<\infty$: 
     \[
         |\mathbb{E} [h(W)]- \mathbb{E}[h(X)]| \leq \frac{4}{3}\times\frac{29n^{5}p^{3}}{\sigma^{3}}||h^{\prime}||
     \]
@@ -674,7 +806,7 @@ Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
         \left|\mathbb{E}[h(W)] - \mathbb{E}[h(X)]\right| \leq 4||h^{\prime}||\sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\left(\mathbb{E}[|X_{\alpha}X_{\beta}X_{\gamma}|]+\mathbb{E}[|X_{\alpha}X_{\beta}|]\mathbb{E}[|X_{\gamma}|]
         \right)
     \end{equation*}
-    First, computing explicitly the expectations leads to:
+    First, computing the expectations explicitly leads to:
     \begin{equation*}
         \mathbb{E}[|X_{\alpha}|]={\frac{2}{\sigma}}p^{3}(1-p^{3}),\quad\mathbb{E}[|X_{\alpha}|^{2}]={\frac{1}{\sigma^{2}}}p^{3}(1-p^{3})
     \end{equation*}
@@ -682,9 +814,11 @@ Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
     \begin{equation*}
         \mathbb{E}[|X_{\alpha}^{3}|]={\frac{1}{\sigma^{3}}}(p^{3}(1-p^{3})^{3}+(1-p^{3})p^{9})\leq2{\frac{p^{3}}{\sigma^{3}}}
     \end{equation*}
-    where we have used the crude bound $|X_\alpha| \leq \frac{1}{\sigma}$ (as the numerator is less than $1$). Now for the first double sum, we have:
+    since the numerator is less than $1$. Now for the first double sum, we have:
     \begin{align*}
-        \sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\mathbb{E}[|X_{\alpha}X_{\beta}X_{\gamma}|] &\leq \sum_{\alpha\in I} \mathbb{E}[|X_\alpha|^3] + 3\sum_{\alpha\in I}\sum_{\beta \in K_\alpha, \beta \neq \alpha} \mathbb{E}[|X_\alpha^2 X_\beta|] + \sum_{\alpha \in I} \sum_{\beta, \gamma \in K_\alpha\setminus \{\alpha\}, \beta \neq \gamma} \mathbb{E}[|X_\alpha X_\beta X_\gamma|]\\
+        \sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\mathbb{E}[|X_{\alpha}X_{\beta}X_{\gamma}|] 
+        &\leq \sum_{\alpha\in I} \mathbb{E}[|X_\alpha|^3] + 3\sum_{\alpha\in I}\sum_{\beta \in K_\alpha, \beta \neq \alpha} \mathbb{E}[|X_\alpha^2 X_\beta|] + \sum_{\alpha \in I} \sum_{\beta, \gamma \in K_\alpha\setminus \{\alpha\}, \beta \neq \gamma} \mathbb{E}[|X_\alpha X_\beta X_\gamma|]\\
+        &\leq \sum_{\alpha\in I} \mathbb{E}[|X_\alpha|^3] + 3\sum_{\alpha\in I}\sum_{\beta \in K_\alpha, \beta \neq \alpha} \frac{1}{\sigma}\mathbb{E}[|X_\alpha^2|] + \sum_{\alpha \in I} \sum_{\beta, \gamma \in K_\alpha\setminus \{\alpha\}, \beta \neq \gamma} \left(\frac{1}{\sigma}\right)^2\mathbb{E}[|X_\alpha|]\\
         &\leq \binom{n}{3} \frac{2p^3}{\sigma^3} + 3\binom{n}{3} (3n) \frac{1}{\sigma} \frac{p^3(1-p^3)}{\sigma^2} + \binom{n}{3} (3n)^2 \left(\frac{1}{\sigma}\right)^2 \frac{2}{\sigma}p^{3}(1-p^{3}) \\
         &\leq \binom{n}{3} \frac{22n^2p^3}{\sigma^3} < \frac{11n^5p^3}{3\sigma^3}
     \end{align*}
@@ -701,6 +835,9 @@ Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
     Summing those two gives the desired result.
 \end{proof}
 
+\begin{remark}
+    To see $|X_\alpha| \leq \frac{1}{\sigma}$, note that $|X_\alpha| = \frac{|Y_\alpha - p^3|}{\sigma} \leq \frac{1}{\sigma}$ as $Y_\alpha \in \{0,1\}$ and $p\in (0,1)$.
+\end{remark}
 
 \subsubsection{Dense and Sparse Regimes}  
 
