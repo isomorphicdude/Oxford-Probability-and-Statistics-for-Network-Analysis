@@ -20,7 +20,7 @@ The first configuration of Erd\H{o}s-R\'{e}nyi random graphs specifies edges wit
 \begin{definition}
     A random graph $\mathcal{G}(n,p)$ is an undirected, unweighted, simple graph on $n$ vertices where the adjacency matrix satisfies
     \begin{equation*}
-        \mathbb{P}(A_{ij}=1)=p
+        \mathbb{P}(A_{ij}=1)=p \quad \forall i \neq j
     \end{equation*}
     The edges are formed independently of each other.
 \end{definition}
@@ -47,9 +47,9 @@ Thus, the expected (global) clustering coefficient is
 An alternative configuration is to specify the number of edges $m$ and choose uniformly from all graphs with $m$ edges. 
 
 \begin{definition}
-    A random graph $G(n,m)$ is a graph on $n$ vertices where the adjacency matrix satisfies
+    A random graph $\mathcal{G}(n,m)$ is a graph on $n$ vertices where the adjacency matrix satisfies
     \begin{equation*}
-        \mathbb{P}(A_{ij}=1)=\frac{m}{\binom{n}{2}}
+        \mathbb{P}(A_{ij}=1)=\frac{m}{\binom{n}{2}} \quad \forall i \neq j
     \end{equation*}
     The edges are independent of each other.
 \end{definition}
