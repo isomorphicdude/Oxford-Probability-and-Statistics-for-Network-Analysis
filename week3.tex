@@ -55,7 +55,7 @@ More formally, we set up Stein's method for a target probability measure $P$ and
 
 The equation $\mathbb{E}_{Z\sim Q}[(\mathcal{T}g)(Z)]=0$ is called the \textbf{Stein identity}.  
 
-With this setup, we can define how close is $Z$ a $P$-distributed by introducing a measure for distance using the characterization above:
+With this setup, we can define how close is $Z$ a $P$-distributed using the characterization above:
 
 \begin{definition}
     The \textbf{Stein discrepancy} between $P$ and $Q$ is defined as\label{def:stein_discrepancy}
@@ -97,7 +97,7 @@ An important example is the total variation distance, which we will use in the n
 
 The proof for the second representation can be found \href{https://math.stackexchange.com/questions/3287889/show-that-the-total-variation-distance-of-probability-measures-mu-nu-is-equa}{here}, and the third can be found \href{https://math.stackexchange.com/questions/1481101/definition-of-the-total-variation-distance-vp-q-frac12-int-p-qd-n}{here}.  
 
-In fact, the concept of Stein discrepancy and general IPMs are related by Stein's equation.
+The concept of Stein discrepancy and general IPMs are related by Stein's equation.
 
 \begin{definition}\label{def:stein_equation}
     The \textbf{Stein's equation} for $h\in \mathcal{H}$ is a functional equation:
@@ -119,14 +119,37 @@ Now taking the supremum over $h \in \mathcal{H}$, we recover the form of an IPM,
     d_{\mathcal{H}}(P, Q) = \sup_{h \in \mathcal{H}} |\mathbb{E}_{X\sim P}[h(X)] - \mathbb{E}_{Z\sim Q}[h(Z)]| = \sup_{g \in \mathcal{G}(\mathcal{T})} |\mathbb{E}_{Z\sim Q}[(\mathcal{T}g)(Z)]|
 \end{equation}
 
-Bounding the last term is often easier, as it only requires taking expectations over $Q$.
+\begin{remark}\label{rem:stein_ipm_relation}
+    Some comments on \Cref{eq:stein_ipm_relation}:
+    \begin{itemize}
+        \item The information about $P$ is encoded in the linear operator $\mathcal{T}$ and function $g$:
+        \begin{align*}
+            \mathcal{T}(g)(w) &= \lambda g(w+1) - wg(w) \quad \text{(Poisson approximation)}\\
+            \mathcal{T}(g)(w) &= g'(w) - wg(w) \quad \text{(Normal approximation)}
+        \end{align*}
+        \item By choosing $\mathcal{H}$ in Stein's equation, we can choose the IPM or any convergence:
+        \begin{align*}
+            \mathcal{H} &= \{1_A: A \in \mathcal{F}\} \quad \text{(total variation distance)}\\
+            \mathcal{H} &= \{h: h \text{ is bounded, continuous a.s., piecewise } C^1\} \quad \text{(weak convergence)}
+        \end{align*}
+        \item Bounding the last term is often easier, as it only requires taking expectations over $Q$:
+        \begin{align*}
+            d_{TV}(P, Q) = \sup_{A \in \mathcal{F}} |P(A) - Q(A)|&\leq \sup_{g \in \mathcal{G}(\mathcal{T})} \|\mathbb{E}_{W\sim Q}[\lambda g(W+1) - Wg(W)]|
+             \\
+            |\mathbb{E}_Q[h(W)] - \mathbb{E}_P[h(X)]| &\leq \sup_{g \in \mathcal{G}(\mathcal{T})} |\mathbb{E}_{W\sim Q}[g'(W) - Wg(W)]|
+        \end{align*}
+        where the first equation is the Stein-Chen method for Poisson approximation and the second is for Stein's normal approximation.
+    \end{itemize}
+\end{remark}
+
+
 
 \begin{unexaminable}
     For an interesting application in Machine Learning, see \citep{pmlr-v119-grathwohl20a}.
 \end{unexaminable}
 
 
-
+% \newpage
 \subsection{Stein-Chen Method for Poisson Approximation}  
 Following the framework in the previous section, we can define the Stein operator (\Cref{def:stein_operator}) for Poisson approximation\footnote{We use the same notations as in the lecture notes, denoting the random variable as $W$ instead of $Z$.}:
 \begin{equation}
@@ -220,7 +243,7 @@ Now we can bound the total variation distance between $W$ and $\text{Po}(\lambda
     d_{TV}(\mathcal{L}(W), \text{Po}(\lambda)) = \sup_{g} |\mathbb{E}[\lambda g(W+1) - Wg(W)]|
 \end{equation}
 
-To see this is actually useful, we consider a bound for Bernoulli random variables. 
+As an example, we consider a bound for Bernoulli random variables. 
 
 \myparagraph{Example: Sum of i.i.d. Bernoulli random variables}  
 
@@ -417,7 +440,7 @@ for all continuous and piecewise continuously differentiable functions $g: \math
 \end{proof}
 
 \begin{unexaminable}
-    The condition for Fubini is easily checked, as $\int_0^\infty |g'(w)| f_W(w) dw \leq \mathbb{E}[|g'(w)|] < \infty$.
+    The condition for Fubini can be checked, as $\int_0^\infty |g'(w)| f_W(w) dw \leq \mathbb{E}[|g'(w)|] < \infty$.
 \end{unexaminable}
 
 We do not consider the total variation distance here, but instead use the \textbf{weak convergence} of measures, which is motivated by the following example.  
@@ -428,13 +451,15 @@ We do not consider the total variation distance here, but instead use the \textb
     \begin{equation*}
         \frac{X-np}{\sqrt{np(1-p)}} \xrightarrow{d} Y
     \end{equation*}
-    where $\xrightarrow{d}$ denotes weak convergence. However, if we have set $A_n :=\{0, 1, \ldots, n\}$, then $\mathbb{P}(X\in A_n) = 1$ and $\mathbb{P}(Y\in A_n) = 0$, for all $n\in \mathbb{N}$. Thus, no matter how large $n$ is, the total variation distance is always 1, which does not reflect the convergence in distribution.  
+    where $\xrightarrow{d}$ denotes weak convergence. However, if we set $A_n :=\{0, 1, \ldots, n\}$, then $\mathbb{P}(X\in A_n) = 1$ and $\mathbb{P}(Y\in A_n) = 0$, for all $n\in \mathbb{N}$. Thus, no matter how large $n$ is, the total variation distance is always 1, which does not reflect the convergence in distribution.  
 \end{example}
 
 We now define the notion of weak convergence of probability measures.  
 
 \begin{definition}
-   Let $(P_n)_{n\in \mathbb{N}}$ be a sequence of probability measures on $\mathbb{R}$ and $P$ be another probability measure on $\mathbb{R}$. Then \textbf{weak convergence} is equivalent to the following statements:
+   Let $(P_n)_{n\in \mathbb{N}}$ be a sequence of probability measures on $\mathbb{R}$ and $P$ be another probability measure on $\mathbb{R}$. 
+   
+   Then \textbf{weak convergence} is equivalent to the following statements:
    \begin{itemize}
     \item $P_n(A) \to P(A)$ for all $A \in \mathcal{B}(\mathbb{R})$ such that $P(\partial A)=0$.
     \item $\int f dP_n \to \int f dP$ for all bounded continuous functions $f$.
@@ -455,7 +480,7 @@ where $h$ is a bounded measurable function.
     \begin{itemize}
         \item $h:\mathbb{R} \to \mathbb{R}$ is bounded and measurable.
         \item $\mathbb{E}[|h(W)|] < \infty$.
-        \item $h$ is continuous and piecewise continuously differentiable with $\|h'\|_\infty < \infty$.
+        \item $h$ is continuous (a.s.) and piecewise continuously differentiable with $\|h'\|_\infty < \infty$.
     \end{itemize}
 
         Then the solution can be written as
@@ -825,6 +850,8 @@ Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
 
     where we used the fact that $|K_\alpha| = 3n-3 + 1 \leq 3n$ and $|X_\alpha| \leq \frac{1}{\sigma}$ along with the expectations computed above.   
 
+    In the penultimate step above, we computed $2 + 9n + 18n^2 \leq n^2 + 3n^2 + 18n^2 = 22n^2$.
+
     For the second double sum, we have:
     \begin{align*}
         \sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\mathbb{E}[|X_{\alpha}X_{\beta}|]\mathbb{E}[|X_{\gamma}|] &\leq \frac{1}{\sigma}  \sum_{\alpha\in I}\sum_{\beta,\gamma\in K_{\alpha}}\mathbb{E}[|X_{\beta}|] \mathbb{E}[|X_{\gamma}|] \\
@@ -849,7 +876,10 @@ Note that in \Cref{thm:triangle_gnp_normal}, we require the factor $\frac{n^5}{\
         f(n) = \Theta(g(n))
         \]
 
-    if there exists $c_1, c_2 > 0$ and $n_0$ such that $c_1 g(n) \leq f(n) \leq c_2 g(n)$ for all $n\geq n_0$.
+    if there exists $c_1, c_2 > 0$ and $n_0$ such that for all $n\geq n_0$, we have:
+    \[
+        c_1 g(n) \leq f(n) \leq c_2 g(n)
+    \]
 \end{definition}
 
 We can now define the dense and sparse regimes for Erd\"os-R\'enyi random graphs.
@@ -869,7 +899,6 @@ Therefore, as discussed above, the Poisson approximation is more useful in the s
 \newpage
 \bibliographystyle{apalike}
 \bibliography{bibliography3.bib}
-
 
 
 \end{document}
