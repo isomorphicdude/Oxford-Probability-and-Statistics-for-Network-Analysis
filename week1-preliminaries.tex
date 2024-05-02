@@ -125,7 +125,10 @@ When dealing with large graphs, it would be convenient to have simple statistics
     \begin{equation*}
         C = \frac{\sum_{u,v,w \in V} a_{uv}a_{vw}a_{wu}}{\sum_{v \in V} d(v)(d(v)-1)}
     \end{equation*}
-    where the numerator is $6\times$the number of triangles and the denominator is the number of paths of length $2$.
+    where the numerator is $6\times$the number of triangles and the denominator is the number of paths of length $2$:
+    \[
+        C = \frac{6\times \text{number of triangles}}{\text{number of 2-paths}}
+    \]
 \end{definition}
 
  Note that if we divide both by $2$, then the denominator is the number of $2-$stars in the graph.
@@ -137,11 +140,17 @@ A similar statistic is the local clustering coefficient for a particular vertex 
     \begin{equation*}
         C(v) =  \frac{\sum_{u,w \in V} a_{uv}a_{vw}a_{wu}}{d(v)(d(v)-1)}
     \end{equation*}
-    where the numerator is $2\times$the number of triangles and the denominator is the number of paths of length $2$ containing $v$.
+    where the numerator is $2\times$the number of triangles and the denominator is the number of paths of length $2$ containing $v$:
+    \[
+        C(v) = \frac{2\times \text{number of triangles containing } v}{\text{number of 2-paths containing }v}
+    \]
 \end{definition}
 Note the denominator has an alternative form $\sum_{u, w \in N(v), u\neq w} a_{uv}a_{wv}$, where $N(v)$ denotes the neighbourhood of $v$; to see this, note we first sum over all pairs $(u,w)$ and then subtract the cases where they are equal, which gives $d(v)^2-d(v)$, as desired.
 
-Thus, the \textbf{average local clustering coefficient} is $\overline{C}=\frac{1}{|V|}\sum_{v \in V} C(v)$.
+Thus, the \textbf{average local clustering coefficient} is 
+\[
+    \overline{C}=\frac{1}{|V|}\sum_{v \in V} C(v)
+\]
 
 Aside from statistics that arise from degrees of vertices, the global structure is also captured by paths in graphs. 
 
