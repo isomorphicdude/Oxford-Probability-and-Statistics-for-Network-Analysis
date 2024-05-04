@@ -26,17 +26,25 @@ The first configuration of Erd\H{o}s-R\'{e}nyi random graphs specifies edges wit
 \end{definition}
 
 In this case, the expected number of edges is $m=\binom{n}{2}p$ and the degree of a vertex $v$ follows a binomial distribution with parameters $n-1$ and $p$:
-$$
+\[
 \mathbb{P}(d(v)=k)=\binom{n-1}{k}p^k(1-p)^{n-1-k}
-$$
+\]
 
 Also, by independence, we can compute the number of triangles by:
 \begin{align*}
-    \mathbb{E}[T]&=\sum_{i<j<k} \mathbb{E}[A_{ij}A_{jk}A_{ki}]\\
-    &=\binom{n}{3}p^3\\
+    \mathbb{E}[T]&=\sum_{i<j<k} \mathbb{E}[A_{ij}A_{jk}A_{ki}]=\binom{n}{3}p^3
 \end{align*}
 
-Thus, the expected (global) clustering coefficient is
+\begin{unexaminable}
+    The local clustering coefficient of a vertex $v$ is $p$. See \href{https://math.stackexchange.com/questions/2200452/expected-local-clustering-coefficient-for-a-node-in-a-network}{this answer} for a proof.
+\end{unexaminable}
+
+Now, recall the definition of the (global) clustering coefficient:
+\begin{equation*}
+    \mathbb{E}[C] = \frac{3 \times \mathbb{E}[\text{number of triangles}]}{\mathbb{E}[\text{number of connected triples}]}
+\end{equation*}
+
+Combining with the result above, the expected (global) clustering coefficient is
 \begin{align*}
     \mathbb{E}[C]&=\frac{\mathbb{E}[\sum_{u,v,w \in V} a_{uv}a_{vw}a_{wu}]}{\mathbb{E}[\sum_{v\in V} d(v)(d(v)-1)]} \\
     &= \frac{6p^3 \binom{n}{3}}{n ((n-1)p(1-p) + (n-1)^2p^2 -(n-1)p)}\\
@@ -73,7 +81,7 @@ The expected (global) clustering coefficient can be computed similarly, which we
 
 \subsection{Small World}
 
-In reality, it is often found that the average distance between two vertices is small, but the clustering coefficient is large. This is known as the \textbf{small world phenomenon}, which cannot be modelled (properly) by the Erd\H{o}s-R\'{e}nyi random graphs.  
+In reality, it is often found that the average distance between two vertices is small (short path), but the clustering coefficient is large. This is known as the \textbf{small world phenomenon}, which cannot be modelled (properly) by the Erd\H{o}s-R\'{e}nyi random graphs.  
 
 \subsubsection{Watts-Strogatz Model}
 The \textbf{Watts-Strogatz model} is a random graph constructed with the following steps:
@@ -106,10 +114,10 @@ The \textbf{Watts-Strogatz model} is a random graph constructed with the followi
 When $n>2k$, there are in total $nk$ edges in the network, which remain constant throughout the rewiring process.
 
 \begin{remark}
-    Instead of a ring in with $n$ equal spaced vertices $\real^2$, we can also start with a torus in higher dimensions. For example, in $\real^3$, we fold a square lattices of $n^2$ vertices into a torus.
+    Instead of a ring in with $n$ equal spaced vertices $\real^2$, we can also start with a torus in higher dimensions. For example, in $\real^3$, we fold a square lattice of $n^2$ vertices into a torus.
 \end{remark}  
 
-One of the most popular modification of Watts-Strogatz is the \textbf{Newman-Moore-Strogatz} model, where instead of rewiring, we introduce random shortcuts:
+One of the most popular modifications of Watts-Strogatz is the \textbf{Newman-Moore-Watts} model, where instead of rewiring, we introduce random shortcuts:
 \begin{itemize}
     \item Start with a ring of $n$ vertices, where each vertex is connected to its $k$ nearest neighbours.
     \item Add shortcut between $v$ and $u\notin \text{bd}(v)$ with probability $p$.
@@ -117,8 +125,11 @@ One of the most popular modification of Watts-Strogatz is the \textbf{Newman-Moo
 \end{itemize}
 
 This gives an exact degree distribution with $d(v) \sim 2k+\mathrm{Binom}(n-2k-1, p)$.
+\begin{unexaminable}
+    To see this, note every vertex starts with $2k$ edges. Then, we choose from the $n-2k-1$ vertices to connect to it with probability $p$.
+\end{unexaminable}
 
-However, the degree distribution of real world networks often follows a power law, i.e. $p(d)\sim d^{-\gamma}$ for some $\gamma>0$.  
+However, the degree distribution of real-world networks often follows a power law, i.e. $p(d)\sim d^{-\gamma}$ for some $\gamma>0$.  
 
 \begin{remark}
     Intuitively, the power-law distribution says that vertices tend to attach to "popular" vertices.
@@ -169,12 +180,38 @@ This is also called Erd\H{o}s-R\'{e}nyi mixture model. The graph is constructed 
     \item Edges are formed independently between vertices in different blocks with probability $p_{ij}$.
 \end{itemize}
 
-In this case, we can compute the expected value of the degree of a vertex $v$ as:
-\begin{equation*}
-    \mathbb{E}[d(v)] = \mathbb{E}[\mathbb{E}[d(v) \mid v \in V_i]] = \sum_{\ell=1}^L  \alpha_{\ell}\left((|\mathcal{V}|\alpha_{\ell}-1)p_{\ell,\ell}+\sum_{k\ne\ell}|\mathcal{V}|\alpha_{k}p_{k,\ell}\right)
-\end{equation*}
+\begin{proposition}
+    For a random vertex $V$, the expected degree is given by:
+    \begin{equation*}
+        \mathbb{E}[d(V)] = \sum_{\ell=1}^L \alpha_{\ell}\left((|\mathcal{V}|\alpha_{\ell}-1)p_{\ell,\ell}+\sum_{k\ne\ell}|\mathcal{V}|\alpha_{k}p_{k,\ell}\right)
+    \end{equation*}
+    where $\alpha_{\ell} = \frac{|V_{\ell}|}{|\mathcal{V}|}$ is the proportion of vertices in block $\ell$.
+\end{proposition}
+\begin{proof}
+    Since we have chosen the vertex $V$ uniformly, we can condition on the particular vertex $V=v_i$:
+    \begin{align*}
+        \mathbb{E}[d(V)] &= \frac{1}{n} \sum_{i=1}^n \mathbb{E}[d(V)\mid V=v_i]\\
+        &= \frac{1}{n} \sum_{i=1}^n \sum_{\ell=1}^L \mathbf{1}(v_i \in V_{\ell}) \sum_{j=1, j\neq i}^n \mathbb{P}(v_i \sim v_j)
+    \end{align*}
 
-where $\alpha_{\ell} = \frac{|V_{\ell}|}{|\mathcal{V}|}$ is the proportion of vertices in block $\ell$.
+    The inner sum is given by:
+    \begin{align*}
+        \sum_{j=1, j\neq i}^n \mathbb{P}(v_i \sim v_j) &= \sum_{j=1, j\neq i}^n \sum_{k=1}^L \mathbf{1}(v_j \in V_k) \mathbb{P}(v_i \sim v_j)\\
+        &= \sum_{j=1, j\neq i}^n \left[\sum_{k=1, k\neq \ell}^L \mathbf{1}(v_j \in V_k) \mathbb{P}(v_i \sim v_j) + \mathbf{1}(v_j \in V_\ell) \mathbb{P}(v_i \sim v_j)\right]\\
+        &= \sum_{j=1, j\neq i}^n \left[\sum_{k=1, k\neq \ell}^L \mathbf{1}(v_j \in V_k) p_{k,\ell} + \mathbf{1}(v_j \in V_\ell) p_{\ell, \ell}\right]\\
+        &= \sum_{k=1, k\neq \ell}^L p_{k,\ell} \left[\sum_{j=1, j\neq i}^n \mathbf{1}(v_j \in V_k)\right]  +p_{\ell, \ell} \sum_{j=1, j\neq i}^n \mathbf{1}(v_j \in V_\ell) \\
+        &= \sum_{k=1, k\neq \ell}^L p_{k,\ell} |V_k| + p_{\ell, \ell} (|V_\ell|-1)
+    \end{align*}
+
+    Now combining the two equations, we obtain the result:
+    \begin{align*}
+        \mathbb{E}[d(V)] &= \frac{1}{n} \sum_{i=1}^n \sum_{\ell=1}^L \mathbf{1}(v_i \in V_{\ell}) \left[\sum_{k=1, k\neq \ell}^L p_{k,\ell} |V_k| + p_{\ell, \ell} (|V_\ell|-1)\right]\\
+        &= \sum_{\ell=1}^L \left[\frac{1}{n} \sum_{i=1}^{n} \mathbf{1}(v_i \in V_{\ell})\right] \left[\sum_{k=1, k\neq \ell}^L p_{k,\ell} |V_k| + p_{\ell, \ell} (|V_\ell|-1)\right]\\
+        &= \sum_{\ell=1}^{L} \alpha_\ell \left[\sum_{k=1, k\neq \ell}^L p_{k,\ell} |V_k| + p_{\ell, \ell} (|V_\ell|-1)\right]
+    \end{align*}
+    as required.  
+\end{proof}
+
 
 A variant of this model is to assign each vertex a block at random with:  
 
