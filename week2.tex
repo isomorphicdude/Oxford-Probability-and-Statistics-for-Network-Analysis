@@ -213,25 +213,53 @@ This is also called Erd\H{o}s-R\'{e}nyi mixture model. The graph is constructed 
 \end{proof}
 
 
-A variant of this model is to assign each vertex a block at random with:  
+A variant of this model is to assign each vertex a block at random with:    
 
 \begin{equation*}
     \mathbb{P}(v\in V_{\ell}) = \alpha_{\ell}
 \end{equation*}  
 
-This leads to a different expected degree:
- \begin{equation*}
-    \operatorname{\mathbb{E}}[d(V)]=(|V|-1)\sum_{\ell=1}^{L}\sum_{k=1}^{L}\alpha_{\ell}\alpha_{k}p_{k,\ell}
- \end{equation*}
+\begin{proposition}
+    For a random vertex $V$, the expected degree is given by:
+    \begin{equation*}
+        \mathbb{E}[d(V)] = (|V|-1)\sum_{\ell=1}^{L}\sum_{k=1}^{L}\alpha_{\ell}\alpha_{k}p_{k,\ell}
+    \end{equation*}
+    for probabilities $\alpha_{\ell}$ and $p_{k,\ell}$.
+\end{proposition}
 
- which is computed similarly $\mathbb{E}[d(v)]=\mathbb{E}[\mathbb{E}[d(v) \mid v \in V_i]]=\sum_{\ell=1}^{L}\alpha_{\ell}\left(\sum_{k}(|\mathcal{V}|-1)\alpha_{k} p_{k, \ell}\right)$, since we do not know how many vertices are in each block, so $|\mathcal{V}|\alpha_{\ell}$ disappears.
+\begin{proof}
+    We proceed similarly to the previous proof:
+    \begin{align*}
+        \mathbb{E}[d(V)] &= \frac{1}{n} \sum_{i=1}^n \mathbb{E}[d(V)\mid V=v_i]\\
+        &= \frac{1}{n} \sum_{i=1}^n \sum_{\ell=1}^L \mathbb{P}(v_i \in V_{\ell}) \sum_{j=1, j\neq i}^n \mathbb{P}(v_i \sim v_j)\\
+        &= \frac{1}{n} \sum_{i=1}^n \sum_{\ell=1}^L \alpha_\ell \sum_{j=1, j\neq i}^n \mathbb{P}(v_i \sim v_j)
+    \end{align*}
+    The inner sum is given by:
+    \begin{align*}
+        \sum_{j=1, j\neq i}^n \mathbb{P}(v_i \sim v_j) &= \sum_{j=1, j\neq i}^n \sum_{k=1}^L \mathbb{P}(v_j \in V_k) \mathbb{P}(v_i \sim v_j)\\
+        &= \sum_{j=1, j\neq i}^n \left[\sum_{k=1}^L \mathbb{P}(v_j \in V_k) \mathbb{P}(v_i \sim v_j)\right]\\
+        &= \sum_{j=1, j\neq i}^n \left[\sum_{k=1}^L \alpha_k p_{k,\ell}\right]\\
+        &= (n-1) \sum_{k=1}^L \alpha_k p_{k,\ell}
+    \end{align*}
+
+    Now combining the two equations, we obtain the result:
+    \begin{align*}
+        \mathbb{E}[d(V)] &=\frac{1}{n} \sum_{i=1}^n \sum_{\ell=1}^L \alpha_\ell \sum_{j=1, j\neq i}^n \mathbb{P}(v_i \sim v_j) \\
+        &= \frac{1}{n} \sum_{i=1}^n \sum_{\ell=1}^L \alpha_\ell (n-1) \sum_{k=1}^L \alpha_k p_{k,\ell} \\
+        &= (n-1) \sum_{\ell=1}^L \sum_{k=1}^L \alpha_\ell \alpha_k p_{k,\ell} \\
+        &= (|V|-1) \sum_{\ell=1}^L \sum_{k=1}^L \alpha_\ell \alpha_k p_{k,\ell}
+    \end{align*}
+    as required (here $n=|V|$).
+\end{proof}
+
+%  which is computed similarly $\mathbb{E}[d(v)]=\mathbb{E}[\mathbb{E}[d(v) \mid v \in V_i]]=\sum_{\ell=1}^{L}\alpha_{\ell}\left(\sum_{k}(|\mathcal{V}|-1)\alpha_{k} p_{k, \ell}\right)$, since we do not know how many vertices are in each block, so $|\mathcal{V}|\alpha_{\ell}$ disappears.
 
 
 
 \subsection{The Configuration Model}  
 Given a feasible degree sequence $(d(i))_{1\leq i \leq n}$, the configuration model constructs a random graph as follows: 
 \begin{itemize}
-    \item For each vertex $i$, create $d(i)$ half-edges.
+    \item For each vertex $i$, create $d(i)$ half-edges (stubs).
     \item Choose two half-edges uniformly at random and connect them.
     \item Repeat until all half-edges are connected.
 \end{itemize}
@@ -243,21 +271,24 @@ Given a feasible degree sequence $(d(i))_{1\leq i \leq n}$, the configuration mo
 
 as each of the half-edge of $i$ can choose any of the $d(j)$ half-edges of $j$ with probability $\frac{1}{2m-1}$.  
 
-\paragraph{Self-loops} For vertex $i$, the probability that it connects to itself is given by:
+\paragraph{Self-loops} For vertex $i$, the expected number of self-loops for vertex $i$ is given by:
 \begin{equation*}
     \frac{d(i) (d(i)-1)}{2(2m-1)}
 \end{equation*}
-since there are $d(i)$ half-edges of $i$ and each of them can choose any of the $d(i)-1$ half-edges of $i$ with probability $\frac{1}{2m-1}$; the number is divided by $2$ since each edge is counted twice.  Hence the expected number of self loops is:
+since there are $d(i)$ half-edges of $i$ and each of them can choose any of the $d(i)-1$ half-edges of $i$ with probability $\frac{1}{2m-1}$; the number is divided by $2$ since each edge is counted twice.  
+
+Hence the total expected number of self-loops is:
 \begin{equation*}
     \sum_{i=1}^{n}\frac{d(i)(d(i)-1)}{2(2m-1)}=\frac{\mathbb{E}[d(V)^{2}]-\mathbb{E}[d(V)]}{2(\mathbb{E}[d(V)]-1/n)}
 \end{equation*}
 
 where $d(V)$ is the degree of a randomly chosen vertex and 
-\begin{equation*}
-    \mathbb{E}[d(V)] = \frac{1}{n} \sum_{i=1}^{n} d(i) = \frac{2m}{n}
-\end{equation*}
+\begin{align*}
+    \mathbb{E}[d(V)] &= \frac{1}{n} \sum_{i=1}^{n} d(i) = \frac{2m}{n} \\
+    \mathbb{E}[d(V)^{2}] &= \frac{1}{n} \sum_{i=1}^{n} d(i)^{2}
+\end{align*}
 
-Therefore, if $\mathbb{E}[d(V)^{2}]$ is bounded, then the expected number of self-loops is remains bounded, whereas the number of edges grow. Hence, self-loops are negligible in the limit. A similar argument can be made for multi-edges.  
+It follows that if $\mathbb{E}[d(V)^{2}]$ is bounded, then the expected number of self-loops remains bounded, whereas the number of edges grows. Hence, self-loops are negligible in the limit. A similar argument can be made for multi-edges.  
 
 \begin{unexaminable}
     The validity of the configuration model is mentioned in Part C of PS 1, which discusses the Havel-Hakimi algorithm. The following content is not examinable.
@@ -269,7 +300,7 @@ Therefore, if $\mathbb{E}[d(V)^{2}]$ is bounded, then the expected number of sel
 
 The Havel-Hakimi algorithm constructs a graph with a given degree sequence.
 \begin{theorem}[Havel-Hakimi algorithm]
-    Let $A=(s, t_1, \ldots, t_s, d_1, \ldots, d_n)$ be a sequence of non-negative integers. Then $A$ is graphical if and only if $A'=(t_1-1, t_2-1, \ldots, t_s-1, d_1, \ldots, d_s)$ is graphical.
+    Let $A=(s, t_1, \ldots, t_s, d_1, \ldots, d_n)$ be a sequence of non-negative integers in non-increasing order. Then $A$ is graphical if and only if $A'=(t_1-1, t_2-1, \ldots, t_s-1, d_1, \ldots, d_s)$ is graphical.
 \end{theorem}
 \begin{proof}[Sketch of proof]
     The proof is by induction on $n$. The base case is trivial. We consider two cases: 
@@ -282,13 +313,21 @@ The Havel-Hakimi algorithm constructs a graph with a given degree sequence.
 
 \subsubsection{Chung-Lu Model}
 
-The Chung-Lu model is a variant of the configuration model. We start with weights of non-negative integers $\{w_i\}_{1\leq i \leq n}$ and construct a random graph as follows:
+The Chung-Lu model (also called the Newman-Girvan model) is a variant of the configuration model. We start with weights of non-negative integers $\{w_i\}_{1\leq i \leq n}$ and construct a random graph as follows:
 \begin{itemize}
     \item Compute $\theta_i = \frac{w_i}{\sqrt{\sum_j w_j}}$ for $1\leq i \leq n$.
     \item Connect two vertices $i$ and $j$ with probability $\min \{\theta_i \theta_j, 1\}$ independently of all other edges.
 \end{itemize}
 
-Often we assume $\max_i w_i^2 < \sum_j w_j$ so that $\theta_i < 1$ for all $i$.
+Often we assume $\max_i w_i^2 < \sum_k w_k$ so that $\theta_i < 1$ for all $i$ (otherwise the probability of an edge might be $1$).  
+
+The expected degree of vertex $i$ is given by:
+\begin{align*}
+    \mathbb{E}[d(i)] &= \sum_{j=1}^{n} \mathbb{P}(i \sim j) = \sum_{j=1}^{n} \min \{\theta_i \theta_j, 1\} \\
+    &= \sum_{j=1}^{n} \min \{\frac{w_iw_j}{\sum_k w_k}, 1\} = \frac{w_i}{\sum_k w_k} \sum_{j=1}^{n} w_j = w_i
+\end{align*}
+
+where we used the assumption $\max_i w_i^2 < \sum_k w_k \implies w_iw_j < \max w_i^2 < \sum_k w_k$. 
 
 \subsection{Geometric Random Graphs}
 In this model, we assume that the vertices are points in $\real^d$ and the probability of an edge between two vertices is a function of their distance. Namely, we construct as follows:
@@ -309,7 +348,7 @@ Exponential random graphs incorporate covariates into the probability of an edge
 where $\theta$ is a vector of parameters, $\mathbf{z}(\mathbf{A})$ is a vector of statistics of $\mathbf{A}$, and $Z(\theta)$ is the normalising constant. 
 
 
-% \newpage
+\newpage
 \bibliographystyle{apalike}
 \bibliography{bibliography2.bib}
 
