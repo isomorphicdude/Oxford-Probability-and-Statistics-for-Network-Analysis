@@ -19,76 +19,100 @@ This section is a brief summary of the results and methods from the last few lec
 
 \subsection{Sampling from Networks}
 \paragraph{Set up} We have population as an index set $U=\{1,2,\ldots, N\}$. With each unit, there is a quantity of interest $y_i$. Let the population total be:
-\begin{equation*}
+\begin{equation}
     \tau = \sum_{i\in U} y_i
-\end{equation*}
+\end{equation}
 and let the population average be:
-\begin{equation*}
+\begin{equation}
     \mu = \frac{\tau}{N}
-\end{equation*}
+\end{equation}
 The population variance is:
-\begin{equation*}
+\begin{equation}
     \sigma^2 = \frac{1}{N}\sum_{i\in U} (y_i-\mu)^2
-\end{equation*}
+\end{equation}
+
+\begin{remark}
+    This is different from the sample variance with $N-1$ in the denominator.
+\end{remark}
 
 We further denote a sample subset as $S\subset U$ with size $n=|S|$ and $S=\{i_1, \ldots, i_n\}$. We are interested in how to estimate $\tau$,  $\mu$, and $\sigma^2$ from the sample.
+
+\begin{remark}
+    Here we are sampling from a finite population, whence the methods differ from those when sampling from a density $f(x)$.
+\end{remark}
 
 \subsubsection{Sampling with Replacement}
 
 \paragraph{Estimating $\mu$} The sample mean is an unbiased estimator of the population mean: 
-\begin{equation*}
+\begin{equation}
     \hat{\mu} = \frac{1}{n}\sum_{i\in S} y_i
-\end{equation*}
+\end{equation}
 and the variance of the sample mean is:
-\begin{equation*}
+\begin{equation}\label{eq:var_sample_mean}
     \mathrm{Var}(\hat{\mu}) = \frac{\sigma^2}{n}
-\end{equation*}
+\end{equation}
 
-\paragraph{Estimating $\tau$} The estimator is given by:
-\begin{equation*}
+\paragraph{Estimating $\tau$} The estimator for population total is $N$ times the sample mean:
+\begin{equation}
     \hat{\tau} = N\hat{\mu}
-\end{equation*}
+\end{equation}
 and the variance of the estimator is:
-\begin{equation*}
-    \mathrm{Var}(\hat{\tau}) = N^2\mathrm{Var}(\hat{\mu}) = \frac{N^2\sigma^2}{n}
-\end{equation*}
 
-\paragraph{Estimating $\sigma^2$} The estimator is given by:
-\begin{equation*}
+\begin{equation}
+    \mathrm{Var}(\hat{\tau}) = N^2\mathrm{Var}(\hat{\mu}) = \frac{N^2\sigma^2}{n}
+\end{equation}
+
+\paragraph{Estimating $\sigma^2$} The estimator is given by the sample variance:
+\begin{equation}
     \hat{\sigma}^2 = \frac{1}{n-1}\sum_{i\in S} (y_i-\bar{y})^2
-\end{equation*}
+\end{equation}
 and the variance of the estimator is:
-\begin{equation*}
+\begin{equation}
     \mathrm{Var}(\hat{\sigma}^2) = \frac{1}{n-1}\left(\frac{1}{n}\sum_{i\in S} (y_i-\mu)^4 - \frac{n-3}{n}\sigma^4\right)
-\end{equation*}
+\end{equation}
 
 
 \subsubsection{The Horvitz-Thompson Estimator}
-\paragraph{Estimating $\mu$} The Horvitz-Thompson estimator is given by:
-\begin{equation*}
+\paragraph{Estimating $\mu$} The Horvitz-Thompson estimator of the population mean is a weighted sum of the sample values:
+\begin{equation}
     \hat{\mu} = \frac{1}{N}\sum_{i\in S} \frac{y_i}{\pi_i}
-\end{equation*}
-where $\pi_i$ is the probability of selecting the unit $i$ into the sample. Note this has an alternative form of $\sum_{i\in U} Z_i\frac{y_i}{\pi_i}$, where $Z_i=\mathbf{1}(i\in S)$ is the indicator function, taking the expectation shows that this is an unbiased estimator of $\mu$.  The variance of the estimator is:
-\begin{equation*}
-    \mathrm{Var}(\hat{\mu}) = \frac{1}{N^2}\sum_{i\in U}\sum_{j\in U}y_{i}y_{j}\left({\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}}-1\right).
-\end{equation*}
+\end{equation}
+where $\pi_i$ is the probability of selecting the unit $i$ into the sample; the weight for each of the sample values $y_i$ is inversely proportional to the probability of selecting the unit. In the notes, the Horvitz-Thompson estimator for the population total is denoted as $\hat{\tau}_{\pi}$.
 
-where $\pi_{i,j}$ is the probability of selecting both unit $i$ and $j$ into the sample; the variance is computed by $\mathrm{Var}(\hat{\mu}) = \frac{1}{N^2} \sum_{i\in U}\frac{y_{i}^{2}}{\pi_{i}^{2}}\mathrm{Var}Z_{i}+\sum_{i\in U}\sum_{j\in U,j\neq i}\frac{y_{i}y_{j}}{\pi_{i}\pi_{j}}\mathrm{Cov}(Z_{i},Z_{j})$ and noting $\pi_{i,i}=\pi_{i}$. In practice, this is summed over $S$, 
-\begin{equation*}
-    \hat{\mathrm{Var}}\left(\hat{\tau}_{\pi}\right)~=~\sum_{i\in{\cal S}}\sum_{j\in{\cal S}}y_{i}y_{j}\left(\frac{1}{\pi_{i}\pi_{j}}-\frac{1}{\pi_{i j}}\right).
-\end{equation*}
+Note this has an alternative form of 
+\[
+    \frac{1}{N}\sum_{i\in U} Z_i\frac{y_i}{\pi_i}
+\]
+
+where $Z_i=\mathbf{1}(i\in S)$ is the indicator function, taking the expectation shows that this is an unbiased estimator of $\mu$.  The variance of the estimator is:
+\begin{align*}
+    \mathrm{Var}(\hat{\mu}) &=  \frac{1}{N^2} \sum_{i\in U}\frac{y_{i}^{2}}{\pi_{i}^{2}}\mathrm{Var}Z_{i}+\sum_{i\in U}\sum_{j\in U,j\neq i}\frac{y_{i}y_{j}}{\pi_{i}\pi_{j}}\mathrm{Cov}(Z_{i},Z_{j})\\
+    &= \frac{1}{N^2} \sum_{i\in U}\frac{y_{i}^{2}}{\pi_{i}^{2}}\pi_i(1-\pi_i)+\sum_{i\in U}\sum_{j\in U,j\neq i}\frac{y_{i}y_{j}}{\pi_{i}\pi_{j}}(\mathbb{E}[Z_iZ_j]-\mathbb{E}[Z_i]\mathbb{E}[Z_j])\\
+    &=\frac{1}{N^2} \sum_{i\in U}\frac{y_{i}y_i}{\pi_{i}\pi_i}(\pi_i-\pi_i\pi_i)+\sum_{i\in U}\sum_{j\in U,j\neq i}\frac{y_{i}y_{j}}{\pi_{i}\pi_{j}}(\pi_{ij} - \pi_i \pi_j)\\
+    &=\frac{1}{N^2}\sum_{i\in U}\sum_{j\in U}y_{i}y_{j}\left({\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}}-1\right)
+\end{align*}
+
+where $\pi_{i,j}$ is the probability of selecting both unit $i$ and $j$ into the sample and  $\pi_{i,i}=\pi_{i}$. 
+
+In practice, this is summed over sample $S$ instead of the population $U$ and correction weights are used, 
+\begin{equation}
+    \widehat{\mathrm{Var}}\left(\hat{\mu}_{\pi}\right)=\frac{1}{N^2}\sum_{i\in S}\sum_{j\in S}\frac{y_{i}y_{j}}{\pi_{i,j}}\left(\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}-1\right)
+\end{equation}
 
 \paragraph{Estimating $\tau$} The estimator is given by:
-\begin{equation*}
+\begin{equation}\label{eq:horvitz_thompson_total}
     \hat{\tau} = \sum_{i\in S} \frac{y_i}{\pi_i}
-\end{equation*}
+\end{equation}
 
-The variance can be deduced from above by multiplying $N^2$.
+The variance can be deduced from above by multiplying $N^2$:
+\begin{equation}\label{eq:var_horvitz_thompson_total}
+    \mathrm{Var}(\hat{\tau}_{\pi}) = \frac{N^2}{n}\sum_{i\in U}\sum_{j\in U}y_{i}y_{j}\left(\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}-1\right)
+\end{equation}
 
 \begin{example}[Simple Random Sampling]\label{ex:srs}
-    In a population of size $N$, there are $\binom{N}{n}$ possible samples of size $n$. Thus, the probability of containing a unit ($k$-tuple) is 
+   Given a population of size $N$, the probability of a sample containing a particular unit of $k$ elements is:
     \begin{equation*}
-        \pi_{(i_1, \ldots, i_k)} = \frac{\binom{N-k}{n-k}}{\binom{N}{n}}
+        \pi_{(i_1, \ldots, i_k)} = \frac{1 \times \binom{N-k}{n-k}}{\binom{N}{n}}
     \end{equation*}
     since there are $\binom{N-k}{n-k}$ ways to choose the remaining $n-k$ units from the remaining $N-k$ units.  
     In particular, for $\pi_i$ and $\pi_{i,j}$, we have:
@@ -96,10 +120,15 @@ The variance can be deduced from above by multiplying $N^2$.
         \pi_i &= \frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{n}{N}\\
         \pi_{i,j} &= \frac{\binom{N-2}{n-2}}{\binom{N}{n}} = \frac{n(n-1)}{N(N-1)}
     \end{align*}
-    For $n\geq 2$, we can see the variance of the Horvitz-Thompson estimator is less than that of the common estimator for the population total:
+    It follows that the Horvitz-Thompson estimator for the population mean is the same as the sample mean (but sampled without replacement):
     \begin{equation*}
-        \mathrm{Var}\,(\hat{\tau}_{\pi})=\frac{N^{2}(N-n)}{n(N-1)}\sigma^{2}<\frac{N^{2}}{n}\sigma^{2}
+        \hat{\mu}_{\pi} = \frac{1}{N}\sum_{i\in S} \frac{y_i}{\pi_i} = \frac{1}{n}\sum_{i\in S} y_i
     \end{equation*}
+    We see the variance of the Horvitz-Thompson estimator (\ref{eq:var_horvitz_thompson_total}) is less than that of the common estimator for the population total (\ref{eq:var_sample_mean}):
+    \begin{equation*}
+        \mathrm{Var}\,(\hat{\tau}_{\pi})=\frac{N^{2}(N-n)}{n(N-1)}\sigma^{2}<\frac{N^{2}}{n}\sigma^{2} \quad \forall n \geq 2
+    \end{equation*}
+    This result is given in \citep{alma990199486190107026} Chapter 7 (Pg. 209). Note the inequality is because sampling without replacement introduces correlations between the sample values.  
 \end{example}
 
 \subsubsection{Horvitz-Thompson for Networks}
@@ -113,7 +142,7 @@ So it has size:
     N=|\mathcal{V}|+|\mathcal{V}|(|\mathcal{V}|-1)
 \end{equation*}
 
-\paragraph{Induced Subgraph Sampling} We first choose a vertex set $S_0$ and choose the induced edges from the vertex set. In this case, the sample $S$ is:
+\paragraph{Induced Subgraph Sampling} We first choose a vertex set $S_0$ and choose the induced edges from the vertex set. In this case, the sample $S$ is a collection of vertices and pairs of vertices:
 \begin{equation*}
     S = S_0 \cup \{(u,v): u,v\in S_0, u\neq v\}
 \end{equation*}
@@ -138,20 +167,21 @@ Note those probabilities assume the size of the population is known.
 
 \paragraph{Star Sampling (1-hop Snow Ball)} We first choose a random sample $S_0$ of $n$ vertices, and we sample all edges incident to the vertices in $S_0$. Usually, the adjacent vertices are added (but they can also be excluded). Therefore, the two cases are:
 \begin{align*}
-    S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\}\\
-    S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\} \cup \{v: (u,v)\in \mathcal{E}, u\in S_0\}
+    S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\}\quad \text{(without vertices)}\\
+    S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\} \cup \{v: (u,v)\in \mathcal{E}, u\in S_0\} \ \text{(with vertices)}
 \end{align*}
-\begin{example}[Not in snowball]
+\begin{example}[Samples not in snowball]
     For a vertex $v\in \mathcal{V}$, the probability of it not being in the initial sample $S_0$ is:
     \begin{align*}
         \mathbb{P}(v\notin S_0) &= \mathbb{P}[\left(\{\nu\}\cup N(\nu)\right)\cap S_{0}=\emptyset]\\
         &= \mathbb{P}[S_{0}\subset V\setminus(\{\nu\}\cup N(\nu))]\\
         &= \frac{\binom{|\mathcal{V}|-(d(\nu)+1)}{n}}{\binom{|\mathcal{V}|}{n}}
     \end{align*}
+    which is the probability of containing a particular unit of $d(\nu)+1$ elements in a sample of size $n$ (see \Cref{ex:srs}).
 \end{example}
 
 We also note that other quantities of interest can be estimated similarly \begin{example}[Triangles]
-    Defining $y_{i,j,k}=\mathbf{1}((i,j),(j,k),(k,i)\in \mathcal{E})$, the sample will need to have the triplets.
+    Defining $y_{i,j,k}=\mathbf{1}((i,j),(j,k),(k,i)\in \mathcal{E})$, this estimates the total number of triangles in the network.
 \end{example}
 
 An important note is that the network considered in the settings above is \textbf{fixed}. If the network is \textbf{random}, then we should be cautious, as the samples do not reflect the real network structure. (\textit{e.g.} the snowball sample is always connected, but the real network may not be connected).  
@@ -168,7 +198,7 @@ An important note is that the network considered in the settings above is \textb
 
 % \subsection{Nonparametric Methods}
 \subsubsection{Monte Carlo Tests} 
-Let $\alpha = \frac{m}{1+n}$, where $n$ is the number of simulations and $m$ is a rank to be determined. We let the test statistic be $T$. The Monte Carlo test is:
+Let $\alpha = \frac{m}{1+n}$, where $n$ is the number of simulations and $m$ is a rank to be determined. Denote the test statistic as $T$. The Monte Carlo test is carried out as follows:
 \begin{enumerate}
     \item Observe the actual value of $T^*$ from the sample.
     \item Simulate a random sample $T_1, \ldots, T_n$ from the null distribution.
@@ -178,8 +208,19 @@ Let $\alpha = \frac{m}{1+n}$, where $n$ is the number of simulations and $m$ is 
 
 The basis of this test is that under $H_0$, $T^*$ is equally likely to be any of the $T_i$'s. Thus, the probability of $T^*$ being in the top $m$ is $\alpha$. 
 
+The $p$-value is given by 
+\begin{align*}
+    p^+ &= \frac{1}{n}\sum_{i=1}^{n}\mathbf{1}(T_i\geq T^*) \quad \text{(reject for large $T^*$)}\\
+    p^- &= \frac{1}{n}\sum_{i=1}^{n}\mathbf{1}(T_i\leq T^*) \quad \text{(reject for small $T^*$)}
+\end{align*}
+
+
 \begin{remark}
     Usually $n$ is chosen with $m\geq 5$. For smaller values of $\alpha$, $n$ is chosen to be larger.  
+\end{remark}
+
+\begin{remark}
+    We often need to choose the direction of the test based on the nature of the observed network. For instance, a friendship/social network is expected to have more triangles than a random network, thus we would reject $H_0$ (the data comes from our model) if $T^*$ is larger than the simulated values (a small $p^+$ value).
 \end{remark}
 
 \paragraph{Conditional Uniform Graph Tests} Suppose we want to see how unusual our statistic is, given the degree sequence. We can simulate graphs with the same degree sequence and count the number of times the simulated statistic is at least as extreme as the observed statistic.
@@ -197,27 +238,42 @@ Recall that a network is scale-free if the degree distribution follows a power l
     \mathbb{P}(d(V)=k)\sim C k^{-\gamma}
 \end{equation*}
 
+\begin{remark}
+    The name comes from the fact that if we scale the degree by a constant $\alpha$, then the distribution form remains the same (asymptotically):
+    \[\mathbb{P}(d(V)=\alpha k)\sim C(\alpha k)^{-\gamma}\sim C^{\prime}k^{-\gamma},\]
+    which still has the form of a power law with the same exponent $\gamma$.
+\end{remark}
+
 To find $C$ and $\gamma$, we first observe that taking the log on both sides gives:
 \begin{equation*}
     \log \mathbb{P}(d(V)=k)\sim \log C - \gamma \log k
 \end{equation*}
 
-So we can fit a least square line to the log-log plot of the degree distribution, that is, we find  $a=\log C$ and $b=\gamma$ minimising the following:
-\begin{equation*}
+So we can fit a least square line to the \textit{log-log plot} of the degree distribution, that is, we find  $a=\log C$ and $b=\gamma$ minimising the following:
+\begin{equation}\label{eq:least_squares_power_law}
     \sum_k (y(k)-a-b x(k))^{2}
-\end{equation*}
+\end{equation}
 
-where $x(k)=\log k$ and $y(k)=\log \mathbb{P}(d(V)=k)$ or $y(k)=\log \mathbb{P}(d(V)\geq k)$.
+where $x(k)=\log k$ and $y(k)=\log \mathbb{P}(d(V)=k)$ or $y(k)=\log \mathbb{P}(d(V)\geq k)$. If our model is correct, then we should see a straight line in the log-log plot, from which the parameter $\gamma$ can be estimated (the slope $b$).
 
 \begin{remark}
     If one is only interested in the behaviour of the tail of the distribution, then one may fit a least-squares regression line only after some point $\log k_0$.
 \end{remark}
 
-\subsection{Edge Inference}
+The case $y(k) = \log \mathbb{P}(d(V)\geq k)$ fits a slightly different model to deal with noisy tails:
+\begin{equation*}
+    \log\mathbb{P}(d(V)\geq k)\sim C^{\prime\prime}-(\gamma-1)\log k
+\end{equation*}
+
+Now solving \Cref{eq:least_squares_power_law} gives the parameter $\gamma=b+1$.
+
+\subsection{Inferring Edges in Networks}
+
+In this section, we are interested in inferring properties such as the existence of an edge.
 \paragraph{Exponential Random Graph}
 Recall the exponential random graph has the form:
 \begin{equation*}
-    \mathbb{P}(\mathbf{X}=\mathbf{x})={\frac{1}{\kappa}}\exp\left\{\theta^{T}\mathbf{z}(\mathbf{x})\right\}
+    \mathbb{P}(\mathbf{X}=\mathbf{x})={\frac{1}{\kappa(\theta)}}\exp\left\{\theta^{T}\mathbf{z}(\mathbf{x})\right\}
 \end{equation*}
 
 where we have 
@@ -239,6 +295,19 @@ where the first two matrices are with and without the edge $(i,j)$, and the last
     \frac{\mathbb{P}(X_{i,j}=1;\mathbf{X}_{i,j}^{c})}{\mathbb{P}(X_{i,j}=0;\mathbf{X}_{i,j}^{c})}=\frac{\exp\left\{\theta^{T}\mathbf{z}(\mathbf{x}_{i,j}^{+})\right\}}{\exp\left\{\theta^{T}\mathbf{z}(\mathbf{x}_{i,j}^{-})\right\}}=\exp\left\{\theta^{T}\left(\mathbf{z}(\mathbf{x}_{i,j}^{+})-\mathbf{z}(\mathbf{x}_{i,j}^{-})\right)\right\}
 \end{equation*}
 
+This odds ratio does not depend on the normalising constant $\kappa(\theta)$.
+
+\begin{example}[From the notes]
+Suppose that we know the group memberships in a stochastic block model and we would like to infer whether or not there is an edge between two vertices.  
+
+Then we can
+\begin{itemize}
+    \item Fit a stochastic block model to the data with the particular edge variable excluded.
+    \item Assess the odds of an edge to be present from the edge probability estimates.
+\end{itemize}
+
+That is, we assess \textit{given the rest of the network}, how likely is it that there is an edge between two vertices.  
+\end{example}
 
 
 
@@ -276,7 +345,7 @@ We would like to apply a clustering method to find out more about the structure 
 \( c_v \) is the unique group that \( v \) is assigned to. 
 Then the \textbf{modularity} is defined as
 \[
-Q = \frac{1}{2m} \sum_{u,v} \left( a_{uv} - \frac{d(u)d(v)}{2m} \right) \mathbf{1}(c_u, c_v),
+Q = \frac{1}{2m} \sum_{u,v} \left( a_{uv} - \frac{d(u)d(v)}{2m} \right) \mathbf{1}(c_u= c_v),
 \]
 where \( m \) is the number of edges, \((a_{uv}) \) is an entry in the adjacency matrix, and \( d(v) \)
 is the degree of vertex \( v \).
@@ -284,7 +353,7 @@ is the degree of vertex \( v \).
 
 \paragraph{Girvan-Newman algorithm} The algorithm is based on the idea that edges with high betweenness are likely to be between communities (recall that betweenness is the number of shortest paths passing through an edge).
 
-The algorithm is as follows:
+The algorithm is given below:
 \begin{enumerate}
     \item Compute the betweenness of all edges in the network.
     \item Remove the edge with the highest betweenness.
@@ -299,16 +368,19 @@ Recall that in a Stochastic Block Model, the probability of an edge between two 
 \end{equation*}
 
 
-We can fit the model to a network and obtain the parameters to determine community structure. However, the naive approach does not perform well. Thus, a degree-corrected version is proposed.  For every vertex $u$, we introduce a parameter $\theta_u$ to model the degree of $u$. For every class $k$,
+We can fit the model to a network and obtain the parameters to determine community structure. However, the naive approach does not perform well, since the model tends to \textit{cluster vertices based on their degrees}.
 
+\paragraph{Degree-corrected Stochastic Block} For every vertex $u$, we introduce a parameter $\theta_u$ to model the degree of $u$, such that for any class $k$:
 \begin{equation*}
     \sum_{u}\theta_{u}\mathbf{1}(c_{u}=k)=1
 \end{equation*}
 
-where $c_u$ is the community that $u$ belongs to. The probability of an edge between $u$ and $v$ is then:
+where $c_u$ is the community that $u$ belongs to (cluster label). The probability of an edge between $u$ and $v$ is then:
 \begin{equation*}
     p_{u,v}=\theta_{u}\theta_{v}p_{c_{u},c_{v}}
 \end{equation*}
+
+This tends to outperform the Stochastic Block Model in practice.  
 
 \newpage
 \bibliographystyle{apalike}
