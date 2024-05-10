@@ -155,15 +155,20 @@ Thus, the \textbf{average local clustering coefficient} is
 Aside from statistics that arise from degrees of vertices, the global structure is also captured by paths in graphs. 
 
 \begin{definition}
-    Let $\ell(u,v)$ be the length of shortest path between two vertices. The \textbf{average shortest path} is given by:
-    $$
-    \ell = \frac{1}{|V|(|V|-1)} \sum_{u\neq v, u,v\in V} \ell (u,v)
-    $$
+    The \textbf{average shortest path} is given by:
+    \[
+        \ell = \frac{1}{|V|(|V|-1)} \sum_{u\neq v, u,v\in V} \ell (u,v)
+    \]
+    where $\ell(u,v)$ is the length of the shortest path between $u$ and $v$.
 \end{definition}
 
 \begin{remark}
     We can compute $\ell(u,v)$ from the smallest power of adjacency matrix $A$ such that the $(u,v)^{th}$ entry of $A^p$ is non-zero. (This can be shown by induction)
 \end{remark}
+
+\begin{definition}
+    The \textbf{motif} of a graph is a small, over-represented subgraph, where over-representation is judged using a probabilistic model for the network.
+\end{definition}
 
 \newpage
 \bibliographystyle{apalike}
