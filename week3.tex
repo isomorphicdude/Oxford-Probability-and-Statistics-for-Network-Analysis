@@ -296,17 +296,24 @@ When the random variables are not independent, the computation of $\mathbb{E}[Wg
     \end{equation*}  
     
     Then the total variation distance is bounded by
-    \begin{equation*}
+    \begin{equation}\label{eq:poisson_stein_local_bound}
         d_{TV}(\mathcal{L}(W), \text{Po}(\lambda)) \leq \sum_{\alpha\in I}[(p_{\alpha}\mathbb{E}(\eta_{\alpha})+\mathbb{E}(X_{\alpha}(\eta_{\alpha}-X_{\alpha}))]\operatorname*{min}\left(1,\lambda^{-1}\right)
-    \end{equation*}
+    \end{equation}
 
     where $\lambda = \sum_{\alpha \in I} p_\alpha$.   
 \end{theorem}
 
 \begin{proof}
 
-    As before, we aim to bound the total variation distance by bounding $\mathbb{E}|\lambda g(W+1) - Wg(W)|$, where $g$ is the solution to Stein's equation.  
-    We compute the term $\mathbb{E}[Wg(W)]$ as follows:  
+    As before, we aim to bound the total variation distance by bounding $\mathbb{E}|\lambda g(W+1) - Wg(W)|$, where $g$ is the solution to Stein's equation.  The basic idea is to obtain independence by using 
+    \[
+       W = W_\alpha + \eta_\alpha  
+    \]
+    which will give $\mathbb{E}[X_\alpha g(W_\alpha )] = p_\alpha \mathbb{E}[g(W_\alpha)]$, isolating the $X_\alpha$ and enables us to derive the bounds using the difference 
+    \[
+       g(W_\alpha + \eta_\alpha -X_\alpha +  1) - g(W_\alpha + 1)  
+    \]
+    which can be bounded by $g(j+1)-g(j)$ (\Cref{lem:poisson_stein_bound}). We compute the term $\mathbb{E}[Wg(W)]$ as follows:  
     \begin{align*}
         \mathbb{E}[Wg(W)] &= \mathbb{E}[\sum_{\alpha \in I} X_\alpha g(W)]\\
         &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(W - X_\alpha + 1)] \quad \text{($X_\alpha$ is binary)}
@@ -314,11 +321,15 @@ When the random variables are not independent, the computation of $\mathbb{E}[Wg
         &= \sum_{\alpha \in I} \mathbb{E}[X_\alpha g(W_\alpha + \eta_\alpha -X_\alpha +  1)]\quad \text{($W = W_\alpha + \eta_\alpha$)}
         \\
         &= \sum_{\alpha \in I} \mathbb{E}[\textcolor{red}{X_\alpha g(W_\alpha + 1)}] + \mathbb{E}[X_\alpha g(W_\alpha + \eta_\alpha -X_\alpha +  1) - \textcolor{red}{X_\alpha g(W_\alpha + 1)}]\\
-        &= \sum_{\alpha \in I} p_\alpha \mathbb{E}[g(W_\alpha + 1)] \\
+        &= \sum_{\alpha \in I} \textcolor{red}{p_\alpha \mathbb{E}[g(W_\alpha + 1)]} \\
         &+ \color{blue}{p_\alpha \mathbb{E}[g(W+1)] - p_\alpha \mathbb{E}[g(W+1)]} \\
-        &+ \mathbb{E}[X_\alpha (g(W_\alpha + \eta_\alpha -X_\alpha +  1) - g(W_\alpha + 1))]
+        &+ \mathbb{E}[X_\alpha g(W_\alpha + \eta_\alpha -X_\alpha +  1) - \textcolor{red}{X_\alpha g(W_\alpha + 1)}]
     \end{align*}
-where in the fourth step, we added and subtracted $\mathbb{E}[X_\alpha g(W_\alpha+1)]$ and in the last step we added and subtracted $p_\alpha \mathbb{E}[g(W+1)]$.
+where in the fourth step, we added and subtracted $\textcolor{red}{X_\alpha g(W_\alpha + 1)}$ and in the last step we added and subtracted $\textcolor{blue}{p_\alpha g(W+1)}$.  
+
+\begin{remark}
+    Note that we used the binary nature of $X_\alpha$ to get the term $\eta_\alpha- X_\alpha$ in the bound (\Cref{eq:poisson_stein_local_bound}).
+\end{remark}
 
 Rearranging the terms leads to 
     \[\sum_{\alpha \in I} p_\alpha \mathbb{E}[g(W + 1)] + \underbrace{p_\alpha \mathbb{E}[g(W_\alpha+1) - g(W+1)]}_{R_{1,\alpha}} + \underbrace{\mathbb{E}[X_\alpha (g(W_\alpha + \eta_\alpha -X_\alpha +  1) - g(W_\alpha + 1))]}_{R_{2, \alpha}}\] 
@@ -756,7 +767,7 @@ Combining \Cref{eq:bound_R1,eq:R2_bound,eq:R3_bound} and using \Cref{lem:stein_e
     \begin{itemize}
         \item For $R_1$, we expand the $g$ in $Wg(W)$ around $W_i$: 
         \[Wg(W) = \sum_i X_i g(W_i) + \textcolor{red}{X_i Z_i g'(W_i)} + \ldots \]
-        \item Using Taylor again for $g(W_i)$ at $W_{ik}$, we have:
+        \item Using Taylor again for $g'(W_i)$ at $W_{ik}$, we have:
         \[
         \textcolor{red}{X_i Z_i g'(W_i)} = \sum_{k\in K_i} \textcolor{blue}{X_i X_k g'(W_{ik})} + \ldots
             \]
@@ -767,7 +778,7 @@ Combining \Cref{eq:bound_R1,eq:R2_bound,eq:R3_bound} and using \Cref{lem:stein_e
 \subsubsection{Triangles in $\mathcal{G}(n,p)$}
 For the number of triangles in an Erd\H{o}s-R\'{e}nyi graph $G=\mathcal{G}(n,p)$, we consider the following setup.  
 
-Let index set be 
+Let the index set be 
 \[
 \Gamma_n = \{(u,v,w): 1\leq u<v<w\leq n\}
 \]
@@ -864,6 +875,10 @@ Applying \Cref{thm:stein_equation_normal_dependent} gives the following result:
 
 \begin{remark}
     To see $|X_\alpha| \leq \frac{1}{\sigma}$, note that $|X_\alpha| = \frac{|Y_\alpha - p^3|}{\sigma} \leq \frac{1}{\sigma}$ as $Y_\alpha \in \{0,1\}$ and $p\in (0,1)$.
+\end{remark}
+
+\begin{remark}
+    Here we only need an upper bound on the size of $|K_\alpha|$ to compute the expectations; this approach is also used in the problem sheets and past exam questions.  
 \end{remark}
 
 \subsubsection{Dense and Sparse Regimes}  
