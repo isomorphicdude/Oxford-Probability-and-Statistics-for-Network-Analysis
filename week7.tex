@@ -128,7 +128,7 @@ The variance can be deduced from above by multiplying $N^2$:
     \begin{equation*}
         \mathrm{Var}\,(\hat{\tau}_{\pi})=\frac{N^{2}(N-n)}{n(N-1)}\sigma^{2}<\frac{N^{2}}{n}\sigma^{2} \quad \forall n \geq 2
     \end{equation*}
-    This result is given in \citep{alma990199486190107026} Chapter 7 (Pg. 209). Note the inequality is because sampling without replacement introduces correlations between the sample values.  
+    This result is given in \citep{alma990199486190107026} Chapter 7 (Pg. 209). Note the inequality is due to the correlation induced by sampling without replacement.
 \end{example}
 
 \subsubsection{Horvitz-Thompson for Networks}
@@ -171,9 +171,9 @@ Note those probabilities assume the size of the population is known.
     S &= S_0\cup \{(u,v)\in \mathcal{E}: u\in S_0\} \cup \{v: (u,v)\in \mathcal{E}, u\in S_0\} \ \text{(with vertices)}
 \end{align*}
 \begin{example}[Samples not in snowball]
-    For a vertex $v\in \mathcal{V}$, the probability of it not being in the initial sample $S_0$ is:
+    For a vertex $v\in \mathcal{V}$, the probability of it not being in the sample $S_0$ is:
     \begin{align*}
-        \mathbb{P}(v\notin S_0) &= \mathbb{P}[\left(\{\nu\}\cup N(\nu)\right)\cap S_{0}=\emptyset]\\
+        \mathbb{P}(v\notin S) &= \mathbb{P}[\left(\{\nu\}\cup N(\nu)\right)\cap S_{0}=\emptyset]\\
         &= \mathbb{P}[S_{0}\subset V\setminus(\{\nu\}\cup N(\nu))]\\
         &= \frac{\binom{|\mathcal{V}|-(d(\nu)+1)}{n}}{\binom{|\mathcal{V}|}{n}}
     \end{align*}
