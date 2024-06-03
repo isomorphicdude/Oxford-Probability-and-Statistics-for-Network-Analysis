@@ -38,7 +38,7 @@ The population variance is:
 We further denote a sample subset as $S\subset U$ with size $n=|S|$ and $S=\{i_1, \ldots, i_n\}$. We are interested in how to estimate $\tau$,  $\mu$, and $\sigma^2$ from the sample.
 
 \begin{remark}
-    Here we are sampling from a finite population, whence the methods differ from those when sampling from a density $f(x)$.
+    Here we are taking a \textbf{random sample} from the population.   
 \end{remark}
 
 \subsubsection{Sampling with Replacement}
@@ -81,10 +81,16 @@ where $\pi_i$ is the probability of selecting the unit $i$ into the sample; the 
 
 Note this has an alternative form of 
 \[
-    \frac{1}{N}\sum_{i\in U} Z_i\frac{y_i}{\pi_i}
+    \frac{1}{N}\sum_{i\in U} Z_i\frac{y_i}{\pi_i} \quad (\text{here} \ U \text{ is the population})
 \]
 
-where $Z_i=\mathbf{1}(i\in S)$ is the indicator function, taking the expectation shows that this is an unbiased estimator of $\mu$.  The variance of the estimator is:
+where $Z_i=\mathbf{1}(i\in S)$ is the indicator function, taking the expectation shows that this is an unbiased estimator of $\mu$.    
+
+\begin{remark}
+    The $Z_i$ accounts for the randomness in the sample selection.
+\end{remark}
+
+The variance of the estimator is:
 \begin{align*}
     \mathrm{Var}(\hat{\mu}) &=  \frac{1}{N^2} \sum_{i\in U}\frac{y_{i}^{2}}{\pi_{i}^{2}}\mathrm{Var}Z_{i}+\sum_{i\in U}\sum_{j\in U,j\neq i}\frac{y_{i}y_{j}}{\pi_{i}\pi_{j}}\mathrm{Cov}(Z_{i},Z_{j})\\
     &= \frac{1}{N^2} \sum_{i\in U}\frac{y_{i}^{2}}{\pi_{i}^{2}}\pi_i(1-\pi_i)+\sum_{i\in U}\sum_{j\in U,j\neq i}\frac{y_{i}y_{j}}{\pi_{i}\pi_{j}}(\mathbb{E}[Z_iZ_j]-\mathbb{E}[Z_i]\mathbb{E}[Z_j])\\
@@ -184,14 +190,14 @@ We also note that other quantities of interest can be estimated similarly \begin
     Defining $y_{i,j,k}=\mathbf{1}((i,j),(j,k),(k,i)\in \mathcal{E})$, this estimates the total number of triangles in the network.
 \end{example}
 
-An important note is that the network considered in the settings above is \textbf{fixed}. If the network is \textbf{random}, then we should be cautious, as the samples do not reflect the real network structure. (\textit{e.g.} the snowball sample is always connected, but the real network may not be connected).  
+\paragraph{Caveat Emptor} An important note is that the network considered in the settings above is \textbf{fixed}. If the network is \textbf{random}, then we should be cautious, as the samples do not reflect the real network structure. (\textit{e.g.} the snowball sample is always connected, but the real network may not be connected).  
 
 
 \subsection{Fitting Network Models}
 \begin{itemize}
-    \item In Erd\H{o}s-R\'{e}nyi random graphs, the MLE for $p$ is $\hat{p}=\frac{m}{\binom{n}{2}}$, where $m$ is the number of edges in the sample.
-    \item MCMC can be used to sample graphs. Use \verb|ergm| in \verb|R|. Cons are: flat likelihood and convergence takes long for exponential graph models, non-unique stationary distribution.
-    \item Can assess model fit by looking at statistics: vertex degree, clustering coefficient, and shortest path length.
+    \item In Erd\H{o}s-R\'{e}nyi random graphs, the \textbf{MLE} for $p$ is $\hat{p}=\frac{m}{\binom{n}{2}}$, where $m$ is the number of edges in the sample.
+    \item MCMC can be used to sample graphs. Use \verb|ergm| in \verb|R|. Cons are flat likelihood, slow convergence for exponential graph models, and non-unique stationary distribution.
+    \item Can \textbf{assess model fit} by looking at statistics: vertex degree, clustering coefficient, and shortest path length.
     \item For example, the number of triangles is approximately $\mathrm{Poisson}(p^3\binom{n}{3})$ and since the no. of triangles increase with $p$, we can test $H_0: p>p_0$. 
     \item QQ plot can be used to compare the distribution of the statistics from the model and the sample.
 \end{itemize}

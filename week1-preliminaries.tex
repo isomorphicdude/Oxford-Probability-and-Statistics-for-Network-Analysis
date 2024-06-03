@@ -13,7 +13,7 @@
 \maketitle
 
 \section{Preliminaries}
-In this course, we use network and graphs interchangeably. A graph/network is a pair $G=(V, E)$, where $E \subseteq V \times V$. An edge is thus a pair $(u,v) \in E$. 
+In this course, we use the terms network and graph interchangeably. A graph/network is a pair $G=(V, E)$, where $E \subseteq V \times V$. An edge is thus a pair $(u,v) \in E$. 
 
 \begin{figure}[H]
     \centering
@@ -129,6 +129,7 @@ When dealing with large graphs, it would be convenient to have simple statistics
     \[
         C = \frac{6\times \text{number of triangles}}{\text{number of 2-paths}}
     \]
+    Also, note that the number $6$ arises from the fact that we have $3!=6$ ways to choose an ordered triplet.
 \end{definition}
 
  Note that if we divide both by $2$, then the denominator is the number of $2-$stars in the graph.
@@ -138,7 +139,8 @@ A similar statistic is the local clustering coefficient for a particular vertex 
 \begin{definition}
     The \textbf{local clustering coefficient} of $v$ is given by:
     \begin{equation*}
-        C(v) =  \frac{\sum_{u,w \in V} a_{uv}a_{vw}a_{wu}}{d(v)(d(v)-1)}
+        C(v) =  \frac{\sum_{u,w \in V} a_{uv}a_{vw}a_{wu}}{d(v)(d(v)-1)} 
+        % = \frac{\frac{1}{2}\sum_{u,w \in N(v), u\neq w} a_{uv}a_{wv}}{\binom{d(v)}{2}}
     \end{equation*}
     where the numerator is $2\times$the number of triangles and the denominator is the number of paths of length $2$ containing $v$:
     \[
