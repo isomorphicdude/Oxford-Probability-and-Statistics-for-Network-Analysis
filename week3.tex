@@ -258,7 +258,7 @@ As an example, we consider a bound for Bernoulli random variables.
         &= \sum_{i=1}^n p_i \mathbb{E}[g(W - X_i + 1)]
     \end{align*}
 
-    where in the second step we use the fact that $X_i=0$ when $g$ is bounded yields wero expectation. Thus, using the results above with $\mathbb{E}[Wg(W)] =  \sum_{i=1}^n p_i \mathbb{E}[g(W - X_i + 1)]$, we have:  
+    where in the second step we use the fact that $X_i=0$ when $g$ is bounded yields zero expectation. Thus, using the results above with $\mathbb{E}[Wg(W)] =  \sum_{i=1}^n p_i \mathbb{E}[g(W - X_i + 1)]$, we have:  
     \begin{align*}
         \mathbb{E}[\lambda g(W+1) - Wg(W)] &= \sum_{i=1}^n p_i \mathbb{E}[g(W + 1)] - \sum_{i=1}^n p_i \mathbb{E}[g(W - X_i + 1)]\\
         &= \sum_{i=1}^n p_i \mathbb{E}[\mathbb{E}[g(W+1) - g(W - X_i + 1) \mid X_i]] \ \text{(using $\mathbb{E}[\mathbb{E}[Y|X_i]]=\mathbb{E}[Y]$)}\\
@@ -375,7 +375,7 @@ Rearranging the terms leads to
         |R_2| \leq \min (1, \lambda^{-1}) \sum_{\alpha \in I} p_\alpha \mathbb{E}[ X_\alpha (\eta_\alpha - X_\alpha)]
     \end{equation*}
 
-    Combing those two bounds gives the desired result.
+    Combining those two bounds gives the desired result.
 \end{proof}  
 
 We are now ready to approximate the number of triangles in Erd\H{o}s-R\'{e}nyi random graph $\mathcal{G}(n,p)$.   
@@ -750,12 +750,26 @@ where in the penultimate step we swapped the indices $i$ and $k$ using the fact 
 \begin{align*}
     \underbrace{\sum_{i\in I}\sum_{k\in K_{i}}\textcolor{blue}{\mathbb{E}[X_{i}X_{k}]\operatorname{\mathbb{E}}[g^{\prime}(W_{i k})]}-\mathbb{E}[X_{i}X_{k}]\operatorname{\mathbb{E}}[g^{\prime}(W)]}_{R_3} &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|Z_i+V_{ik}|]\\
     &=\|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|\sum_{j\in K_i} X_j + \sum_{j\in K_k\setminus K_i} X_j|]\\
-    &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k,j\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|X_j|]\\
+    &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\left(\mathbb{E}[|\sum_{j\in K_i} X_j|] + \mathbb{E}[|\sum_{j\in K_k\setminus K_i} X_j|]\right)\\
+    &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\left(\sum_{j\in K_i} \mathbb{E}[| X_j|] + \sum_{j\in K_k\setminus K_i} \mathbb{E}[|X_j|]\right)\\
+    &\leq 2 \|g''\|_\infty \sum_{i\in I}\sum_{k,j\in K_{i}}\mathbb{E}[|X_{i}X_{j}|]\mathbb{E}[|X_k|]\\
 \end{align*}
+
+where in the last step, we used the fact in the proof of $R_2$ that $K_k\setminus K_i = K_i\setminus K_k$ and the non-negativity of the absolute value.
+
+\begin{unexaminable}
+    Namely, we have:
+    \begin{align*}
+        R_3&\leq \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\left(\sum_{j\in K_i} \mathbb{E}[| X_j|] + \sum_{j\in K_k\setminus K_i} \mathbb{E}[|X_j|]\right) \\
+        &= \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\left(\sum_{j\in K_i} \mathbb{E}[| X_j|] + \sum_{j\in K_i\setminus K_k} \mathbb{E}[|X_j|]\right)\\
+        &\leq \|g''\|_\infty \sum_{i\in I}\sum_{k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\left(2\sum_{j\in K_i} \mathbb{E}[| X_j|] \right)
+    \end{align*}
+    Thus, we obtain the result by symmetry.
+\end{unexaminable}
 
 Therefore, 
 \begin{equation}\label{eq:R3_bound}
-    |R_3| \leq \|g''\|_\infty \sum_{i\in I}\sum_{j,k\in K_{i}}\mathbb{E}[|X_{i}X_{k}|]\mathbb{E}[|X_j|]
+    |R_3| \leq 2\|g''\|_\infty \sum_{i\in I}\sum_{j,k\in K_{i}}\mathbb{E}[|X_{i}X_{j}|]\mathbb{E}[|X_k|]
 \end{equation}
 
 Combining \Cref{eq:bound_R1,eq:R2_bound,eq:R3_bound} and using \Cref{lem:stein_equation_normal_bound} gives the desired result.  
