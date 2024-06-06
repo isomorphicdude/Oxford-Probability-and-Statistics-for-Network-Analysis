@@ -13,7 +13,7 @@
 \maketitle
 
 \section{Random Graphs}
-In order to judge whether a network summary is ”unusual” or whether a motif (pattern) is ”frequent”, there is an underlying assumption of randomness in the network. The randomness can be intrinsic to the network, and/or may stem from errors in the data. With the random models, we would like to compute important statistics such as \textbf{the degree distribution}, \textbf{the clustering coefficient}, and \textbf{the number of triangles}.
+In order to judge whether a network summary is ”unusual” or whether a motif (a speical pattern) is ”frequent”, there is an underlying assumption of randomness in the network. The randomness can be intrinsic to the network, and/or may stem from errors in the data. With the random models, we would like to compute important statistics such as \textbf{the degree distribution}, \textbf{the clustering coefficient}, and \textbf{the number of triangles}.
 
 \subsection{Erd\H{o}s-R\'{e}nyi}
 The first configuration of Erd\H{o}s-R\'{e}nyi random graphs specifies edges with a probability $p$. Namely, for $V=\{1,2,\ldots,n\}$, the probability of an edge between $i$ and $j$ is $p$ for all $i,j\in V$.
@@ -39,7 +39,7 @@ Also, by independence, we can compute the number of triangles by:
     The local clustering coefficient of a vertex $v$ is $p$. See \href{https://math.stackexchange.com/questions/2200452/expected-local-clustering-coefficient-for-a-node-in-a-network}{this answer} for a proof.
 \end{unexaminable}
 
-Now, recall the definition of the (global) clustering coefficient:
+Now, recall the definition of the expected (global) clustering coefficient\footnote{This is not the same as the expectation of global clustering coefficient.}:
 \begin{equation*}
     \mathbb{E}[C] = \frac{3 \times \mathbb{E}[\text{number of triangles}]}{\mathbb{E}[\text{number of connected triples}]}
 \end{equation*}
@@ -63,11 +63,19 @@ An alternative configuration is to specify the number of edges $m$ and choose un
 \end{definition}
 
 The degree distribution here is hypergeometric:
-$$
-\mathbb{P}(d(v)=k)=\frac{\binom{n-1}{k}\binom{\binom{n}{2}-k}{m-k}}{\binom{\binom{n}{2}}{m}}
-$$
+\[
+\mathbb{P}(d(v)=k)=\frac{\binom{n-1}{k}\binom{\binom{n}{2}-(n-1)}{m-k}}{\binom{\binom{n}{2}}{m}}
+\]
 
-where $k=0,1,\ldots,\min(n-1,m)$. To see this, note that we can choose $k$ vertices to be connected to $v$ among $V\setminus \{v\}$, and then choose $m-k$ edges from the remaining $\binom{n}{2}-k$ edges to connect the rest pairs of vertices. 
+where $k=0,1,\ldots,\min(n-1,m)$. To see this, note that we can choose $k$ vertices to be connected to $v$ among $V\setminus \{v\}$, and then choose $m-k$ edges from the remaining $\binom{n}{2}-(n-1)$ edges to connect the rest pairs of vertices.  
+
+The expected degree of a vertex $v$ is given by:
+
+\[
+  \mathbb{E}[d(v)] = \frac{2m}{n}  
+\]
+
+which can be seen from either the hypergeometric distribution or the fact that the sum of degrees is $2m$, thus with $n$ vertices, the expected degree is $\frac{2m}{n}$.  
 
 The expected number of triangles is:
 \begin{align*}
@@ -107,7 +115,7 @@ The \textbf{Watts-Strogatz model} is a random graph constructed with the followi
         \draw[edge] (node1) -- (node2);
         \draw[edge] (node1) -- (node3);
       \end{tikzpicture}
-    \caption{We connect the vertex to its nearest neighbours on both directions. (\href{https://www.kth.se/social/files/5605669af2765468be471eda/lecture\%204\%20\%282015\%29.pdf}{a better illustration})}
+    \caption{We connect the vertex to its nearest neighbours in both directions ($k=2$). (\href{https://www.kth.se/social/files/5605669af2765468be471eda/lecture\%204\%20\%282015\%29.pdf}{Here is a better illustration})}
     \label{fig:watts-strogatz}
 \end{figure}
 
@@ -135,6 +143,10 @@ However, the degree distribution of real-world networks often follows a power la
     Intuitively, the power-law distribution says that vertices tend to attach to "popular" vertices.
 \end{remark}
 
+\paragraph{Applications}
+    An application of the Watts-Strogatz or the Newman-Moore-Watts model is the modelling of an epidemic; they can simulate how a disease spreads within \textit{local} communities but also jumps to distant locations through a few \textit{long-range} connections (re-wiring or shortcuts).  
+
+
 \subsection{Barab\'{a}si-Albert Model}
 
 \begin{definition}
@@ -144,7 +156,7 @@ However, the degree distribution of real-world networks often follows a power la
 To explain this power-law behaviour, Albert and Barab\'{a}si proposed the \textbf{preferential attachment model}, which has the following construction:
 \begin{itemize}
     \item Start with $m_0$ vertices, the edges between which are formed arbitrarily.  
-    \item (Growth) At each time $t$, add a new vertex with $m\leq m_0$ edges that connect to $m$ existing vertices.
+    \item (Growth) At each time $t$, add a new vertex with $m\leq m_0$ edges that connect to $m$ of the existing vertices.
     \item (Preferential attachment) The probability that the new vertex connects to vertex $v_i$ is given by:
     \begin{equation*}
         \pi_i = \frac{d(v_i)}{\sum_j d(v_j)}
@@ -165,20 +177,28 @@ The resulting graph may contain self-loops and multi-edges. A more mathematicall
 
     where $t_i$ is the time when vertex $v_i$ is added (we used the initial condition $k_i(t_i)=m$).
 
-    To compute the degree distribution, note $\mathbb{P}(k_i(t)>k) = \mathbb{P}(t_i < \frac{m^2}{k^2} t) = \frac{m^2}{k^2}$, if we assume the vertices were added uniformly over time: $t_i \sim \mathrm{Unif}(0,t)$. Now differentiating with respect to $k$, we obtain:
+    To compute the degree distribution, we assume the vertices were added uniformly over time: $t_i \sim \mathrm{Unif}(0,t)$, so that
+     $\mathbb{P}(k_i(t)>k) = \mathbb{P}(t_i < \frac{m^2}{k^2} t) = \frac{m^2}{k^2}$.
+     Now differentiating $\mathbb{P}(k_i(t)\leq k)$ w.r.t. $k$ gives:  
     \begin{equation*}
         \mathbb{P}(d(v_i)=k) \approx 2m^2 k^{-3}
     \end{equation*}
     for $k$ large. This is a power law with $\gamma=3$.
 \end{unexaminable}
 
+\paragraph{Applications}
+    The Barab\'{a}si-Albert model is used to model the growth of the internet, where new websites tend to link to popular websites. It is also used to model the growth of social networks, where new users tend to connect to popular users.
+
 \subsection{Stochastic Block Model}
 
 This is also called Erd\H{o}s-R\'{e}nyi mixture model. The graph is constructed as follows:
 \begin{itemize}
     \item Start with $n$ vertices, which are partitioned into $L$ blocks $V_1,\ldots,V_L$.
-    \item Edges are formed independently between vertices in different blocks with probability $p_{ij}$.
+    \item Edges are formed independently between vertices in blocks $i$ and $j$ with probability $p_{ij}$.
 \end{itemize}
+\begin{remark}
+    Note that we allow for $i=j$ in the probability $p_{ij}$. 
+\end{remark}
 
 \begin{proposition}
     For a random vertex $V$, the expected degree is given by:
@@ -252,6 +272,8 @@ A variant of this model is to assign each vertex a block at random with:
     as required (here $n=|V|$).
 \end{proof}
 
+\paragraph{Applications}
+    The stochastic block model is used to model community structures in social networks, where vertices are grouped into communities and edges are formed within and between communities. 
 %  which is computed similarly $\mathbb{E}[d(v)]=\mathbb{E}[\mathbb{E}[d(v) \mid v \in V_i]]=\sum_{\ell=1}^{L}\alpha_{\ell}\left(\sum_{k}(|\mathcal{V}|-1)\alpha_{k} p_{k, \ell}\right)$, since we do not know how many vertices are in each block, so $|\mathcal{V}|\alpha_{\ell}$ disappears.
 
 
@@ -310,6 +332,9 @@ The Havel-Hakimi algorithm constructs a graph with a given degree sequence.
     \end{enumerate}
 \end{proof}
 
+\paragraph{Applications}
+    The configuration model gives a way to construct random graphs with \textbf{a given degree sequence}. This is useful in the study of real-world networks, where we can simulate networks with the same degree distribution.
+
 
 \subsubsection{Chung-Lu Model}
 
@@ -329,6 +354,9 @@ The expected degree of vertex $i$ is given by:
 
 where we used the assumption $\max_i w_i^2 < \sum_k w_k \implies w_iw_j < \max w_i^2 < \sum_k w_k$. 
 
+\paragraph{Applications}
+    The Chung-Lu model is used to model real-world networks where the degree of a vertex is proportional to its weight. For example, in a social network, the degree of a user might be proportional to the number of friends they have.
+
 \subsection{Geometric Random Graphs}
 In this model, we assume that the vertices are points in $\real^d$ and the probability of an edge between two vertices is a function of their distance. Namely, we construct as follows:
 \begin{itemize}
@@ -337,6 +365,9 @@ In this model, we assume that the vertices are points in $\real^d$ and the proba
     \item Choose value $r>0$.
     \item Connect vertices $i$ and $j$ if $\|X_i-X_j\|_2\leq r$.
 \end{itemize}
+
+\paragraph{Applications}
+    The geometric random graph can be used to model wireless networks, where the probability of a connection between two devices is a function of their distance. It is also used to model social networks, where the probability of a connection between two users may be modelled as a function of their geographical location.
 
 
 \subsection{Exponential Random Graph Models}
