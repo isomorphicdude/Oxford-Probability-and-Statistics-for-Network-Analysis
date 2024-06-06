@@ -105,6 +105,13 @@ In practice, this is summed over sample $S$ instead of the population $U$ and co
     \widehat{\mathrm{Var}}\left(\hat{\mu}_{\pi}\right)=\frac{1}{N^2}\sum_{i\in S}\sum_{j\in S}\frac{y_{i}y_{j}}{\pi_{i,j}}\left(\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}-1\right)
 \end{equation}
 
+This estimator is unbiased, since we can compute:
+\begin{align*}
+    \mathbb{E}[\widehat{\mathrm{Var}}\left(\hat{\mu}_{\pi}\right)] &= \frac{1}{N^2}\sum_{i\in U}\sum_{j\in U}\mathbb{E}[Z_i Z_j] \frac{y_{i}y_{j}}{\pi_{i,j}}\left(\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}-1\right)\\
+    &= \frac{1}{N^2}\sum_{i\in U}\sum_{j\in U}\pi_{i,j} \frac{y_{i}y_{j}}{\pi_{i,j}}\left(\frac{\pi_{i,j}}{\pi_{i}\pi_{j}}-1\right)\\
+    &= \mathrm{Var}(\hat{\mu})
+\end{align*}
+
 \paragraph{Estimating $\tau$} The estimator is given by:
 \begin{equation}\label{eq:horvitz_thompson_total}
     \hat{\tau} = \sum_{i\in S} \frac{y_i}{\pi_i}
@@ -148,7 +155,7 @@ So it has size:
     N=|\mathcal{V}|+|\mathcal{V}|(|\mathcal{V}|-1)
 \end{equation*}
 
-\paragraph{Induced Subgraph Sampling} We first choose a vertex set $S_0$ and choose the induced edges from the vertex set. In this case, the sample $S$ is a collection of vertices and pairs of vertices:
+\paragraph{Induced Subgraph Sampling} We first choose a vertex set $S_0$ using \textit{simple random sampling} and choose the induced edges from the vertex set. In this case, the sample $S$ is a collection of vertices and pairs of vertices:
 \begin{equation*}
     S = S_0 \cup \{(u,v): u,v\in S_0, u\neq v\}
 \end{equation*}
@@ -161,7 +168,7 @@ and the probability of choosing an edge is (recall from \Cref{ex:srs}):
     \pi_{i,j} = \frac{n(n-1)}{|\mathcal{V}|(|\mathcal{V}|-1)}
 \end{equation*}
 
-Note those probabilities assume the size of the population is known.  
+Note those probabilities assume the size of the population is \textbf{known}.  
 
 
 \begin{example}[Estimating the number of edges]
@@ -169,6 +176,8 @@ Note those probabilities assume the size of the population is known.
     \begin{equation*}
         \hat{\tau}_{\pi}=\frac{|\mathcal{V}|(|\mathcal{V}|-1)}{n(n-1)}\sum_{u\in S}\sum_{\nu\in S}1((u,\nu)\in\mathcal{E}),
     \end{equation*}
+
+    We need to divide this population total by $2$ to get the number of edges, as each edge is counted twice (since we are using $u\neq v$ for $U$).
 \end{example}
 
 \paragraph{Star Sampling (1-hop Snow Ball)} We first choose a random sample $S_0$ of $n$ vertices, and we sample all edges incident to the vertices in $S_0$. Usually, the adjacent vertices are added (but they can also be excluded). Therefore, the two cases are:
@@ -183,7 +192,7 @@ Note those probabilities assume the size of the population is known.
         &= \mathbb{P}[S_{0}\subset V\setminus(\{\nu\}\cup N(\nu))]\\
         &= \frac{\binom{|\mathcal{V}|-(d(\nu)+1)}{n}}{\binom{|\mathcal{V}|}{n}}
     \end{align*}
-    which is the probability of containing a particular unit of $d(\nu)+1$ elements in a sample of size $n$ (see \Cref{ex:srs}).
+    % which is the probability of containing a particular unit of $d(\nu)+1$ elements in a sample of size $n$ (see \Cref{ex:srs}).
 \end{example}
 
 We also note that other quantities of interest can be estimated similarly \begin{example}[Triangles]
@@ -204,7 +213,7 @@ We also note that other quantities of interest can be estimated similarly \begin
 
 % \subsection{Nonparametric Methods}
 \subsubsection{Monte Carlo Tests} 
-Let $\alpha = \frac{m}{1+n}$, where $n$ is the number of simulations and $m$ is a rank to be determined. Denote the test statistic as $T$. The Monte Carlo test is carried out as follows:
+Let $\alpha = \frac{m}{1+n}$, where $n$ is the number of simulations and $m$ is a rank to be determined. Denote the test statistic as $T$. Assuming the null distribution $F_0$ is continuous, the Monte Carlo test is carried out as follows:
 \begin{enumerate}
     \item Observe the actual value of $T^*$ from the sample.
     \item Simulate a random sample $T_1, \ldots, T_n$ from the null distribution.
@@ -229,7 +238,7 @@ The $p$-value is given by
     We often need to choose the direction of the test based on the nature of the observed network. For instance, a friendship/social network is expected to have more triangles than a random network, thus we would reject $H_0$ (the data comes from our model) if $T^*$ is larger than the simulated values (a small $p^+$ value).
 \end{remark}
 
-\paragraph{Conditional Uniform Graph Tests} Suppose we want to see how unusual our statistic is, given the degree sequence. We can simulate graphs with the same degree sequence and count the number of times the simulated statistic is at least as extreme as the observed statistic.
+\paragraph{Conditional Uniform Graph Tests} Suppose we want to see how unusual our statistic is, given the degree sequence. We can simulate graphs with the same degree sequence (recall the Havel-Hakimi theorem) and count the number of times the simulated statistic is \textbf{at least as extreme} as the observed statistic.
 
 \begin{remark}
     In $\mathcal{G}(n,p)$, the number of edges asymptotically determines
@@ -303,10 +312,8 @@ where the first two matrices are with and without the edge $(i,j)$, and the last
 
 This odds ratio does not depend on the normalising constant $\kappa(\theta)$.
 
-\begin{example}[From the notes]
-Suppose that we know the group memberships in a stochastic block model and we would like to infer whether or not there is an edge between two vertices.  
-
-Then we can
+\begin{example}[From the slides (Pg. 58)]
+Suppose that we know the group memberships in a stochastic block model and we would like to infer whether or not there is an edge between two vertices. Then we can
 \begin{itemize}
     \item Fit a stochastic block model to the data with the particular edge variable excluded.
     \item Assess the odds of an edge to be present from the edge probability estimates.
@@ -343,6 +350,10 @@ The parameters of the Polya-Aeppli distribution can be estimated by the method o
     \hat{\lambda} &= (1-\hat{a})\hat{\mu}
 \end{align*}
 
+\begin{remark}
+    The Poisson distribution models the number of clumps, while the geometric distribution models the number of vertices in a clump. The parameter $a$ is the probability of failing to join a clump, hence the higher the $a$, the lower the clump size.  
+\end{remark}
+
 
 \subsection{Modules and Communities}
 We would like to apply a clustering method to find out more about the structure of the network. As a guidance to how many communities a network should be split into, often modularity is used.  
@@ -356,6 +367,8 @@ Q = \frac{1}{2m} \sum_{u,v} \left( a_{uv} - \frac{d(u)d(v)}{2m} \right) \mathbf{
 where \( m \) is the number of edges, \((a_{uv}) \) is an entry in the adjacency matrix, and \( d(v) \)
 is the degree of vertex \( v \).
 \end{definition}
+
+The modularity can be viewed as comparing the network to a configuration model. High modularity indicates that the partition for the network captures the community structure well; low or even negative modularity indicates that the partition is worse than a random partition.  
 
 \paragraph{Girvan-Newman algorithm} The algorithm is based on the idea that edges with high betweenness are likely to be between communities (recall that betweenness is the number of shortest paths passing through an edge).
 

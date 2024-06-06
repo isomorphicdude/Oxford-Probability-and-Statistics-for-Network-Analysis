@@ -20,7 +20,7 @@
 We begin with an example of threshold behaviour in a random graph.  
 
 \begin{example}
-    In $\mathcal{G}(n,p)$, if $p=\frac{c}{n}$ with $c<1$, then the largest connected component is of size $O(\log n)$, whereas if $c>1$, then the largest connected component is of linear size with probability $1$ as $n\to \infty$.      
+    In $\mathcal{G}(n,p)$, if $p=\frac{c}{n}$ with $c<1$, then the largest connected component is of size $\mathcal{O}(\log n)$, whereas if $c>1$, then the largest connected component is of linear in $n$ with probability $1$ as $n\to \infty$.      
 \end{example}
 
 To show this, we use the approach in \citep{krivelevich2012phase} and use the Depth-First Search (DFS) algorithm on the random graph. 
@@ -33,13 +33,47 @@ The DFS operates on the vertex set $V$ with three sets of vertices at each step:
     \item $U = V\setminus (S\cup T)$ is the set of vertices under investigation
 \end{itemize}
 
-The algorithm starts with $S=\emptyset$, $T=V$ and $U=\emptyset$. At each step, if $U$ is nonempty, let $v$ be the last vertex added to $U$, we perform the following:
-\begin{enumerate}
-    \item If $v$ has a neighbour $u$ in $T$, move $u$ from $T$ to $U$.
-    \item If $v$ has no neighbour in $T$, move $v$ from $U$ to $S$.
-\end{enumerate}
+\textbf{Initialisation}: The algorithm starts with $S=\emptyset$, $T=V$ and $U=\emptyset$.    
 
-If $U$ is empty, we pick a vertex $v$ from $T$ and move it to $U$ (select the vertex with the smallest index). If $U\cup T=\emptyset$, query all remaining pairs in $S$ and stop.  
+We then perform the following moves:
+
+\textbf{Move 1}: If $U\neq \emptyset$, let $v$ be the last vertex added to $U$, we do the following:
+\begin{itemize}
+    \item If $v$ has a neighbour $u$ in $T$, move $u$ from $T$ to $U$ (Queried all $(u,v), u\in T$ pairs, and stop at the first positive response, then move this vertex)
+    \item Else if $v$ has no neighbour in $T$, move $v$ from $U$ to $S$.
+\end{itemize}
+
+\textbf{Move 2}: If $U=\emptyset$, we do the following:
+\begin{itemize}
+    \item If $T\neq \emptyset$, we pick a vertex $v$ from $T$ and move it to $U$\footnote{When there are multiple vertices in $T$, we pick the one with the smallest label.}.
+    \item Else if $U\cup T=\emptyset$, query all remaining pairs in $S$ and stop.  
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.2, every node/.style={circle, draw, minimum size=0.5cm}]
+  \node (A) at (0,0) {1};
+  \node (B) at (2,0) {3};
+  \node (C) at (1,1) {2};
+  \node (D) at (1,-1) {4};
+  \node (E) at (1,-2) {5};
+  
+  % \draw (A) -- (B) node[midway, below] {Edge 1};
+  % \draw (B) -- (C) node[midway, right] {Edge 2};
+  % \draw (A) -- (C) node[midway, above, sloped] {Edge 3};
+  \draw (A) -- (B) ;
+  \draw (B) -- (C) ;
+  \draw (A) -- (C) ;
+  \draw (B) -- (D) ;
+  \draw (A) -- (D) ;
+  \draw (E) -- (D) ;
+\end{tikzpicture}
+    \caption{A graph with $|V|=5$}
+    \label{fig: example graph}
+\end{figure}
+
+
+
 
 The period of time between two consecutive emptyings of $U$ is called an \textbf{epoch}, which reveals a connected component.  
 
@@ -68,11 +102,16 @@ Denote $X_i\in \{0,1\}$ as the outcome of the $i$-th query, with each $X_i \sim 
     At all times, $|S(t)|+|U(t)|+|T(t)|=n$.
 \end{proposition}
 
-The $+1$ comes from the initial vertex $v$ in $U$ at the beginning of each epoch. 
+\begin{proof}
+    The first inequality follows from the fact that any vertex in $U$ must be the result of a successful query; the $+1$ comes from the initial vertex $v$ in $U$ at the beginning of each epoch.  
+    
+    The second inequality follows from the fact that after any successful query, the vertex is moved to $U$ or $S$.
+\end{proof}
+
 
 \subsection{Small Connected Components}
 
-We will first show that the size of any connected component cannot exceed some constant associated with the probability $p$ with high probability as $n\to \infty$.  
+We will first show that the probability that the size of any connected component is bounded by some constant associated with the probability $p$ converges to $1$ as $n\to \infty$.
 
 \begin{theorem}\label{thm:small_connected_components}
     Let $\varepsilon \in (0,1)$ be fixed and let $G\sim \mathcal{G}(n,p)$ with $p=\frac{1-\varepsilon}{n}$, then any connected component $C$ of $G$, satisfies
@@ -81,7 +120,11 @@ We will first show that the size of any connected component cannot exceed some c
     \end{equation*}
 \end{theorem}
 
-The proof of this theorem is based on the following lemma, which bounds the number of successes $W$ in an interval of length $\ell$ during a sequence of Bernoulli trials.  
+The proof of this theorem is based on the following lemma, which bounds the number of successes $W$ in an interval of length $\ell$ during a sequence of Bernoulli trials.   
+
+\begin{remark}
+    Here $Y_t$ is the \textit{number of successes} in the interval $[t, t+\ell-1]\cap \mathbb{N}$ (sequence sum starting at $t$) and $W$ is the \textit{number of intervals} of length $\ell$ with at least $k$ successes.  
+\end{remark}
 
 \begin{lemma}\label{lem:bernoulli_trials}
     Let $X_1, \ldots, X_N \overset{i.i.d.}{\sim} \text{Bernoulli}(p)$. Let $k, \ell \in \mathbb{N}$ with $k > \ell p$. Then, define the random variable $Y_t$ as:
@@ -101,19 +144,23 @@ The proof of this theorem is based on the following lemma, which bounds the numb
 We delay the proof of this lemma to the end of this section and first prove \Cref{thm:small_connected_components}.  
 
 \begin{proof}[Proof of \Cref{thm:small_connected_components}]
-    Assume for the sake of contradiction that $G$ contains a connected component $C$ with more than $\frac{7}{\varepsilon^2}\log n$ vertices.  Let $k+1=\lfloor \frac{7}{\varepsilon^2}\log n \rfloor + 1$ be the smallest integer which is larger than $\frac{7}{\varepsilon^2}\log n$. We show the probability of such a component to exist tends to $0$ as $n\to \infty$.  
+    Assume FTSOC that $G$ contains a connected component $C$ with more than $\frac{7}{\varepsilon^2}\log n$ vertices.  Let $k+1=\lfloor \frac{7}{\varepsilon^2}\log n \rfloor + 1$ be the smallest integer which is larger than $\frac{7}{\varepsilon^2}\log n$. We show the probability of such a component to exist tends to $0$ as $n\to \infty$.  
 
     \medskip
 
     During the epoch when $C$ was created, consider the moment when the algorithm has received a positive response for the $(k+1)$-th time (the $k+1$-th vertex of $C$ is found). 
     % Let $\Delta S = S\cap C$ be the set of vertices in $C$ that have been found before this moment, then $|\Delta S \cup U| = k$, 
-    Before this moment the algorithm has recevied exactly $k$ positive responses.  
+    Before this moment the algorithm has received exactly $k$ positive responses $X_i$.    
 
     The total number of queries up to this moment during this epoch is at most
 
     \begin{equation*}
         \binom{k}{2} + k(n-k) < kn
     \end{equation*}
+
+    \begin{unexaminable}
+
+    \end{unexaminable}
 
     Set $\ell = kn$ and $N=\binom{n}{2}$, then by \Cref{lem:bernoulli_trials}, we have such a component $C$ with probability at most
 
